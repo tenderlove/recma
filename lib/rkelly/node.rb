@@ -39,6 +39,17 @@ class RKelly
     end
 
     def initialize (t, type = nil)
+      [
+      :type, :value, :lineno, :start, :end, :tokenizer, :initializer,
+      :name, :params, :funDecls, :varDecls, :body, :functionForm,
+      :assignOp, :expression, :condition, :thenPart, :elsePart,
+      :readOnly, :isLoop, :setup, :postfix, :update, :exception,
+      :object, :iterator, :varDecl, :label, :target, :tryBlock,
+      :catchClauses, :varName, :guard, :block, :discriminant, :cases,
+      :defaultIndex, :caseLabel, :statements, :statement,
+      :finallyBlock ].each do |sym|
+        instance_variable_set(:"@#{sym.to_s}", nil)
+      end
       token = t.token
       if token
         if type != nil
