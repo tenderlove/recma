@@ -197,7 +197,7 @@ class TestRKelly < Test::Unit::TestCase
                     [:defn, "bar",
                       [:scope, [:block, [:args],
                         [:block,
-                          [:sclass, [:vcall, :this],
+                          [:sclass, [:vcall, :self],
                             [:defn, "r", [:scope,
                               [:block, [:args],
                                 [:block,
@@ -210,6 +210,25 @@ class TestRKelly < Test::Unit::TestCase
                       ]]
                      ]
     ]
+    },
+    "custom_object" => {
+      "JS" => "function foo() { this.bar = 'aaron'; } baz = new foo();",
+      "ParseTree" => [:block,
+        [:class, :Foo, [:const, :OpenStruct],
+          [:defn, "initialize",
+            [:scope, [:block, [:args], [:super], [:fcall, :foo]]]
+          ],
+          [:defn, "foo",
+            [:scope, [:block, [:args],
+              [:block,
+                [:attrasgn, [:self], :bar=, [:array, [:str, "aaron"]]]
+              ]]]]],
+          [:defn, "foo",
+            [:scope, [:block, [:args],
+              [:block,
+                [:attrasgn, [:self], :bar=, [:array, [:str, "aaron"]]]
+              ]]]],
+        [:lasgn, :baz, [:call, [:lvar, :Foo], :new]]]
     },
   }
 

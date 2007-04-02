@@ -1,6 +1,7 @@
 class RKelly
   def initialize
     @function_cache = {}
+    @class_cache = {}
   end
 
   def script(t, x)
@@ -636,7 +637,12 @@ class RKelly
   end
 
   def process(js)
-    walk_tree(parse(js))
+    sexp = walk_tree(parse(js))
+    if @class_cache.length > 0
+      sexp[0] = *@class_cache.values
+      sexp.unshift(:block)
+    end
+    sexp
   end
 
   def get_children(n)
@@ -664,6 +670,8 @@ class RKelly
   def walk_tree(n)
     sexp = [TOKENS[n.type]]
     case TOKENS[n.type]
+    when 'this'
+      sexp = [:self]
     when 'SCRIPT'
       sexp = [:block]
     when 'function'
@@ -698,10 +706,21 @@ class RKelly
       sexp[1][0] = :lasgn
       sexp = sexp[1]
     when 'new'
-      if sexp[1][1] == :Object
-        sexp[1][1] = :OpenStruct
+      name = sexp[1][1]
+      if @function_cache[name] && ! @class_cache[name]
+        func = @function_cache[name]
+        @class_cache[name] =
+          [:class, name.to_s.capitalize.intern, [:const, :OpenStruct],
+          [:defn, 'initialize',[:scope, [:block, [:args], [:super], [:fcall, name]]]],
+          func ]
+        sexp[1][1] = sexp[1][1].to_s.capitalize.intern
+        sexp = [:call, sexp[1], sexp[0].to_sym]
+      else
+        if sexp[1][1] == :Object
+          sexp[1][1] = :OpenStruct
+        end
+        sexp = [:call, sexp[1], sexp[0].to_sym]
       end
-      sexp = [:call, sexp[1], sexp[0].to_sym]
     when 'CALL'
       if sexp[1][0] == :call
         sexp = sexp[1]
@@ -729,11 +748,11 @@ class RKelly
         # This might be an array index
         if sexp[1][0] == :call && sexp[1][2] == :[]
           sexp = :attrasgn, sexp[1][1], :[]=, [:array, sexp[1][3][1], sexp[2] ]
-        elsif sexp[1][0] == :call && sexp[1][1] == ["this"] && @function_cache[sexp[2][1]]
+        elsif sexp[1][0] == :call && sexp[1][1] == [:self] && @function_cache[sexp[2][1]]
           scope = @function_cache[sexp[2][1]].dup
           scope[1] = sexp[1].last.to_s
           # [:sclass, [:vcall, :this], [:scope, [:defn, :r, [:scope, [:block, [:args], [:fcall, :puts, [:array, [:str, "asdfadsf"]]]]]]]]
-          sexp = [:sclass, [:vcall, :this], scope]
+          sexp = [:sclass, [:vcall, :self], scope]
         else
           if n.value == '='
             if sexp[1][0] == :call
