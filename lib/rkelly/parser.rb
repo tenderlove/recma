@@ -730,7 +730,8 @@ class RKelly
         if sexp[1][0] == :call && sexp[1][2] == :[]
           sexp = :attrasgn, sexp[1][1], :[]=, [:array, sexp[1][3][1], sexp[2] ]
         elsif sexp[1][0] == :call && sexp[1][1] == ["this"] && @function_cache[sexp[2][1]]
-          scope = @function_cache[sexp[2][1]]
+          scope = @function_cache[sexp[2][1]].dup
+          scope[1] = sexp[1].last.to_s
           # [:sclass, [:vcall, :this], [:scope, [:defn, :r, [:scope, [:block, [:args], [:fcall, :puts, [:array, [:str, "asdfadsf"]]]]]]]]
           sexp = [:sclass, [:vcall, :this], scope]
         else

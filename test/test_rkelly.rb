@@ -198,7 +198,7 @@ class TestRKelly < Test::Unit::TestCase
                       [:scope, [:block, [:args],
                         [:block,
                           [:sclass, [:vcall, :this],
-                            [:defn, "foo", [:scope,
+                            [:defn, "r", [:scope,
                               [:block, [:args],
                                 [:block,
                                   [:fcall, :alert, [:array, [:str, "foo"]]]
