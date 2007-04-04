@@ -723,7 +723,9 @@ class RKelly
       end
     when 'CALL'
       if sexp[1][0] == :call
+        params = sexp[2]
         sexp = sexp[1]
+        sexp << params unless params.nil?
       else
         if sexp[1][0] == '.' # is this a method call?
           sexp = [:call, sexp[1][1], sexp[1][2][1]]
@@ -735,7 +737,7 @@ class RKelly
       sexp = sexp[1]
     when 'function'
       sexp = [:defn, n.name, [:scope, sexp]]
-      @function_cache[sexp[1].to_sym] = sexp.dup
+      @function_cache[sexp[1].to_sym] = sexp.dup unless sexp[1].nil?
     when '+', '-', '*', '/'
       sexp = :call, sexp[1], sexp[0].to_sym, sexp[2]
     when '='
@@ -751,13 +753,20 @@ class RKelly
         elsif sexp[1][0] == :call && sexp[1][1] == [:self] && @function_cache[sexp[2][1]]
           scope = @function_cache[sexp[2][1]].dup
           scope[1] = sexp[1].last.to_s
-          # [:sclass, [:vcall, :this], [:scope, [:defn, :r, [:scope, [:block, [:args], [:fcall, :puts, [:array, [:str, "asdfadsf"]]]]]]]]
           sexp = [:sclass, [:vcall, :self], scope]
         else
           if n.value == '='
             if sexp[1][0] == :call
-              sym = "#{sexp[1].last.to_s}=".to_sym
-              sexp = [:attrasgn, sexp[1][1], sym, [:array, sexp.last]]
+              if sexp.last[0] == :defn && sexp.last[1].nil?
+                function = sexp.last.dup
+                function[1] = sexp[1].last
+                sexp = [:sclass, sexp[1][1],
+                          [:scope, function ]
+                ]
+              else
+                sym = "#{sexp[1].last.to_s}=".to_sym
+                sexp = [:attrasgn, sexp[1][1], sym, [:array, sexp.last]]
+              end
             else
               sexp = [:lasgn, sexp[1][1], sexp[2]]
             end

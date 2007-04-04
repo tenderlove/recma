@@ -134,7 +134,7 @@ class TestRKelly < Test::Unit::TestCase
       "JS"          => "var s = new Date();\ns.getSeconds();",
       "ParseTree"   => [:block,
         [:lasgn, :s, [:call, [:const, :Date], :new]],
-        [:call, [:lvar, :s], :getSeconds]
+        [:call, [:lvar, :s], :getSeconds, [:array]]
       ]
     },
 
@@ -229,6 +229,34 @@ class TestRKelly < Test::Unit::TestCase
                 [:attrasgn, [:self], :bar=, [:array, [:str, "aaron"]]]
               ]]]],
         [:lasgn, :baz, [:call, [:lvar, :Foo], :new]]]
+    },
+    "dynamic_method_assignment" => {
+      "JS" => " var g = new Object();
+                g.test = function () { alert('asd'); }
+                g.test();",
+      "ParseTree" => [:block,
+                      [:lasgn, :g, [:call, [:const, :OpenStruct], :new]],
+                      [:sclass, [:lvar, :g], [:scope,
+                        [:defn, :test, [:scope, [:block, [:args], [:block,
+                          [:fcall, :alert, [:array, [:str, "asd"]]]
+                        ]]]]
+                      ]],
+                      [:call, [:lvar, :g], :test, [:array]]
+                    ]
+    },
+    "dynamic_method_assignment_with_var" => {
+      "JS" => " var g = new Object();
+                g.test = function (boo) { alert(boo); }
+                g.test('aaron');",
+      "ParseTree" => [:block,
+                      [:lasgn, :g, [:call, [:const, :OpenStruct], :new]],
+                      [:sclass, [:lvar, :g], [:scope,
+                        [:defn, :test, [:scope, [:block, [:args, :boo], [:block,
+                          [:fcall, :alert, [:array, [:lvar, :boo]]]
+                        ]]]]
+                      ]],
+                      [:call, [:lvar, :g], :test, [:array, [:str, 'aaron']]]
+                    ]
     },
   }
 
