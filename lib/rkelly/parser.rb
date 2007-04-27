@@ -711,8 +711,10 @@ class RKelly
         func = @function_cache[name]
         @class_cache[name] =
           [:class, name.to_s.capitalize.intern, [:const, :OpenStruct],
-          [:defn, 'initialize',[:scope, [:block, [:args], [:super], [:fcall, name]]]],
-          func ]
+          [:defn, 'initialize',[:scope, [:block, [:args], [:super],
+            func[2][1][2]
+          ]]],
+          ]
         sexp[1][1] = sexp[1][1].to_s.capitalize.intern
         sexp = [:call, sexp[1], sexp[0].to_sym]
       else

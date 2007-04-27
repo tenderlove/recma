@@ -215,20 +215,14 @@ class TestRKelly < Test::Unit::TestCase
       "JS" => "function foo() { this.bar = 'aaron'; } baz = new foo();",
       "ParseTree" => [:block,
         [:class, :Foo, [:const, :OpenStruct],
-          [:defn, "initialize",
-            [:scope, [:block, [:args], [:super], [:fcall, :foo]]]
-          ],
-          [:defn, "foo",
-            [:scope, [:block, [:args],
-              [:block,
-                [:attrasgn, [:self], :bar=, [:array, [:str, "aaron"]]]
-              ]]]]],
-          [:defn, "foo",
-            [:scope, [:block, [:args],
-              [:block,
-                [:attrasgn, [:self], :bar=, [:array, [:str, "aaron"]]]
-              ]]]],
-        [:lasgn, :baz, [:call, [:lvar, :Foo], :new]]]
+          [:defn, "initialize", [:scope, [:block, [:args],
+            [:super],
+            [:block, [:attrasgn, [:self], :bar=, [:array, [:str, "aaron"]]]]
+        ]]]],
+        [:defn, "foo", [:scope, [:block, [:args],
+          [:block, [:attrasgn, [:self], :bar=, [:array, [:str, "aaron"]]]]
+        ]]], [:lasgn, :baz, [:call, [:lvar, :Foo], :new]]]
+
     },
     "dynamic_method_assignment" => {
       "JS" => " var g = new Object();
