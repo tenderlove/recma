@@ -1,7 +1,10 @@
 class RKelly
+  attr_reader :sexp
+
   def initialize
     @function_cache = {}
     @class_cache = {}
+    @sexp = []
   end
 
   def script(t, x)
@@ -636,13 +639,23 @@ class RKelly
       return n
   end
 
+  def self.process(js)
+    obj = self.new
+    obj.process(js)
+    obj
+  end
+
   def process(js)
     sexp = walk_tree(parse(js))
     if @class_cache.length > 0
       sexp[0] = *@class_cache.values
       sexp.unshift(:block)
     end
-    sexp
+    @sexp += sexp
+  end
+
+  def to_ruby
+    RubyToRuby.new.process(Marshal::load(Marshal::dump(@sexp)))
   end
 
   def get_children(n)

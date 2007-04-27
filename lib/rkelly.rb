@@ -1,3 +1,5 @@
+require 'ruby2ruby'
+require 'ostruct'
 require 'rkelly/parser'
 require 'rkelly/constants'
 require 'rkelly/token'

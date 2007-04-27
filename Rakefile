@@ -42,6 +42,7 @@ RKellyHoe.new('rkelly', RKelly::VERSION) do |p|
   p.description     = p.paragraphs_of('README.txt', 3).join("\n\n")
   p.url             = p.paragraphs_of('README.txt', 1).first.strip
   p.changes         = p.paragraphs_of('CHANGELOG.txt', 0..2).join("\n\n")
+  p.extra_deps      = ['ruby2ruby']
 end
 
 
