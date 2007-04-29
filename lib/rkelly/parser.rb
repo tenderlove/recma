@@ -718,6 +718,8 @@ class RKelly
     when 'var'
       sexp[1][0] = :lasgn
       sexp = sexp[1]
+    when 'ARRAY_INIT'
+      sexp = [:call, [:const, :OpenStruct], :new, [:array, sexp[1]]]
     when 'new'
       name = sexp[1][1]
       if @function_cache[name] && ! @class_cache[name]
