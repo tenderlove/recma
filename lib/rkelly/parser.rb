@@ -718,8 +718,31 @@ class RKelly
     when 'var'
       sexp[1][0] = :lasgn
       sexp = sexp[1]
+      if sexp[2][0] == 'OBJECT_INIT'
+        objects = sexp[2].slice(1..-1)
+        var_name = sexp[1]
+        sexp = sexp.slice(0, 2) << [:call, [:const, :OpenStruct], :new]
+        sexp = [:block, sexp]
+        objects.each do |node|
+          if node[2][0] == :defn
+            sexp << [:sclass, [:lvar, var_name],
+                      [:scope, [:defn, node[1][1], node[2][2]]]]
+
+          else
+            sexp << [:attrasgn,
+                      [:vcall, var_name], :[]=,
+                      [:array, [:str, node[1][1].to_s], node[2]]]
+          end
+        end
+      end
     when 'ARRAY_INIT'
       sexp = [:call, [:const, :OpenStruct], :new, [:array, sexp[1]]]
+    #when 'OBJECT_INIT'
+    #  sexp.shift
+    #  sexp.each do |prop|
+    #    p prop
+    #  end
+    #  exit
     when 'new'
       name = sexp[1][1]
       if @function_cache[name] && ! @class_cache[name]
