@@ -7,6 +7,7 @@ require 'rkelly/tokenizer'
 require 'rkelly/compiler_context'
 require 'rkelly/node'
 require 'rkelly/errors'
+require 'rkelly/jsarray'
 
 class RKelly
   VERSION = '0.0.1'
