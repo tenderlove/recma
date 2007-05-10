@@ -256,7 +256,8 @@ class TestRKelly < Test::Unit::TestCase
       "JS" => 'var s = ["blah"];',
       "ParseTree" => [:block,
         [:lasgn, :s,
-          [:call, [:const, :OpenStruct], :new, [:array, [:str, 'blah']]]]
+          [:call, [:const, :OpenStruct], :new, [:array,
+            [:array, [:str, 'blah']]]]]
       ],
     },
     "array_init_many" => {
@@ -264,7 +265,7 @@ class TestRKelly < Test::Unit::TestCase
       "ParseTree" => [:block,
         [:lasgn, :s,
           [:call, [:const, :OpenStruct], :new,
-            [:array, [:lit, 1], [:str, 'blah']]
+            [:array, [:array, [:lit, 1], [:str, 'blah']]]
           ]]
       ],
     },
