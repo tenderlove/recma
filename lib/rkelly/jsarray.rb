@@ -12,19 +12,27 @@ class RKelly
   class JSArray < Array
     def initialize(*args)
       super(*args)
-      @__hash_values = JSObject.new
+      @__table = {}
     end
 
     def []=(k, v)
-      k.is_a?(Integer) ?  super(k, v) : @__hash_values.[]=(k, v)
+      if k.is_a?(Integer)
+        super(k, v)
+      else
+        name = k.to_s.intern
+        meta = class << self; self; end
+        meta.send(:define_method, name) {
+          @__table[name]
+        }
+        meta.send(:define_method, :"#{name}=") { |x|
+          @__table[name] = x
+        }
+        @__table[name] = v
+      end
     end
 
     def [](k)
-      k.is_a?(Integer) ?  super(k) : @__hash_values.[](k)
-    end
-
-    def method_missing(sym, *args)
-      @__hash_values.send(sym, *args)
+      k.is_a?(Integer) ?  super(k) : self.send(k.to_s.intern)
     end
   end
 end

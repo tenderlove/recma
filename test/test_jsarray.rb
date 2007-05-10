@@ -10,6 +10,21 @@ class TestJSArray < Test::Unit::TestCase
 
   def test_string_index
     @obj['something'] = 'aaron'
+    assert @obj.respond_to?(:something)
+    assert_equal('aaron', @obj.something)
+    assert_equal('aaron', @obj['something'])
+
+    class << @obj
+      alias :old_something :something
+      def something
+        'patterson'
+      end
+    end
+
+    assert_equal('patterson', @obj.something)
+    assert_equal('patterson', @obj['something'])
+
+    @obj['something'] = 'aaron'
     assert_equal('aaron', @obj.something)
     assert_equal('aaron', @obj['something'])
 
