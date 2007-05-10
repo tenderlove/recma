@@ -719,7 +719,7 @@ class RKelly
       sexp[1][0] = :lasgn
       sexp = sexp[1]
     when 'ARRAY_INIT'
-      sexp = [:call, [:const, :OpenStruct], :new, [:array, sexp[1]]]
+      sexp = [:call, [:const, :OpenStruct], :new, [:array, *sexp.slice(1..-1)]]
     when 'OBJECT_INIT'
       objects = sexp.slice(1..-1)
       obj_sexp = []
