@@ -269,6 +269,19 @@ class TestRKelly < Test::Unit::TestCase
           ]]
       ],
     },
+    "array_add_method_pointer" => {
+      "JS" => 'var s = ["blah"]; function foo() { alert("x");} s.aaron = foo;',
+      "ParseTree" => [:block,
+        [:lasgn, :s,
+        [:call, [:const, :OpenStruct], :new, [:array, [:array, [:str, "blah"]]]]],
+        [:defn, "foo", [:scope, [:block, [:args],
+          [:block, [:fcall, :alert, [:array, [:str, "x"]]]]]]],
+        [:sclass, [:dvar, :s], [:scope,
+          [:defn, :aaron, [:scope, [:block, [:args],
+            [:block, [:fcall, :alert, [:array, [:str, "x"]]]]]]]
+        ]]
+      ],
+    },
     "hash_init" => {
       "JS" => 'var s = { x: function () { alert("blh"); }, y: "foo" };',
       'ParseTree' => [:block,

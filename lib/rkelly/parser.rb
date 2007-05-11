@@ -805,8 +805,17 @@ class RKelly
                           [:scope, function ]
                 ]
               else
-                sym = "#{sexp[1].last.to_s}=".to_sym
-                sexp = [:attrasgn, sexp[1][1], sym, [:array, sexp.last]]
+                rhs = sexp.last
+                lhs = sexp[1]
+                if rhs.first == :lvar && @function_cache[rhs.last]
+                  scope = @function_cache[rhs.last][2].dup
+                  sexp = [:sclass, [:dvar, lhs[1][1]], [:scope,
+                    [:defn, lhs.last, scope]
+                  ]]
+                else
+                  sym = "#{sexp[1].last.to_s}=".to_sym
+                  sexp = [:attrasgn, sexp[1][1], sym, [:array, sexp.last]]
+                end
               end
             else
               sexp = [:lasgn, sexp[1][1], sexp[2]]
