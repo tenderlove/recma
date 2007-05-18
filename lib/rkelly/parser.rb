@@ -790,7 +790,17 @@ class RKelly
       else
         # This might be an array index
         if sexp[1][0] == :call && sexp[1][2] == :[]
-          sexp = :attrasgn, sexp[1][1], :[]=, [:array, sexp[1][3][1], sexp[2] ]
+          if @function_cache[sexp.last.last] && sexp[1].flatten.last.is_a?(String)
+            scope = @function_cache[sexp.last.last][2].dup
+            dvar  = sexp[1][1].last
+            lhs   = sexp[1].flatten.last
+            scope =
+            sexp = [:sclass, [:dvar, dvar], [:scope,
+              [:defn, lhs, scope ]
+            ]]
+          else
+            sexp = :attrasgn, sexp[1][1],:[]=, [:array, sexp[1][3][1], sexp[2] ]
+          end
         elsif sexp[1][0] == :call && sexp[1][1] == [:self] && @function_cache[sexp[2][1]]
           scope = @function_cache[sexp[2][1]].dup
           scope[1] = sexp[1].last.to_s

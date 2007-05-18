@@ -298,6 +298,35 @@ class TestRKelly < Test::Unit::TestCase
               [:return, [:dvar, :s]]
           ]], :call]]],
     },
+    "hash_member" => {
+      "JS" => 'function c() { alert("ab"); } var a = {}; a["b"] = c;',
+      'ParseTree' => [:block,
+ [:defn,
+  "c",
+  [:scope,
+   [:block,
+    [:args],
+    [:block, [:fcall, :alert, [:array, [:str, "ab"]]]]]]],
+ [:lasgn,
+  :a,
+  [:call,
+   [:iter,
+    [:fcall, :lambda],
+    nil,
+    [:block,
+     [:dasgn_curr, :s, [:call, [:const, :OpenStruct], :new]],
+     [:return, [:dvar, :s]]]],
+   :call]],
+ [:sclass,
+  [:dvar, :a],
+  [:scope,
+   [:defn,
+    "b",
+    [:scope,
+     [:block,
+      [:args],
+      [:block, [:fcall, :alert, [:array, [:str, "ab"]]]]]]]]]]
+    },
   }
 
   @@testcases.each do |node, data|
