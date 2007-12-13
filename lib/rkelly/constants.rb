@@ -1,4 +1,4 @@
-class RKelly
+module RKelly
 TOKENS = [
   # End of source.
   "END",
