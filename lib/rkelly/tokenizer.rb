@@ -3,8 +3,15 @@ require 'rkelly/lexeme'
 
 module RKelly
   class Tokenizer
+    KEYWORDS = [ "break", "case", "catch", "const", "continue",
+          "debugger", "default", "delete", "do", "else", "enum",
+          "false", "finally", "for", "function",
+          "if", "in", "instanceof", "new", "null", "return",
+          "switch", "this", "throw", "true", "try", "typeof",
+          "var", "void", "while", "with" ]
+
     def initialize(&block)
-      @lexemes = Hash.new { |h,k| h[k] = [] }
+      @lexemes = []
 
       token(:COMMENT, /\A\/(?:\*(?:.)*?\*\/|\/[^\n]*)/m)
       token(:STRING, /\A"(?:\\.|[^"])*"|\A'(?:[^']|\\.)*'/m)
@@ -13,9 +20,16 @@ module RKelly
       token(:NUMBER, Regexp.new("\\A\\d+\\.\\d*(?:[eE][-+]?\\d+)?|\\A\\d+(?:\\.\\d*)?[eE][-+]?\\d+|\\A\\.\\d+(?:[eE][-+]?\\d+)?", Regexp::MULTILINE))
       token(:NUMBER, /\A0[xX][\da-fA-F]+|\A0[0-7]*|\A\d+/)
 
-      token(:IDENTIFIER, /\A(\w|\$)+/)
+      token(:IDENTIFIER, /\A(\w|\$)+/) do |type,value|
+        if KEYWORDS.include?(value)
+          [value.upcase.to_sym, value]
+        else
+          [type, value]
+        end
+      end
 
       token(:REGEXP, /\A\/((?:\\.|[^\/])+)\/([gi]*)/m)
+      token(:S, /\A[\s\r\n]*/m)
 
     end
   
@@ -101,15 +115,25 @@ module RKelly
     def tokenize(string)
       tokens = []
       while string.length > 0
-        @lexemes.values.each do |lexeme|
-        end
+        longest_token = nil
+
+        @lexemes.each { |lexeme|
+          match = lexeme.match(string)
+          next if match.nil?
+          longest_token = match if longest_token.nil?
+          next if longest_token.value.length >= match.value.length
+          longest_token = match
+        }
+
+        string = string.slice(Range.new(longest_token.value.length, -1))
+        tokens << longest_token unless longest_token.name == :S
       end
-      tokens
+      tokens.map { |x| x.to_racc_token }
     end
   
     private
     def token(name, pattern = nil, &block)
-      @lexemes[name] << Lexeme.new(name, pattern, &block)
+      @lexemes << Lexeme.new(name, pattern, &block)
     end
   end
 end

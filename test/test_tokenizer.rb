@@ -10,4 +10,16 @@ class TokenizerTest < Test::Unit::TestCase
     assert_equal 1, tokens.length
     assert_equal([[:COMMENT, '/** Fooo */']], tokens)
   end
+
+  def test_identifier
+    tokens = @tokenizer.tokenize("foo")
+    assert_equal 1, tokens.length
+    assert_equal([[:IDENTIFIER, 'foo']], tokens)
+  end
+
+  def test_keywords
+    tokens = @tokenizer.tokenize("var")
+    assert_equal 1, tokens.length
+    assert_equal([[:VAR, 'var']], tokens)
+  end
 end
