@@ -10,6 +10,25 @@ module RKelly
           "switch", "this", "throw", "true", "try", "typeof",
           "var", "void", "while", "with" ]
 
+    PUNCTUATORS = {
+      '=='  => :EQEQ,
+      '!='  => :NE,
+      '===' => :STREQ,
+      '!==' => :STRNEQ,
+      '<'   => :LE,
+      '>'   => :GE,
+      '||'  => :OR,
+      '&&'  => :AND,
+      '++'  => :PLUSPLUS,
+      '--'  => :MINUSMINUS,
+      '<<'  => :LSHIFT,
+      '>>'  => :RSHIFT,
+      '>>>' => :URSHIFT,
+      '+='  => :PLUSEQUAL,
+      '-='  => :MINUSEQUAL,
+      '*='  => :MULTEQUAL,
+    }
+
     def initialize(&block)
       @lexemes = []
 
