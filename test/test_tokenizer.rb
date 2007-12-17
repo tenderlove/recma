@@ -51,12 +51,12 @@ class TokenizerTest < Test::Unit::TestCase
   end
 
   def test_regex
-    tokens = @tokenizer.tokenize("foo = /asdf/;")
+    tokens = @tokenizer.tokenize("foo = /=asdf/;")
     assert_equal 4, tokens.length
     assert_equal([
                  [:IDENTIFIER, 'foo'],
                  ['=', '='],
-                 [:REGEXP, '/asdf/'],
+                 [:REGEXP, '/=asdf/'],
                  [';', ';'],
     ], tokens)
   end
