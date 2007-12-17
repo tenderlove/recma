@@ -39,6 +39,14 @@ module RKelly
       token(:NUMBER, Regexp.new("\\A\\d+\\.\\d*(?:[eE][-+]?\\d+)?|\\A\\d+(?:\\.\\d*)?[eE][-+]?\\d+|\\A\\.\\d+(?:[eE][-+]?\\d+)?", Regexp::MULTILINE))
       token(:NUMBER, /\A0[xX][\da-fA-F]+|\A0[0-7]*|\A\d+/)
 
+      token(:PUNCTUATOR,
+        Regexp.new(PUNCTUATORS.keys.sort_by { |x|
+          x.length
+        }.reverse.map { |x| "\\A#{x.gsub(/([|+*])/, '\\\\\1')}" }.join('|')
+      )) do |type, value|
+        [PUNCTUATORS[value], value]
+      end
+
       token(:IDENTIFIER, /\A(\w|\$)+/) do |type,value|
         if KEYWORDS.include?(value)
           [value.upcase.to_sym, value]
@@ -50,6 +58,9 @@ module RKelly
       token(:REGEXP, /\A\/((?:\\.|[^\/])+)\/([gi]*)/m)
       token(:S, /\A[\s\r\n]*/m)
 
+      token(:SINGLE_CHAR, /\A./) do |type, value|
+        [value, value]
+      end
     end
   
     def get
