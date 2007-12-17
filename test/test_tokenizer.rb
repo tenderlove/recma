@@ -111,6 +111,9 @@ class TokenizerTest < Test::Unit::TestCase
     '+='  => :PLUSEQUAL,
     '-='  => :MINUSEQUAL,
     '*='  => :MULTEQUAL,
+    'null'  => :NULL,
+    'true'  => :TRUE,
+    'false' => :FALSE,
   }.each do |punctuator, sym|
     define_method(:"test_punctuator_#{sym}") do
       tokens = @tokenizer.tokenize(punctuator)

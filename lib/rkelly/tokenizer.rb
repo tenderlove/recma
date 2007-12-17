@@ -10,7 +10,8 @@ module RKelly
           "switch", "this", "throw", "true", "try", "typeof",
           "var", "void", "while", "with" ]
 
-    PUNCTUATORS = {
+    LITERALS = {
+      # Punctuators
       '=='  => :EQEQ,
       '!='  => :NE,
       '===' => :STREQ,
@@ -27,6 +28,11 @@ module RKelly
       '+='  => :PLUSEQUAL,
       '-='  => :MINUSEQUAL,
       '*='  => :MULTEQUAL,
+
+      # Literals
+      'null'  => :NULL,
+      'true'  => :TRUE,
+      'false' => :FALSE,
     }
 
     def initialize(&block)
@@ -39,12 +45,12 @@ module RKelly
       token(:NUMBER, Regexp.new("\\A\\d+\\.\\d*(?:[eE][-+]?\\d+)?|\\A\\d+(?:\\.\\d*)?[eE][-+]?\\d+|\\A\\.\\d+(?:[eE][-+]?\\d+)?", Regexp::MULTILINE))
       token(:NUMBER, /\A0[xX][\da-fA-F]+|\A0[0-7]*|\A\d+/)
 
-      token(:PUNCTUATOR,
-        Regexp.new(PUNCTUATORS.keys.sort_by { |x|
+      token(:LITERALS,
+        Regexp.new(LITERALS.keys.sort_by { |x|
           x.length
         }.reverse.map { |x| "\\A#{x.gsub(/([|+*])/, '\\\\\1')}" }.join('|')
       )) do |type, value|
-        [PUNCTUATORS[value], value]
+        [LITERALS[value], value]
       end
 
       token(:IDENTIFIER, /\A(\w|\$)+/) do |type,value|
