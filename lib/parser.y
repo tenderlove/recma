@@ -147,14 +147,14 @@ rule
     MemberExpr Arguments  { raise; result = makeFunctionCallNode($1, $2); }
   | CallExpr Arguments    { raise; result = makeFunctionCallNode($1, $2); }
   | CallExpr '[' Expr ']' { raise; result = BracketAccessorNode.new($1, $3); }
-  | CallExpr '.' IDENT    { raise; result = DotAccessorNode.new($1, *$3); }
+  | CallExpr '.' IDENT    { raise; result = DotAccessorNode.new($1, $3); }
   ;
 
   CallExprNoBF:
     MemberExprNoBF Arguments  { raise; result = makeFunctionCallNode($1, $2); }
   | CallExprNoBF Arguments    { raise; result = makeFunctionCallNode($1, $2); }
   | CallExprNoBF '[' Expr ']' { raise; result = BracketAccessorNode.new($1, $3); }
-  | CallExprNoBF '.' IDENT    { raise; result = DotAccessorNode.new($1, *$3); }
+  | CallExprNoBF '.' IDENT    { raise; result = DotAccessorNode.new($1, $3); }
   ;
 
   Arguments:
@@ -470,12 +470,12 @@ rule
   Block:
     '{' '}' {
       raise
-      result = BlockNode.new(new SourceElements)
+      result = BlockNode.new(SourceElements.new)
       debug(result)
     }
   | '{' SourceElements '}' {
       raise
-      result = BlockNode.new($2->release())
+      result = BlockNode.new($2.release())
       debug(result)
     }
   ;
@@ -499,7 +499,7 @@ rule
                                           result.tail = result.head; }
   | VariableDeclarationList ',' VariableDeclaration
                                         { raise; result.head = $1.head;
-                                          $1.tail->next = $3;
+                                          $1.tail.next = $3;
                                           result.tail = $3; }
   ;
 
@@ -508,18 +508,18 @@ rule
                                           result.tail = result.head; }
   | VariableDeclarationListNoIn ',' VariableDeclarationNoIn
                                         { raise; result.head = $1.head;
-                                          $1.tail->next = $3;
+                                          $1.tail.next = $3;
                                           result.tail = $3; }
   ;
 
   VariableDeclaration:
-    IDENT                               { raise; result = VarDeclNode.new(*$1, 0, VarDeclNode::Variable); }
-  | IDENT Initializer                   { raise; result = VarDeclNode.new(*$1, $2, VarDeclNode::Variable); }
+    IDENT                               { raise; result = VarDeclNode.new($1, 0, VarDeclNode::Variable); }
+  | IDENT Initializer                   { raise; result = VarDeclNode.new($1, $2, VarDeclNode::Variable); }
   ;
 
   VariableDeclarationNoIn:
-    IDENT                               { raise; result = VarDeclNode.new(*$1, 0, VarDeclNode::Variable); }
-  | IDENT InitializerNoIn               { raise; result = VarDeclNode.new(*$1, $2, VarDeclNode::Variable); }
+    IDENT                               { raise; result = VarDeclNode.new($1, 0, VarDeclNode::Variable); }
+  | IDENT InitializerNoIn               { raise; result = VarDeclNode.new($1, $2, VarDeclNode::Variable); }
   ;
 
   ConstStatement:
@@ -541,13 +541,13 @@ rule
                                           result.tail = result.head; }
   | ConstDeclarationList ',' ConstDeclaration
                                         { raise; result.head = $1.head;
-                                          $1.tail->next = $3;
+                                          $1.tail.next = $3;
                                           result.tail = $3; }
   ;
 
   ConstDeclaration:
-    IDENT                               { raise; result = VarDeclNode.new(*$1, 0, VarDeclNode::Constant); }
-  | IDENT Initializer                   { raise; result = VarDeclNode.new(*$1, $2, VarDeclNode::Constant); }
+    IDENT                               { raise; result = VarDeclNode.new($1, 0, VarDeclNode::Constant); }
+  | IDENT Initializer                   { raise; result = VarDeclNode.new($1, $2, VarDeclNode::Constant); }
   ;
 
   Initializer:
@@ -625,12 +625,12 @@ rule
                                         }
   | FOR '(' VAR IDENT IN Expr ')' Statement {
       raise
-      result = ForInNode.new(*$4, 0, $6, $8)
+      result = ForInNode.new($4, 0, $6, $8)
       debug(result)
     }
   | FOR '(' VAR IDENT InitializerNoIn IN Expr ')' Statement {
       raise
-      result = ForInNode.new(*$4, $5, $7, $9)
+      result = ForInNode.new($4, $5, $7, $9)
       debug(result)
     }
   ;
@@ -659,12 +659,12 @@ rule
     }
   | CONTINUE IDENT ';' {
       raise
-      result = ContinueNode.new(*$2)
+      result = ContinueNode.new($2)
       debug(result)
     }
   | CONTINUE IDENT error {
       raise
-      result = ContinueNode.new(*$2)
+      result = ContinueNode.new($2)
       debug(result)
       AUTO_SEMICOLON
     }
@@ -684,12 +684,12 @@ rule
     }
   | BREAK IDENT ';' {
       raise
-      result = BreakNode.new(*$2)
-      debug(result, @1, @3)
+      result = BreakNode.new($2)
+      debug(result)
     }
   | BREAK IDENT error {
       raise
-      result = BreakNode.new(*$2)
+      result = BreakNode.new($2)
       debug(result)
       AUTO_SEMICOLON
     }
@@ -756,16 +756,16 @@ rule
 
   CaseClause:
     CASE Expr ':'                       { raise; result = CaseClauseNode.new($2); }
-  | CASE Expr ':' SourceElements        { raise; result = CaseClauseNode.new($2, $4->release()); }
+  | CASE Expr ':' SourceElements        { raise; result = CaseClauseNode.new($2, $4.release()); }
   ;
 
   DefaultClause:
     DEFAULT ':'                         { raise; result = CaseClauseNode.new(0); }
-  | DEFAULT ':' SourceElements          { raise; result = CaseClauseNode.new(0, $3->release()); }
+  | DEFAULT ':' SourceElements          { raise; result = CaseClauseNode.new(0, $3.release()); }
   ;
 
   LabelledStatement:
-    IDENT ':' Statement                 { $3->pushLabel(*$1); result = LabelNode.new(*$1, $3); }
+    IDENT ':' Statement                 { $3.pushLabel($1); result = LabelNode.new($1, $3); }
   ;
 
   ThrowStatement:
@@ -790,12 +790,12 @@ rule
     }
   | TRY Block CATCH '(' IDENT ')' Block {
       raise
-      result = TryNode.new($2, *$5, $7, 0)
+      result = TryNode.new($2, $5, $7, 0)
       debug(result)
     }
   | TRY Block CATCH '(' IDENT ')' Block FINALLY Block {
       raise
-      result = TryNode.new($2, *$5, $7, $9)
+      result = TryNode.new($2, $5, $7, $9)
       debug(result)
     }
   ;
@@ -817,12 +817,12 @@ rule
   FunctionDeclaration:
     FUNCTION IDENT '(' ')' '{' FunctionBody '}' {
       raise
-      result = FuncDeclNode.new(*$2, $6)
+      result = FuncDeclNode.new($2, $6)
       debug($6)
     }
   | FUNCTION IDENT '(' FormalParameterList ')' '{' FunctionBody '}' {
       raise
-      result = FuncDeclNode.new(*$2, $4.head, $7)
+      result = FuncDeclNode.new($2, $4.head, $7)
       debug($7)
     }
   ;
@@ -840,31 +840,31 @@ rule
     }
   | FUNCTION IDENT '(' ')' '{' FunctionBody '}' {
       raise
-      result = FuncExprNode.new(*$2, $6)
+      result = FuncExprNode.new($2, $6)
       debug($6)
     }
   | FUNCTION IDENT '(' FormalParameterList ')' '{' FunctionBody '}' {
       raise
-      result = FuncExprNode.new(*$2, $7, $4.head)
+      result = FuncExprNode.new($2, $7, $4.head)
       debug($7)
     }
   ;
 
   FormalParameterList:
-    IDENT                               { raise; result.head = ParameterNode.new(*$1);
+    IDENT                               { raise; result.head = ParameterNode.new($1);
                                           result.tail = result.head; }
   | FormalParameterList ',' IDENT       { raise; result.head = $1.head;
-                                          result.tail = ParameterNode.new($1.tail, *$3); }
+                                          result.tail = ParameterNode.new($1.tail, $3); }
   ;
 
   FunctionBody:
-    /* not in spec */           { raise; result = FunctionBodyNode.new(new SourceElements); }
-  | SourceElements              { raise; result = FunctionBodyNode.new($1->release()); }
+    /* not in spec */           { raise; result = FunctionBodyNode.new(SourceElements.new); }
+  | SourceElements              { raise; result = FunctionBodyNode.new($1.release()); }
   ;
 
   SourceElements:
-    SourceElement                       { raise; result = new SourceElementsStub; result->append($1); }
-  | SourceElements SourceElement        { raise; result->append($2); }
+    SourceElement                       { raise; result = SourceElementsStub.new; result.append($1); }
+  | SourceElements SourceElement        { raise; result.append($2); }
   ;
 
   SourceElement:

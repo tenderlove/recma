@@ -3,7 +3,7 @@ require 'hoe'
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), "lib")
 
-require 'rkelly'
+require 'rkelly/constants'
 
 GENERATED_PARSER = "lib/rkelly/generated_parser.rb"
 
