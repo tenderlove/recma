@@ -3,12 +3,20 @@ require 'rkelly/lexeme'
 
 module RKelly
   class Tokenizer
-    KEYWORDS = [ "break", "case", "catch", "const", "continue",
-          "debugger", "default", "delete", "do", "else", "enum",
-          "false", "finally", "for", "function",
-          "if", "in", "instanceof", "new", "null", "return",
-          "switch", "this", "throw", "true", "try", "typeof",
-          "var", "void", "while", "with" ]
+    KEYWORDS = %w{
+      break case catch continue default delete do else finally for function
+      if in instanceof new return switch this throw try typeof var void while 
+      with 
+
+      const true false null debugger
+    }
+
+    RESERVED = %w{
+      abstract boolean byte char class double enum export extends
+      final float goto implements import int interface long native package
+      private protected public short static super synchronized throws
+      transient volatile
+    }
 
     LITERALS = {
       # Punctuators
@@ -28,11 +36,6 @@ module RKelly
       '+='  => :PLUSEQUAL,
       '-='  => :MINUSEQUAL,
       '*='  => :MULTEQUAL,
-
-      # Literals
-      'null'  => :NULL,
-      'true'  => :TRUE,
-      'false' => :FALSE,
     }
 
     def initialize(&block)
@@ -53,9 +56,11 @@ module RKelly
         [LITERALS[value], value]
       end
 
-      token(:IDENTIFIER, /\A(\w|\$)+/) do |type,value|
+      token(:IDENT, /\A(\w|\$)+/) do |type,value|
         if KEYWORDS.include?(value)
           [value.upcase.to_sym, value]
+        elsif RESERVED.include?(value)
+          [:RESERVED, value]
         else
           [type, value]
         end

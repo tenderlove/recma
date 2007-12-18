@@ -15,7 +15,7 @@ class TokenizerTest < Test::Unit::TestCase
     tokens = @tokenizer.tokenize("foo = 'hello world';")
     assert_equal 4, tokens.length
     assert_equal([
-                 [:IDENTIFIER, 'foo'],
+                 [:IDENT, 'foo'],
                  ['=', '='],
                  [:STRING, "'hello world'"],
                  [';', ';'],
@@ -26,7 +26,7 @@ class TokenizerTest < Test::Unit::TestCase
     tokens = @tokenizer.tokenize('foo = "hello world";')
     assert_equal 4, tokens.length
     assert_equal([
-                 [:IDENTIFIER, 'foo'],
+                 [:IDENT, 'foo'],
                  ['=', '='],
                  [:STRING, '"hello world"'],
                  [';', ';'],
@@ -36,14 +36,14 @@ class TokenizerTest < Test::Unit::TestCase
   def test_identifier
     tokens = @tokenizer.tokenize("foo")
     assert_equal 1, tokens.length
-    assert_equal([[:IDENTIFIER, 'foo']], tokens)
+    assert_equal([[:IDENT, 'foo']], tokens)
   end
 
   def test_increment
     tokens = @tokenizer.tokenize("foo += 1;")
     assert_equal 4, tokens.length
     assert_equal([
-                 [:IDENTIFIER, 'foo'],
+                 [:IDENT, 'foo'],
                  [:PLUSEQUAL, '+='],
                  [:NUMBER, '1'],
                  [';', ';'],
@@ -54,7 +54,7 @@ class TokenizerTest < Test::Unit::TestCase
     tokens = @tokenizer.tokenize("foo = /=asdf/;")
     assert_equal 4, tokens.length
     assert_equal([
-                 [:IDENTIFIER, 'foo'],
+                 [:IDENT, 'foo'],
                  ['=', '='],
                  [:REGEXP, '/=asdf/'],
                  [';', ';'],
@@ -65,7 +65,7 @@ class TokenizerTest < Test::Unit::TestCase
     tokens = @tokenizer.tokenize("foo = /**/;")
     assert_equal 4, tokens.length
     assert_equal([
-                 [:IDENTIFIER, 'foo'],
+                 [:IDENT, 'foo'],
                  ['=', '='],
                  [:COMMENT, '/**/'],
                  [';', ';'],
@@ -74,19 +74,18 @@ class TokenizerTest < Test::Unit::TestCase
     tokens = @tokenizer.tokenize("foo = //;")
     assert_equal 3, tokens.length
     assert_equal([
-                 [:IDENTIFIER, 'foo'],
+                 [:IDENT, 'foo'],
                  ['=', '='],
                  [:COMMENT, '//;'],
     ], tokens)
   end
 
   %w{
-    break case catch const continue
-    debugger default delete do else enum
-    false finally for function
-    if in instanceof new null return
-    switch this throw true try typeof
-    var void while with
+    break case catch continue default delete do else finally for function
+    if in instanceof new return switch this throw try typeof var void while 
+    with 
+
+    const true false null debugger
   }.each do |kw|
     define_method(:"test_keyword_#{kw}") do
       tokens = @tokenizer.tokenize(kw)
