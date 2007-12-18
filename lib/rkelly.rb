@@ -1,5 +1,4 @@
-require 'rkelly/constants'
-require 'rkelly/tokenizer'
+require 'rkelly/parser'
 
 module RKelly
   VERSION = '0.0.1'

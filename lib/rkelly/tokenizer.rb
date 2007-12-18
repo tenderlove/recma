@@ -1,4 +1,3 @@
-require 'rkelly/constants'
 require 'rkelly/lexeme'
 
 module RKelly

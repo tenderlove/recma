@@ -1,6 +1,6 @@
 /* vim: set filetype=racc : */
 
-class RKelly::Parser
+class RKelly::GeneratedParser
 
 /* Literals */
 token NULL TRUE FALSE
@@ -468,31 +468,48 @@ rule
 
 
   Block:
-    '{' '}'                             { raise; result = BlockNode.new(new SourceElements); DBG($$, @1, @2); }
-  | '{' SourceElements '}'              { raise; result = BlockNode.new($2->release()); DBG($$, @1, @3); }
+    '{' '}' {
+      raise
+      result = BlockNode.new(new SourceElements)
+      debug(result)
+    }
+  | '{' SourceElements '}' {
+      raise
+      result = BlockNode.new($2->release())
+      debug(result)
+    }
   ;
 
   VariableStatement:
-    VAR VariableDeclarationList ';'     { raise; result = VarStatementNode.new($2.head); DBG($$, @1, @3); }
-  | VAR VariableDeclarationList error   { raise; result = VarStatementNode.new($2.head); DBG($$, @1, @2); AUTO_SEMICOLON; }
+    VAR VariableDeclarationList ';' {
+      raise
+      result = VarStatementNode.new($2.head)
+      debug(result)
+    }
+  | VAR VariableDeclarationList error {
+      raise
+      result = VarStatementNode.new($2.head)
+      debug(result)
+      AUTO_SEMICOLON
+    }
   ;
 
   VariableDeclarationList:
     VariableDeclaration                 { raise; result.head = $1; 
-                                          $$.tail = $$.head; }
+                                          result.tail = result.head; }
   | VariableDeclarationList ',' VariableDeclaration
                                         { raise; result.head = $1.head;
                                           $1.tail->next = $3;
-                                          $$.tail = $3; }
+                                          result.tail = $3; }
   ;
 
   VariableDeclarationListNoIn:
     VariableDeclarationNoIn             { raise; result.head = $1; 
-                                          $$.tail = $$.head; }
+                                          result.tail = result.head; }
   | VariableDeclarationListNoIn ',' VariableDeclarationNoIn
                                         { raise; result.head = $1.head;
                                           $1.tail->next = $3;
-                                          $$.tail = $3; }
+                                          result.tail = $3; }
   ;
 
   VariableDeclaration:
@@ -506,18 +523,26 @@ rule
   ;
 
   ConstStatement:
-    CONST ConstDeclarationList ';' { raise; result = VarStatementNode.new($2.head); DBG($$, @1, @3); }
-  | CONST ConstDeclarationList error
-                                        { raise; result = VarStatementNode.new($2.head); DBG($$, @1, @2); AUTO_SEMICOLON; }
+    CONST ConstDeclarationList ';' {
+      raise
+      result = VarStatementNode.new($2.head)
+      debug(result)
+    }
+  | CONST ConstDeclarationList error {
+      raise
+      result = VarStatementNode.new($2.head)
+      debug(result)
+      AUTO_SEMICOLON
+    }
   ;
 
   ConstDeclarationList:
     ConstDeclaration                    { raise; result.head = $1; 
-                                          $$.tail = $$.head; }
+                                          result.tail = result.head; }
   | ConstDeclarationList ',' ConstDeclaration
                                         { raise; result.head = $1.head;
                                           $1.tail->next = $3;
-                                          $$.tail = $3; }
+                                          result.tail = $3; }
   ;
 
   ConstDeclaration:
@@ -538,37 +563,76 @@ rule
   ;
 
   ExprStatement:
-    ExprNoBF ';'                        { raise; result = ExprStatementNode.new($1); DBG($$, @1, @2); }
-  | ExprNoBF error                      { raise; result = ExprStatementNode.new($1); DBG($$, @1, @1); AUTO_SEMICOLON; }
+    ExprNoBF ';' {
+      raise
+      result = ExprStatementNode.new($1)
+      debug(result)
+    }
+  | ExprNoBF error {
+      raise
+      result = ExprStatementNode.new($1)
+      debug(result)
+      AUTO_SEMICOLON
+    }
   ;
 
   IfStatement:
-    IF '(' Expr ')' Statement
-                                        { raise; result = IfNode.new($3, $5, 0); DBG($$, @1, @4); } =IF_WITHOUT_ELSE
-  | IF '(' Expr ')' Statement ELSE Statement
-                                        { raise; result = IfNode.new($3, $5, $7); DBG($$, @1, @4); }
+    IF '(' Expr ')' Statement {
+      raise
+      result = IfNode.new($3, $5, 0)
+      debug(result)
+    } =IF_WITHOUT_ELSE
+  | IF '(' Expr ')' Statement ELSE Statement {
+      raise
+      result = IfNode.new($3, $5, $7)
+      debug(result)
+    }
   ;
 
   IterationStatement:
-    DO Statement WHILE '(' Expr ')' ';'    { raise; result = DoWhileNode.new($2, $5); DBG($$, @1, @3); }
-  | DO Statement WHILE '(' Expr ')' error  { raise; result = DoWhileNode.new($2, $5); DBG($$, @1, @3); } /* Always performs automatic semicolon insertion. */
-  | WHILE '(' Expr ')' Statement        { raise; result = WhileNode.new($3, $5); DBG($$, @1, @4); }
-  | FOR '(' ExprNoInOpt ';' ExprOpt ';' ExprOpt ')' Statement
-                                        { raise; result = ForNode.new($3, $5, $7, $9); DBG($$, @1, @8); }
+    DO Statement WHILE '(' Expr ')' ';' {
+      raise
+      result = DoWhileNode.new($2, $5)
+      debug(result)
+    }
+  | DO Statement WHILE '(' Expr ')' error {
+      raise
+      result = DoWhileNode.new($2, $5)
+      debug(result)
+    } /* Always performs automatic semicolon insertion. */
+  | WHILE '(' Expr ')' Statement {
+      raise
+      result = WhileNode.new($3, $5)
+      debug(result)
+    }
+  | FOR '(' ExprNoInOpt ';' ExprOpt ';' ExprOpt ')' Statement {
+      raise
+      result = ForNode.new($3, $5, $7, $9)
+      debug(result)
+    }
   | FOR '(' VAR VariableDeclarationListNoIn ';' ExprOpt ';' ExprOpt ')' Statement
-                                        { raise; result = ForNode.new($4.head, $6, $8, $10); DBG($$, @1, @9); }
+    {
+      raise
+      result = ForNode.new($4.head, $6, $8, $10)
+      debug(result)
+    }
   | FOR '(' LeftHandSideExpr IN Expr ')' Statement
                                         {
-                                            ExpressionNode* n = $3;
-                                            if (!n->isLocation())
-                                                YYABORT;
-                                            $$ = ForInNode.new(n, $5, $7);
-                                            DBG($$, @1, @6);
+                                            n = $3;
+                                            yyabort if (!n.isLocation())
+                                            result = ForInNode.new(n, $5, $7);
+                                            debug(result);
                                         }
-  | FOR '(' VAR IDENT IN Expr ')' Statement
-                                        { raise; result = ForInNode.new(*$4, 0, $6, $8); DBG($$, @1, @7); }
-  | FOR '(' VAR IDENT InitializerNoIn IN Expr ')' Statement
-                                        { raise; result = ForInNode.new(*$4, $5, $7, $9); DBG($$, @1, @8); }
+  | FOR '(' VAR IDENT IN Expr ')' Statement {
+      raise
+      result = ForInNode.new(*$4, 0, $6, $8)
+      debug(result)
+    }
+  | FOR '(' VAR IDENT InitializerNoIn IN Expr ')' Statement {
+      raise
+      result = ForInNode.new(*$4, $5, $7, $9)
+      debug(result)
+    }
   ;
 
   ExprOpt:
@@ -582,32 +646,94 @@ rule
   ;
 
   ContinueStatement:
-    CONTINUE ';'                        { raise; result = ContinueNode.new(); DBG($$, @1, @2); }
-  | CONTINUE error                      { raise; result = ContinueNode.new(); DBG($$, @1, @1); AUTO_SEMICOLON; }
-  | CONTINUE IDENT ';'                  { raise; result = ContinueNode.new(*$2); DBG($$, @1, @3); }
-  | CONTINUE IDENT error                { raise; result = ContinueNode.new(*$2); DBG($$, @1, @2); AUTO_SEMICOLON; }
+    CONTINUE ';' {
+      raise
+      result = ContinueNode.new()
+      debug(result)
+    }
+  | CONTINUE error {
+      raise
+      result = ContinueNode.new()
+      debug(result)
+      AUTO_SEMICOLON
+    }
+  | CONTINUE IDENT ';' {
+      raise
+      result = ContinueNode.new(*$2)
+      debug(result)
+    }
+  | CONTINUE IDENT error {
+      raise
+      result = ContinueNode.new(*$2)
+      debug(result)
+      AUTO_SEMICOLON
+    }
   ;
 
   BreakStatement:
-    BREAK ';'                           { raise; result = BreakNode.new(); DBG($$, @1, @2); }
-  | BREAK error                         { raise; result = BreakNode.new(); DBG($$, @1, @1); AUTO_SEMICOLON; }
-  | BREAK IDENT ';'                     { raise; result = BreakNode.new(*$2); DBG($$, @1, @3); }
-  | BREAK IDENT error                   { raise; result = BreakNode.new(*$2); DBG($$, @1, @2); AUTO_SEMICOLON; }
+    BREAK ';' {
+      raise
+      result = BreakNode.new()
+      debug(result)
+    }
+  | BREAK error {
+      raise
+      result = BreakNode.new()
+      debug(result)
+      AUTO_SEMICOLON
+    }
+  | BREAK IDENT ';' {
+      raise
+      result = BreakNode.new(*$2)
+      debug(result, @1, @3)
+    }
+  | BREAK IDENT error {
+      raise
+      result = BreakNode.new(*$2)
+      debug(result)
+      AUTO_SEMICOLON
+    }
   ;
 
   ReturnStatement:
-    RETURN ';'                          { raise; result = ReturnNode.new(0); DBG($$, @1, @2); }
-  | RETURN error                        { raise; result = ReturnNode.new(0); DBG($$, @1, @1); AUTO_SEMICOLON; }
-  | RETURN Expr ';'                     { raise; result = ReturnNode.new($2); DBG($$, @1, @3); }
-  | RETURN Expr error                   { raise; result = ReturnNode.new($2); DBG($$, @1, @2); AUTO_SEMICOLON; }
+    RETURN ';' {
+      raise
+      result = ReturnNode.new(0)
+      debug(result)
+    }
+  | RETURN error {
+      raise
+      result = ReturnNode.new(0)
+      debug(result)
+      AUTO_SEMICOLON
+    }
+  | RETURN Expr ';' {
+      raise
+      result = ReturnNode.new($2)
+      debug(result)
+    }
+  | RETURN Expr error {
+      raise
+      result = ReturnNode.new($2)
+      debug(result)
+      AUTO_SEMICOLON
+    }
   ;
 
   WithStatement:
-    WITH '(' Expr ')' Statement         { raise; result = WithNode.new($3, $5); DBG($$, @1, @4); }
+    WITH '(' Expr ')' Statement {
+      raise
+      result = WithNode.new($3, $5)
+      debug(result)
+    }
   ;
 
   SwitchStatement:
-    SWITCH '(' Expr ')' CaseBlock       { raise; result = SwitchNode.new($3, $5); DBG($$, @1, @4); }
+    SWITCH '(' Expr ')' CaseBlock {
+      raise
+      result = SwitchNode.new($3, $5)
+      debug(result)
+    }
   ;
 
   CaseBlock:
@@ -617,15 +743,15 @@ rule
   ;
 
   CaseClausesOpt:
-    /* nothing */                       { raise; result.head = 0; $$.tail = 0; }
+    /* nothing */                       { raise; result.head = 0; result.tail = 0; }
   | CaseClauses
   ;
 
   CaseClauses:
     CaseClause                          { raise; result.head = ClauseListNode.new($1);
-                                          $$.tail = $$.head; }
+                                          result.tail = result.head; }
   | CaseClauses CaseClause              { raise; result.head = $1.head; 
-                                          $$.tail = ClauseListNode.new($1.tail, $2); }
+                                          result.tail = ClauseListNode.new($1.tail, $2); }
   ;
 
   CaseClause:
@@ -639,44 +765,96 @@ rule
   ;
 
   LabelledStatement:
-    IDENT ':' Statement                 { $3->pushLabel(*$1); $$ = LabelNode.new(*$1, $3); }
+    IDENT ':' Statement                 { $3->pushLabel(*$1); result = LabelNode.new(*$1, $3); }
   ;
 
   ThrowStatement:
-    THROW Expr ';'                      { raise; result = ThrowNode.new($2); DBG($$, @1, @3); }
-  | THROW Expr error                    { raise; result = ThrowNode.new($2); DBG($$, @1, @2); AUTO_SEMICOLON; }
+    THROW Expr ';' {
+      raise
+      result = ThrowNode.new($2)
+      debug(result)
+    }
+  | THROW Expr error {
+      raise
+      result = ThrowNode.new($2)
+      debug(result)
+      AUTO_SEMICOLON
+    }
   ;
 
   TryStatement:
-    TRY Block FINALLY Block             { raise; result = TryNode.new($2, CommonIdentifiers::shared()->nullIdentifier, 0, $4); DBG($$, @1, @2); }
-  | TRY Block CATCH '(' IDENT ')' Block { raise; result = TryNode.new($2, *$5, $7, 0); DBG($$, @1, @2); }
-  | TRY Block CATCH '(' IDENT ')' Block FINALLY Block
-                                        { raise; result = TryNode.new($2, *$5, $7, $9); DBG($$, @1, @2); }
+    TRY Block FINALLY Block {
+      raise
+      result = TryNode.new($2, CommonIdentifiers::shared().nullIdentifier, 0, $4)
+      debug(result)
+    }
+  | TRY Block CATCH '(' IDENT ')' Block {
+      raise
+      result = TryNode.new($2, *$5, $7, 0)
+      debug(result)
+    }
+  | TRY Block CATCH '(' IDENT ')' Block FINALLY Block {
+      raise
+      result = TryNode.new($2, *$5, $7, $9)
+      debug(result)
+    }
   ;
 
   DebuggerStatement:
-    DEBUGGER ';'                        { raise; result = EmptyStatementNode.new(); DBG($$, @1, @2); }
-  | DEBUGGER error                      { raise; result = EmptyStatementNode.new(); DBG($$, @1, @1); AUTO_SEMICOLON; }
+    DEBUGGER ';' {
+      raise
+      result = EmptyStatementNode.new()
+      debug(result)
+    }
+  | DEBUGGER error {
+      raise
+      result = EmptyStatementNode.new()
+      debug(result)
+      AUTO_SEMICOLON
+    }
   ;
 
   FunctionDeclaration:
-    FUNCTION IDENT '(' ')' '{' FunctionBody '}' { raise; result = FuncDeclNode.new(*$2, $6); DBG($6, @5, @7); }
-  | FUNCTION IDENT '(' FormalParameterList ')' '{' FunctionBody '}'
-                                        { raise; result = FuncDeclNode.new(*$2, $4.head, $7); DBG($7, @6, @8); }
+    FUNCTION IDENT '(' ')' '{' FunctionBody '}' {
+      raise
+      result = FuncDeclNode.new(*$2, $6)
+      debug($6)
+    }
+  | FUNCTION IDENT '(' FormalParameterList ')' '{' FunctionBody '}' {
+      raise
+      result = FuncDeclNode.new(*$2, $4.head, $7)
+      debug($7)
+    }
   ;
 
   FunctionExpr:
-    FUNCTION '(' ')' '{' FunctionBody '}' { raise; result = FuncExprNode.new(CommonIdentifiers::shared()->nullIdentifier, $5); DBG($5, @4, @6); }
-  | FUNCTION '(' FormalParameterList ')' '{' FunctionBody '}' { raise; result = FuncExprNode.new(CommonIdentifiers::shared()->nullIdentifier, $6, $3.head); DBG($6, @5, @7); }
-  | FUNCTION IDENT '(' ')' '{' FunctionBody '}' { raise; result = FuncExprNode.new(*$2, $6); DBG($6, @5, @7); }
-  | FUNCTION IDENT '(' FormalParameterList ')' '{' FunctionBody '}' { raise; result = FuncExprNode.new(*$2, $7, $4.head); DBG($7, @6, @8); }
+    FUNCTION '(' ')' '{' FunctionBody '}' {
+      raise
+      result = FuncExprNode.new(CommonIdentifiers::shared().nullIdentifier, $5)
+      debug($5)
+    }
+  | FUNCTION '(' FormalParameterList ')' '{' FunctionBody '}' {
+      raise
+      result = FuncExprNode.new(CommonIdentifiers::shared().nullIdentifier, $6, $3.head)
+      debug($6)
+    }
+  | FUNCTION IDENT '(' ')' '{' FunctionBody '}' {
+      raise
+      result = FuncExprNode.new(*$2, $6)
+      debug($6)
+    }
+  | FUNCTION IDENT '(' FormalParameterList ')' '{' FunctionBody '}' {
+      raise
+      result = FuncExprNode.new(*$2, $7, $4.head)
+      debug($7)
+    }
   ;
 
   FormalParameterList:
     IDENT                               { raise; result.head = ParameterNode.new(*$1);
-                                          $$.tail = $$.head; }
+                                          result.tail = result.head; }
   | FormalParameterList ',' IDENT       { raise; result.head = $1.head;
-                                          $$.tail = ParameterNode.new($1.tail, *$3); }
+                                          result.tail = ParameterNode.new($1.tail, *$3); }
   ;
 
   FunctionBody:
@@ -685,7 +863,7 @@ rule
   ;
 
   SourceElements:
-    SourceElement                       { raise; result = new SourceElementsStub; $$->append($1); }
+    SourceElement                       { raise; result = new SourceElementsStub; result->append($1); }
   | SourceElements SourceElement        { raise; result->append($2); }
   ;
 
@@ -697,3 +875,8 @@ end
 
 ---- header
   require "rkelly/nodes"
+
+---- inner
+  def debug(*args)
+    logger.debug(*args) if @logger
+  end
