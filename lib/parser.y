@@ -482,21 +482,19 @@ rule
 
   VariableStatement:
     VAR VariableDeclarationList ';' {
-      raise
-      result = VarStatementNode.new($2.head)
+      result = VarStatementNode.new(val[1])
       debug(result)
     }
   | VAR VariableDeclarationList error {
       raise
-      result = VarStatementNode.new($2.head)
+      result = VarStatementNode.new(val[1])
       debug(result)
-      AUTO_SEMICOLON
+      #AUTO_SEMICOLON
     }
   ;
 
   VariableDeclarationList:
-    VariableDeclaration                 { raise; result.head = $1; 
-                                          result.tail = result.head; }
+    VariableDeclaration                 { result = val }
   | VariableDeclarationList ',' VariableDeclaration
                                         { raise; result.head = $1.head;
                                           $1.tail.next = $3;
@@ -513,8 +511,12 @@ rule
   ;
 
   VariableDeclaration:
-    IDENT                               { raise; result = VarDeclNode.new($1, 0, VarDeclNode::Variable); }
-  | IDENT Initializer                   { raise; result = VarDeclNode.new($1, $2, VarDeclNode::Variable); }
+    IDENT {
+      raise; result = VarDeclNode.new($1, 0, VarDeclNode::Variable);
+    }
+  | IDENT Initializer {
+      result = VarDeclNode.new(val.first, val[1])
+    }
   ;
 
   VariableDeclarationNoIn:
@@ -532,7 +534,7 @@ rule
       raise
       result = VarStatementNode.new($2.head)
       debug(result)
-      AUTO_SEMICOLON
+      #AUTO_SEMICOLON
     }
   ;
 
@@ -551,7 +553,7 @@ rule
   ;
 
   Initializer:
-    '=' AssignmentExpr                  { raise; result = AssignExprNode.new($2); }
+    '=' AssignmentExpr                  { result = AssignExprNode.new(val[1]) }
   ;
 
   InitializerNoIn:
@@ -572,7 +574,7 @@ rule
       raise
       result = ExprStatementNode.new($1)
       debug(result)
-      AUTO_SEMICOLON
+      #AUTO_SEMICOLON
     }
   ;
 
@@ -655,7 +657,7 @@ rule
       raise
       result = ContinueNode.new()
       debug(result)
-      AUTO_SEMICOLON
+      #AUTO_SEMICOLON
     }
   | CONTINUE IDENT ';' {
       raise
@@ -666,7 +668,7 @@ rule
       raise
       result = ContinueNode.new($2)
       debug(result)
-      AUTO_SEMICOLON
+      #AUTO_SEMICOLON
     }
   ;
 
@@ -680,7 +682,7 @@ rule
       raise
       result = BreakNode.new()
       debug(result)
-      AUTO_SEMICOLON
+      #AUTO_SEMICOLON
     }
   | BREAK IDENT ';' {
       raise
@@ -691,7 +693,7 @@ rule
       raise
       result = BreakNode.new($2)
       debug(result)
-      AUTO_SEMICOLON
+      #AUTO_SEMICOLON
     }
   ;
 
@@ -705,7 +707,7 @@ rule
       raise
       result = ReturnNode.new(0)
       debug(result)
-      AUTO_SEMICOLON
+      #AUTO_SEMICOLON
     }
   | RETURN Expr ';' {
       raise
@@ -716,7 +718,7 @@ rule
       raise
       result = ReturnNode.new($2)
       debug(result)
-      AUTO_SEMICOLON
+      #AUTO_SEMICOLON
     }
   ;
 
@@ -778,7 +780,7 @@ rule
       raise
       result = ThrowNode.new($2)
       debug(result)
-      AUTO_SEMICOLON
+      #AUTO_SEMICOLON
     }
   ;
 
@@ -810,7 +812,7 @@ rule
       raise
       result = EmptyStatementNode.new()
       debug(result)
-      AUTO_SEMICOLON
+      #AUTO_SEMICOLON
     }
   ;
 
@@ -877,6 +879,8 @@ end
   require "rkelly/nodes"
 
 ---- inner
+  include RKelly::Nodes
+
   def debug(*args)
     logger.debug(*args) if @logger
   end
