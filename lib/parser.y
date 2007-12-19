@@ -39,6 +39,16 @@ prechigh
 preclow
 
 rule
+  SourceElements:
+    SourceElement
+  | SourceElements SourceElement        { result = val.flatten }
+  ;
+
+  SourceElement:
+    FunctionDeclaration                 { raise; result = $1; }
+  | Statement
+  ;
+
   Statement:
     Block
   | VariableStatement
@@ -551,7 +561,7 @@ rule
   ;
 
   EmptyStatement:
-    ';'                                 { raise; result = EmptyStatementNode.new(); }
+    ';' { result = EmptyStatementNode.new(val[0]) }
   ;
 
   ExprStatement:
@@ -852,16 +862,6 @@ rule
   FunctionBody:
     /* not in spec */           { raise; result = FunctionBodyNode.new(SourceElements.new); }
   | SourceElements              { raise; result = FunctionBodyNode.new($1.release()); }
-  ;
-
-  SourceElements:
-    SourceElement                       { raise; result = SourceElementsStub.new; result.append($1); }
-  | SourceElements SourceElement        { raise; result.append($2); }
-  ;
-
-  SourceElement:
-    FunctionDeclaration                 { raise; result = $1; }
-  | Statement                           { raise; result = $1; }
   ;
 end
 

@@ -5,73 +5,83 @@ class ParserTest < Test::Unit::TestCase
     @parser = RKelly::Parser.new
   end
 
+  def test_empty_statement
+    assert_sexp(
+      [
+        [:const, [[:const_decl, :foo, [:assign, [:lit, "10"]]]]],
+        [:empty]
+      ],
+      @parser.parse('const foo = 10; ;').to_sexp
+    )
+  end
+
   def test_const_statement
     assert_sexp(
-      [:const, [[:const_decl, :foo, [:assign, [:lit, "10"]]]]],
+      [[:const, [[:const_decl, :foo, [:assign, [:lit, "10"]]]]]],
       @parser.parse('const foo = 10;').to_sexp
     )
   end
 
   def test_const_decl_list
     assert_sexp(
-      [:const,
+      [[:const,
         [
           [:const_decl, :foo, [:assign, [:lit, "10"]]],
           [:const_decl, :bar, [:assign, [:lit, "1"]]],
-      ]],
+      ]]],
       @parser.parse('const foo = 10, bar = 1;').to_sexp
     )
   end
 
   def test_const_decl_no_init
     assert_sexp(
-      [:const, [[:const_decl, :foo, nil]]],
+      [[:const, [[:const_decl, :foo, nil]]]],
       @parser.parse('const foo;').to_sexp
     )
   end
 
   def test_const_statement_error
     assert_sexp(
-      [:const, [[:const_decl, :foo, [:assign, [:lit, "10"]]]]],
+      [[:const, [[:const_decl, :foo, [:assign, [:lit, "10"]]]]]],
       @parser.parse('const foo = 10').to_sexp
     )
   end
 
   def test_variable_statement
     assert_sexp(
-      [:var, [[:var_decl, :foo, [:assign, [:lit, "10"]]]]],
+      [[:var, [[:var_decl, :foo, [:assign, [:lit, "10"]]]]]],
       @parser.parse('var foo = 10;').to_sexp
     )
   end
 
   def test_variable_declaration_no_init
     assert_sexp(
-      [:var, [[:var_decl, :foo, nil]]],
+      [[:var, [[:var_decl, :foo, nil]]]],
       @parser.parse('var foo;').to_sexp
     )
   end
 
   def test_variable_declaration_nil_init
     assert_sexp(
-      [:var, [[:var_decl, :foo, [:assign, [:nil]]]]],
+      [[:var, [[:var_decl, :foo, [:assign, [:nil]]]]]],
       @parser.parse('var foo = null;').to_sexp
     )
   end
 
   def test_variable_statement_no_semi
     assert_sexp(
-      [:var, [[:var_decl, :foo, [:assign, [:lit, "10"]]]]],
+      [[:var, [[:var_decl, :foo, [:assign, [:lit, "10"]]]]]],
       @parser.parse('var foo = 10').to_sexp
     )
   end
 
   def test_variable_declaration_list
     assert_sexp(
-      [:var,
+      [[:var,
         [
           [:var_decl, :foo, [:assign, [:lit, "10"]]],
           [:var_decl, :bar, [:assign, [:lit, "1"]]],
-      ]],
+      ]]],
       @parser.parse('var foo = 10, bar = 1;').to_sexp
     )
   end

@@ -30,6 +30,14 @@ module RKelly
         [:const, o.value.map { |x| x.accept(self) }]
       end
 
+      def visit_EmptyStatementNode(o)
+        [:empty]
+      end
+
+      def visit_SourceElementList(o)
+        o.value.map { |x| x.accept(self) }
+      end
+
       def visit_NullNode(o)
         [:nil]
       end
