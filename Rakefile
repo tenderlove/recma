@@ -28,6 +28,7 @@ end
 
 task :parser => GENERATED_PARSER
 
+desc "Create a new node"
 task :new_node do
   filename = ENV['NODE']
   raise "invalid node name" if !filename

@@ -17,3 +17,4 @@
   require "rkelly/nodes/#{node}"
 end
 require 'rkelly/nodes/bracket_accessor_node'
+require 'rkelly/nodes/dot_accessor_node'

@@ -14,7 +14,15 @@ class ParserTest < Test::Unit::TestCase
           ]]
         ]
       ],
-                @parser.parse('var a = foo[10];').to_sexp)
+      @parser.parse('var a = foo[10];').to_sexp)
+  end
+
+  def test_dot_access
+    assert_sexp(
+      [[:var,
+        [[:var_decl, :a, [:assign, [:dot_access, [:resolve, "foo"], "bar"]]]]
+      ]],
+      @parser.parse('var a = foo.bar;').to_sexp)
   end
 
   def test_empty_statement

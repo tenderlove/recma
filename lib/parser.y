@@ -132,7 +132,7 @@ rule
     PrimaryExpr
   | FunctionExpr
   | MemberExpr '[' Expr ']' { result = BracketAccessorNode.new(val[0], val[2]) }
-  | MemberExpr '.' IDENT    { raise "Not implemented" }
+  | MemberExpr '.' IDENT    { result = DotAccessorNode.new(val[0], val[2]) }
   | NEW MemberExpr Arguments { raise "Not implemented" }
   ;
 

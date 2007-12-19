@@ -49,6 +49,13 @@ module RKelly
         ]
       end
 
+      def visit_DotAccessorNode(o)
+        [:dot_access,
+          o.value.accept(self),
+          o.accessor
+        ]
+      end
+
       def visit_NullNode(o)
         [:nil]
       end
