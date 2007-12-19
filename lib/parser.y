@@ -494,10 +494,9 @@ rule
 
   VariableDeclarationList:
     VariableDeclaration                 { result = val }
-  | VariableDeclarationList ',' VariableDeclaration
-                                        { raise; result.head = $1.head;
-                                          $1.tail.next = $3;
-                                          result.tail = $3; }
+  | VariableDeclarationList ',' VariableDeclaration {
+      result = [val.first, val.last].flatten
+    }
   ;
 
   VariableDeclarationListNoIn:
