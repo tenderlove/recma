@@ -1,13 +1,19 @@
-require 'rkelly/nodes/node'
-require 'rkelly/nodes/null_node'
-require 'rkelly/nodes/true_node'
-require 'rkelly/nodes/false_node'
-require 'rkelly/nodes/number_node'
-require 'rkelly/nodes/string_node'
-require 'rkelly/nodes/regexp_node'
-require 'rkelly/nodes/assign_expr_node'
-require 'rkelly/nodes/var_decl_node'
-require 'rkelly/nodes/var_statement_node'
-require 'rkelly/nodes/const_statement_node'
-require 'rkelly/nodes/empty_statement_node'
-require 'rkelly/nodes/source_element_list'
+%w{
+  node
+  null_node
+  true_node
+  false_node
+  number_node
+  string_node
+  regexp_node
+  assign_expr_node
+  var_decl_node
+  var_statement_node
+  const_statement_node
+  empty_statement_node
+  source_element_list
+  resolve_node
+}.each do |node|
+  require "rkelly/nodes/#{node}"
+end
+require 'rkelly/nodes/bracket_accessor_node'

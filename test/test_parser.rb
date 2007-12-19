@@ -5,6 +5,18 @@ class ParserTest < Test::Unit::TestCase
     @parser = RKelly::Parser.new
   end
 
+  def test_array_access
+    assert_sexp(
+      [
+        [:var,
+          [[:var_decl, :a,
+            [:assign, [:bracket_access, [:resolve, "foo"], [:lit, "10"]]],
+          ]]
+        ]
+      ],
+                @parser.parse('var a = foo[10];').to_sexp)
+  end
+
   def test_empty_statement
     assert_sexp(
       [

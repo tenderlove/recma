@@ -28,6 +28,50 @@ end
 
 task :parser => GENERATED_PARSER
 
+task :new_node do
+  filename = ENV['NODE']
+  raise "invalid node name" if !filename
+
+  classname = nil
+  if filename =~ /[A-Z]/
+    classname = filename
+    filename = filename.gsub(/([A-Z])/) { |x| "_#{x.downcase}" }.gsub(/^_/, '')
+  end
+
+  full_file = "lib/rkelly/nodes/#{filename}.rb"
+  test_file = "test/test_#{filename}.rb"
+  puts "writing: #{full_file}"
+  File.open(full_file, 'wb') { |f|
+    f.write(<<END
+module RKelly
+  module Nodes
+    class #{classname} < Node
+    end
+  end
+end
+END
+           )
+  }
+  puts "adding to nodes include"
+  File.open("lib/rkelly/nodes.rb", 'ab') { |f|
+    f.puts "require 'rkelly/nodes/#{filename}'"
+  }
+
+  puts "writing test case: #{test_file}"
+  File.open(test_file, 'wb') { |f|
+    f.write(<<END
+require File.dirname(__FILE__) + "/helper"
+
+class #{classname}Test < NodeTestCase
+  def test_failure
+    assert false
+  end
+end
+END
+            )
+  }
+end
+
 # make sure the parser's up-to-date when we test
 Rake::Task[:test].prerequisites << :parser
 Rake::Task[:check_manifest].prerequisites << :parser

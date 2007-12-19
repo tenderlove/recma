@@ -38,6 +38,17 @@ module RKelly
         o.value.map { |x| x.accept(self) }
       end
 
+      def visit_ResolveNode(o)
+        [:resolve, o.value]
+      end
+
+      def visit_BracketAccessorNode(o)
+        [:bracket_access,
+          o.value.accept(self),
+          o.accessor.accept(self)
+        ]
+      end
+
       def visit_NullNode(o)
         [:nil]
       end

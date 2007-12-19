@@ -103,7 +103,7 @@ rule
     THIS          { raise "Not implemented" }
   | Literal
   | ArrayLiteral
-  | IDENT         { raise "Not implemented" }
+  | IDENT         { result = ResolveNode.new(val.first) }
   | '(' Expr ')'  { raise "Not implemented" }
   ;
 
@@ -131,7 +131,7 @@ rule
   MemberExpr:
     PrimaryExpr
   | FunctionExpr
-  | MemberExpr '[' Expr ']' { raise "Not implemented" }
+  | MemberExpr '[' Expr ']' { result = BracketAccessorNode.new(val[0], val[2]) }
   | MemberExpr '.' IDENT    { raise "Not implemented" }
   | NEW MemberExpr Arguments { raise "Not implemented" }
   ;
