@@ -509,12 +509,8 @@ rule
   ;
 
   VariableDeclaration:
-    IDENT {
-      raise; result = VarDeclNode.new($1, 0, VarDeclNode::Variable);
-    }
-  | IDENT Initializer {
-      result = VarDeclNode.new(val.first, val[1])
-    }
+    IDENT             { result = VarDeclNode.new(val.first, nil) }
+  | IDENT Initializer { result = VarDeclNode.new(val.first, val[1]) }
   ;
 
   VariableDeclarationNoIn:

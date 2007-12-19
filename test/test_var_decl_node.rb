@@ -5,5 +5,8 @@ class VarDeclNodeTest < NodeTestCase
     initializer = AssignExprNode.new(NumberNode.new(10))
     node = VarDeclNode.new('foo', initializer)
     assert_sexp [:var_decl, :foo, [:assign, [:lit, 10]]], node.to_sexp
+
+    node = VarDeclNode.new('foo', nil)
+    assert_sexp [:var_decl, :foo, nil], node.to_sexp
   end
 end

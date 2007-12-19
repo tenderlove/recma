@@ -18,7 +18,7 @@ module RKelly
       end
 
       def visit_VarDeclNode(o)
-        [:var_decl, o.name.to_sym, o.value.accept(self)]
+        [:var_decl, o.name.to_sym, o.value ? o.value.accept(self) : nil]
       end
 
       def visit_VarStatementNode(o)
