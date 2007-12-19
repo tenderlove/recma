@@ -18,11 +18,16 @@ module RKelly
       end
 
       def visit_VarDeclNode(o)
-        [:var_decl, o.name.to_sym, o.value ? o.value.accept(self) : nil]
+        [ o.constant? ? :const_decl : :var_decl,
+          o.name.to_sym, o.value ? o.value.accept(self) : nil]
       end
 
       def visit_VarStatementNode(o)
         [:var, o.value.map { |x| x.accept(self) }]
+      end
+
+      def visit_ConstStatementNode(o)
+        [:const, o.value.map { |x| x.accept(self) }]
       end
 
       def visit_NullNode(o)

@@ -520,8 +520,7 @@ rule
 
   ConstStatement:
     CONST ConstDeclarationList ';' {
-      raise
-      result = VarStatementNode.new($2.head)
+      result = ConstStatementNode.new(val[1])
       debug(result)
     }
   | CONST ConstDeclarationList error {
@@ -533,8 +532,7 @@ rule
   ;
 
   ConstDeclarationList:
-    ConstDeclaration                    { raise; result.head = $1; 
-                                          result.tail = result.head; }
+    ConstDeclaration                    { result = val }
   | ConstDeclarationList ',' ConstDeclaration
                                         { raise; result.head = $1.head;
                                           $1.tail.next = $3;
@@ -543,7 +541,7 @@ rule
 
   ConstDeclaration:
     IDENT                               { raise; result = VarDeclNode.new($1, 0, VarDeclNode::Constant); }
-  | IDENT Initializer                   { raise; result = VarDeclNode.new($1, $2, VarDeclNode::Constant); }
+  | IDENT Initializer { result = VarDeclNode.new(val[0], val[1], true) }
   ;
 
   Initializer:
