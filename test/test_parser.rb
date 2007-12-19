@@ -25,6 +25,16 @@ class ParserTest < Test::Unit::TestCase
       @parser.parse('var a = foo.bar;').to_sexp)
   end
 
+  def test_new_member_expr
+    assert_sexp(
+      [[:var,
+        [[:var_decl, :a,
+          [:assign, [:new_expr, [:resolve, "foo"], [:args, []]]]
+        ]]
+      ]],
+      @parser.parse('var a = new foo();').to_sexp)
+  end
+
   def test_empty_statement
     assert_sexp(
       [

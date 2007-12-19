@@ -49,6 +49,14 @@ module RKelly
         ]
       end
 
+      def visit_NewExprNode(o)
+        [:new_expr, o.value.accept(self), o.arguments.accept(self)]
+      end
+
+      def visit_ArgumentsNode(o)
+        [:args, o.value.map { |x| x.accept(self) }]
+      end
+
       def visit_DotAccessorNode(o)
         [:dot_access,
           o.value.accept(self),

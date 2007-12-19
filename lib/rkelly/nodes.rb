@@ -18,3 +18,5 @@
 end
 require 'rkelly/nodes/bracket_accessor_node'
 require 'rkelly/nodes/dot_accessor_node'
+require 'rkelly/nodes/arguments_node'
+require 'rkelly/nodes/new_expr_node'

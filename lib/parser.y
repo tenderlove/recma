@@ -133,7 +133,7 @@ rule
   | FunctionExpr
   | MemberExpr '[' Expr ']' { result = BracketAccessorNode.new(val[0], val[2]) }
   | MemberExpr '.' IDENT    { result = DotAccessorNode.new(val[0], val[2]) }
-  | NEW MemberExpr Arguments { raise "Not implemented" }
+  | NEW MemberExpr Arguments { result = NewExprNode.new(val[1], val[2]) }
   ;
 
   MemberExprNoBF:
@@ -168,7 +168,7 @@ rule
   ;
 
   Arguments:
-    '(' ')'               { raise; result = ArgumentsNode.new(); }
+    '(' ')'               { result = ArgumentsNode.new([]) }
   | '(' ArgumentList ')'  { raise; result = ArgumentsNode.new($2.head); }
   ;
 
