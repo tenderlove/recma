@@ -486,10 +486,9 @@ rule
       debug(result)
     }
   | VAR VariableDeclarationList error {
-      raise
       result = VarStatementNode.new(val[1])
       debug(result)
-      #AUTO_SEMICOLON
+      yyabort unless allow_auto_semi?(val.last)
     }
   ;
 
@@ -880,6 +879,10 @@ end
 
 ---- inner
   include RKelly::Nodes
+
+  def allow_auto_semi?(error_token)
+    error_token == false || error_token == '}'
+  end
 
   def debug(*args)
     logger.debug(*args) if @logger

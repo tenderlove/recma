@@ -4,4 +4,3 @@ module RKelly
     end
   end
 end
-

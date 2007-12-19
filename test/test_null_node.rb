@@ -6,4 +6,3 @@ class NullNodeTest < NodeTestCase
     assert_sexp [:nil], node.to_sexp
   end
 end
-

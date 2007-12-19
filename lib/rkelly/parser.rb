@@ -17,6 +17,9 @@ module RKelly
     end
 
     private
+    def on_error(error_token_id, error_value, value_stack)
+    end
+
     def next_token
       return [false, false] if @position >= @tokens.length
       n_token = @tokens[@position]
