@@ -28,6 +28,10 @@ end
 
 task :parser => GENERATED_PARSER
 
+# make sure the parser's up-to-date when we test
+Rake::Task[:test].prerequisites << :parser
+Rake::Task[:check_manifest].prerequisites << :parser
+
 desc "Create a new node"
 task :new_node do
   filename = ENV['NODE']
@@ -43,15 +47,14 @@ task :new_node do
   test_file = "test/test_#{filename}.rb"
   puts "writing: #{full_file}"
   File.open(full_file, 'wb') { |f|
-    f.write(<<END
-module RKelly
-  module Nodes
-    class #{classname} < Node
-    end
-  end
-end
-END
-           )
+    f.write <<-END
+      module RKelly
+        module Nodes
+          class #{classname} < Node
+          end
+        end
+      end
+    END
   }
   puts "adding to nodes include"
   File.open("lib/rkelly/nodes.rb", 'ab') { |f|
@@ -60,19 +63,14 @@ END
 
   puts "writing test case: #{test_file}"
   File.open(test_file, 'wb') { |f|
-    f.write(<<END
-require File.dirname(__FILE__) + "/helper"
+    f.write <<-END
+      require File.dirname(__FILE__) + "/helper"
 
-class #{classname}Test < NodeTestCase
-  def test_failure
-    assert false
-  end
-end
-END
-            )
+      class #{classname}Test < NodeTestCase
+        def test_failure
+          assert false
+        end
+      end
+    END
   }
 end
-
-# make sure the parser's up-to-date when we test
-Rake::Task[:test].prerequisites << :parser
-Rake::Task[:check_manifest].prerequisites << :parser
