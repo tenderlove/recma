@@ -524,23 +524,21 @@ rule
       debug(result)
     }
   | CONST ConstDeclarationList error {
-      raise
-      result = VarStatementNode.new($2.head)
+      result = ConstStatementNode.new(val[1])
       debug(result)
-      #AUTO_SEMICOLON
+      yyerror unless allow_auto_semi?(val.last)
     }
   ;
 
   ConstDeclarationList:
     ConstDeclaration                    { result = val }
-  | ConstDeclarationList ',' ConstDeclaration
-                                        { raise; result.head = $1.head;
-                                          $1.tail.next = $3;
-                                          result.tail = $3; }
+  | ConstDeclarationList ',' ConstDeclaration {
+      result = [val.first, val.last].flatten
+    }
   ;
 
   ConstDeclaration:
-    IDENT                               { raise; result = VarDeclNode.new($1, 0, VarDeclNode::Constant); }
+    IDENT             { result = VarDeclNode.new(val[0], nil, true) }
   | IDENT Initializer { result = VarDeclNode.new(val[0], val[1], true) }
   ;
 

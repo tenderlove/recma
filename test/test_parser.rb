@@ -5,10 +5,35 @@ class ParserTest < Test::Unit::TestCase
     @parser = RKelly::Parser.new
   end
 
-  def test_const_decl
+  def test_const_statement
     assert_sexp(
       [:const, [[:const_decl, :foo, [:assign, [:lit, "10"]]]]],
       @parser.parse('const foo = 10;').to_sexp
+    )
+  end
+
+  def test_const_decl_list
+    assert_sexp(
+      [:const,
+        [
+          [:const_decl, :foo, [:assign, [:lit, "10"]]],
+          [:const_decl, :bar, [:assign, [:lit, "1"]]],
+      ]],
+      @parser.parse('const foo = 10, bar = 1;').to_sexp
+    )
+  end
+
+  def test_const_decl_no_init
+    assert_sexp(
+      [:const, [[:const_decl, :foo, nil]]],
+      @parser.parse('const foo;').to_sexp
+    )
+  end
+
+  def test_const_statement_error
+    assert_sexp(
+      [:const, [[:const_decl, :foo, [:assign, [:lit, "10"]]]]],
+      @parser.parse('const foo = 10').to_sexp
     )
   end
 
