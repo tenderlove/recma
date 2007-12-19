@@ -831,23 +831,22 @@ rule
 
   FunctionExpr:
     FUNCTION '(' ')' '{' FunctionBody '}' {
-      raise
-      result = FuncExprNode.new(CommonIdentifiers::shared().nullIdentifier, $5)
-      debug($5)
+      result = FunctionExprNode.new(nil, val[4])
+      debug(val[4])
     }
   | FUNCTION '(' FormalParameterList ')' '{' FunctionBody '}' {
       raise
-      result = FuncExprNode.new(CommonIdentifiers::shared().nullIdentifier, $6, $3.head)
+      result = FunctionExprNode.new(CommonIdentifiers::shared().nullIdentifier, $6, $3.head)
       debug($6)
     }
   | FUNCTION IDENT '(' ')' '{' FunctionBody '}' {
       raise
-      result = FuncExprNode.new($2, $6)
+      result = FunctionExprNode.new($2, $6)
       debug($6)
     }
   | FUNCTION IDENT '(' FormalParameterList ')' '{' FunctionBody '}' {
       raise
-      result = FuncExprNode.new($2, $7, $4.head)
+      result = FunctionExprNode.new($2, $7, $4.head)
       debug($7)
     }
   ;
@@ -860,7 +859,7 @@ rule
   ;
 
   FunctionBody:
-    /* not in spec */           { raise; result = FunctionBodyNode.new(SourceElements.new); }
+    /* not in spec */           { result = FunctionBodyNode.new(SourceElements.new([])) }
   | SourceElements              { raise; result = FunctionBodyNode.new($1.release()); }
   ;
 end

@@ -34,7 +34,11 @@ module RKelly
         [:empty]
       end
 
-      def visit_SourceElementList(o)
+      def visit_FunctionBodyNode(o)
+        [:func_body, o.value.accept(self)]
+      end
+
+      def visit_SourceElements(o)
         o.value.map { |x| x.accept(self) }
       end
 
@@ -51,6 +55,10 @@ module RKelly
 
       def visit_NewExprNode(o)
         [:new_expr, o.value.accept(self), o.arguments.accept(self)]
+      end
+
+      def visit_FunctionExprNode(o)
+        [:func_expr, o.value ? o.value : nil, o.function_body.accept(self)] 
       end
 
       def visit_ArgumentsNode(o)

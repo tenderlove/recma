@@ -48,12 +48,12 @@ task :new_node do
   puts "writing: #{full_file}"
   File.open(full_file, 'wb') { |f|
     f.write <<-END
-      module RKelly
-        module Nodes
-          class #{classname} < Node
-          end
-        end
-      end
+module RKelly
+  module Nodes
+    class #{classname} < Node
+    end
+  end
+end
     END
   }
   puts "adding to nodes include"
@@ -64,13 +64,13 @@ task :new_node do
   puts "writing test case: #{test_file}"
   File.open(test_file, 'wb') { |f|
     f.write <<-END
-      require File.dirname(__FILE__) + "/helper"
+require File.dirname(__FILE__) + "/helper"
 
-      class #{classname}Test < NodeTestCase
-        def test_failure
-          assert false
-        end
-      end
+class #{classname}Test < NodeTestCase
+  def test_failure
+    assert false
+  end
+end
     END
   }
 end

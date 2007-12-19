@@ -11,7 +11,7 @@
   var_statement_node
   const_statement_node
   empty_statement_node
-  source_element_list
+  source_elements
   resolve_node
 }.each do |node|
   require "rkelly/nodes/#{node}"
@@ -20,3 +20,5 @@ require 'rkelly/nodes/bracket_accessor_node'
 require 'rkelly/nodes/dot_accessor_node'
 require 'rkelly/nodes/arguments_node'
 require 'rkelly/nodes/new_expr_node'
+require 'rkelly/nodes/function_body_node'
+require 'rkelly/nodes/function_expr_node'
