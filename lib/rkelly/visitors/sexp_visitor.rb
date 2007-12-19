@@ -57,8 +57,16 @@ module RKelly
         [:new_expr, o.value.accept(self), o.arguments.accept(self)]
       end
 
+      def visit_ParameterNode(o)
+        [:param, o.value]
+      end
+
       def visit_FunctionExprNode(o)
-        [:func_expr, o.value ? o.value : nil, o.function_body.accept(self)] 
+        [ :func_expr,
+          o.value ? o.value : nil,
+          o.arguments.map { |x| x.accept(self) },
+          o.function_body.accept(self)
+        ] 
       end
 
       def visit_ArgumentsNode(o)

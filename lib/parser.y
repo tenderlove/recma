@@ -835,8 +835,7 @@ rule
       debug(val[4])
     }
   | FUNCTION '(' FormalParameterList ')' '{' FunctionBody '}' {
-      raise
-      result = FunctionExprNode.new(CommonIdentifiers::shared().nullIdentifier, $6, $3.head)
+      result = FunctionExprNode.new(nil, val[5], val[2])
       debug($6)
     }
   | FUNCTION IDENT '(' ')' '{' FunctionBody '}' {
@@ -852,8 +851,7 @@ rule
   ;
 
   FormalParameterList:
-    IDENT                               { raise; result.head = ParameterNode.new($1);
-                                          result.tail = result.head; }
+    IDENT                               { result = [ParameterNode.new(val[0])] }
   | FormalParameterList ',' IDENT       { raise; result.head = $1.head;
                                           result.tail = ParameterNode.new($1.tail, $3); }
   ;

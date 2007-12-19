@@ -21,10 +21,20 @@ class ParserTest < Test::Unit::TestCase
     assert_sexp(
                 [[:var,
                   [[:var_decl, :foo, [:assign,
-                    [:func_expr, nil, [:func_body, []]]
+                    [:func_expr, nil, [], [:func_body, []]]
                   ]]]
                 ]],
                 @parser.parse("var foo = function() { }"))
+  end
+
+  def test_function_expr_anon_single_arg
+    assert_sexp(
+                [[:var,
+                  [[:var_decl, :foo, [:assign,
+                    [:func_expr, nil, [[:param, "a"]], [:func_body, []]]
+                  ]]]
+                ]],
+                @parser.parse("var foo = function(a) { }"))
   end
 
   def test_dot_access
