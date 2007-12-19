@@ -19,6 +19,13 @@ class ParserTest < Test::Unit::TestCase
     )
   end
 
+  def test_variable_declaration_nil_init
+    assert_sexp(
+      [:var, [[:var_decl, :foo, [:assign, [:nil]]]]],
+      @parser.parse('var foo = null;').to_sexp
+    )
+  end
+
   def test_variable_statement_no_semi
     assert_sexp(
       [:var, [[:var_decl, :foo, [:assign, [:lit, "10"]]]]],
