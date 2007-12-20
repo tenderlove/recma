@@ -190,6 +190,25 @@ class ParserTest < Test::Unit::TestCase
     )
   end
 
+  def test_return_statement
+    assert_sexp(
+      [[:return]],
+      @parser.parse('return;')
+    )
+    assert_sexp(
+      [[:return]],
+      @parser.parse('return')
+    )
+    assert_sexp(
+      [[:return, [:lit, 10]]],
+      @parser.parse('return 10;')
+    )
+    assert_sexp(
+      [[:return, [:lit, 10]]],
+      @parser.parse('return 10')
+    )
+  end
+
   def test_variable_declaration_list
     assert_sexp(
       [[:var,

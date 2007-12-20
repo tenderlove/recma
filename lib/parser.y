@@ -699,26 +699,22 @@ rule
 
   ReturnStatement:
     RETURN ';' {
-      raise
-      result = ReturnNode.new(0)
+      result = ReturnNode.new(nil)
       debug(result)
     }
   | RETURN error {
-      raise
-      result = ReturnNode.new(0)
+      result = ReturnNode.new(nil)
       debug(result)
-      #AUTO_SEMICOLON
+      yyabort unless allow_auto_semi?(val[1])
     }
   | RETURN Expr ';' {
-      raise
-      result = ReturnNode.new($2)
+      result = ReturnNode.new(val[1])
       debug(result)
     }
   | RETURN Expr error {
-      raise
-      result = ReturnNode.new($2)
+      result = ReturnNode.new(val[1])
       debug(result)
-      #AUTO_SEMICOLON
+      yyabort unless allow_auto_semi?(val[2])
     }
   ;
 

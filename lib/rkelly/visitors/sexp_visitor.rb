@@ -61,6 +61,10 @@ module RKelly
         [:param, o.value]
       end
 
+      def visit_ReturnNode(o)
+        o.value ? [:return, o.value.accept(self)] : [:return]
+      end
+
       def visit_FunctionExprNode(o)
         [ :func_expr,
           o.value ? o.value : nil,
