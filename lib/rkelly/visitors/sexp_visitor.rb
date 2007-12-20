@@ -66,7 +66,15 @@ module RKelly
           o.value ? o.value : nil,
           o.arguments.map { |x| x.accept(self) },
           o.function_body.accept(self)
-        ] 
+        ]
+      end
+
+      def visit_FunctionDeclNode(o)
+        [ :func_decl,
+          o.value ? o.value : nil,
+          o.arguments.map { |x| x.accept(self) },
+          o.function_body.accept(self)
+        ]
       end
 
       def visit_ArgumentsNode(o)

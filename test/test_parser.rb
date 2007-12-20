@@ -120,6 +120,16 @@ class ParserTest < Test::Unit::TestCase
     )
   end
 
+  def test_function_decl
+    assert_sexp([[:func_decl, 'foo', [], [:func_body, []]]],
+                @parser.parse('function foo() { }'))
+  end
+
+  def test_function_decl_params
+    assert_sexp([[:func_decl, 'foo', [[:param, 'a']], [:func_body, []]]],
+                @parser.parse('function foo(a) { }'))
+  end
+
   def test_const_statement
     assert_sexp(
       [[:const, [[:const_decl, :foo, [:assign, [:lit, "10"]]]]]],

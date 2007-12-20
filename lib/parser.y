@@ -45,7 +45,7 @@ rule
   ;
 
   SourceElement:
-    FunctionDeclaration                 { raise; result = $1; }
+    FunctionDeclaration
   | Statement
   ;
 
@@ -816,14 +816,12 @@ rule
 
   FunctionDeclaration:
     FUNCTION IDENT '(' ')' '{' FunctionBody '}' {
-      raise
-      result = FuncDeclNode.new($2, $6)
-      debug($6)
+      result = FunctionDeclNode.new(val[1], val[5])
+      debug(val[5])
     }
   | FUNCTION IDENT '(' FormalParameterList ')' '{' FunctionBody '}' {
-      raise
-      result = FuncDeclNode.new($2, $4.head, $7)
-      debug($7)
+      result = FunctionDeclNode.new(val[1], val[6], val[3])
+      debug(val[6])
     }
   ;
 
