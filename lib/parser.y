@@ -836,7 +836,7 @@ rule
     }
   | FUNCTION '(' FormalParameterList ')' '{' FunctionBody '}' {
       result = FunctionExprNode.new(nil, val[5], val[2])
-      debug($6)
+      debug(val[5])
     }
   | FUNCTION IDENT '(' ')' '{' FunctionBody '}' {
       raise
