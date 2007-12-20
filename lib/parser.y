@@ -760,15 +760,13 @@ rule
 
   ThrowStatement:
     THROW Expr ';' {
-      raise
-      result = ThrowNode.new($2)
+      result = ThrowNode.new(val[1])
       debug(result)
     }
   | THROW Expr error {
-      raise
-      result = ThrowNode.new($2)
+      result = ThrowNode.new(val[1])
       debug(result)
-      #AUTO_SEMICOLON
+      yyabort unless allow_auto_semi?(val[2])
     }
   ;
 

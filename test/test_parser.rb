@@ -88,6 +88,11 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('foo: var x = 10'))
   end
 
+  def test_throw_statement
+    assert_sexp([[:throw, [:lit, 10]]], @parser.parse('throw 10;'))
+    assert_sexp([[:throw, [:lit, 10]]], @parser.parse('throw 10'))
+  end
+
   def test_dot_access
     assert_sexp(
       [[:var,

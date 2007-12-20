@@ -73,6 +73,10 @@ module RKelly
         [:label, o.name, o.value.accept(self)]
       end
 
+      def visit_ThrowNode(o)
+        [:throw, o.value.accept(self)]
+      end
+
       def visit_ReturnNode(o)
         o.value ? [:return, o.value.accept(self)] : [:return]
       end
