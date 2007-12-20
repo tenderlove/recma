@@ -804,15 +804,13 @@ rule
 
   DebuggerStatement:
     DEBUGGER ';' {
-      raise
-      result = EmptyStatementNode.new()
+      result = EmptyStatementNode.new(val[0])
       debug(result)
     }
   | DEBUGGER error {
-      raise
-      result = EmptyStatementNode.new()
+      result = EmptyStatementNode.new(val[0])
       debug(result)
-      #AUTO_SEMICOLON
+      yyabort unless allow_auto_semi?(val[1])
     }
   ;
 

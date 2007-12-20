@@ -109,6 +109,17 @@ class ParserTest < Test::Unit::TestCase
     )
   end
 
+  def test_debugger_statement
+    assert_sexp(
+      [ [:empty] ],
+      @parser.parse('debugger;')
+    )
+    assert_sexp(
+      [ [:empty] ],
+      @parser.parse('debugger')
+    )
+  end
+
   def test_const_statement
     assert_sexp(
       [[:const, [[:const_decl, :foo, [:assign, [:lit, "10"]]]]]],
