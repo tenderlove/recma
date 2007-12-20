@@ -45,7 +45,7 @@ class TokenizerTest < Test::Unit::TestCase
     assert_equal([
                  [:IDENT, 'foo'],
                  [:PLUSEQUAL, '+='],
-                 [:NUMBER, '1'],
+                 [:NUMBER, 1],
                  [';', ';'],
     ], tokens)
   end

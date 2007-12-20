@@ -44,8 +44,12 @@ module RKelly
       token(:STRING, /\A"(?:\\.|[^"])*"|\A'(?:[^']|\\.)*'/m)
 
       # A regexp to match floating point literals (but not integer literals).
-      token(:NUMBER, Regexp.new("\\A\\d+\\.\\d*(?:[eE][-+]?\\d+)?|\\A\\d+(?:\\.\\d*)?[eE][-+]?\\d+|\\A\\.\\d+(?:[eE][-+]?\\d+)?", Regexp::MULTILINE))
-      token(:NUMBER, /\A0[xX][\da-fA-F]+|\A0[0-7]*|\A\d+/)
+      token(:NUMBER, Regexp.new("\\A\\d+\\.\\d*(?:[eE][-+]?\\d+)?|\\A\\d+(?:\\.\\d*)?[eE][-+]?\\d+|\\A\\.\\d+(?:[eE][-+]?\\d+)?", Regexp::MULTILINE)) do |type, value|
+        [type, eval(value)]
+      end
+      token(:NUMBER, /\A0[xX][\da-fA-F]+|\A0[0-7]*|\A\d+/) do |type, value|
+        [type, eval(value)]
+      end
 
       token(:LITERALS,
         Regexp.new(LITERALS.keys.sort_by { |x|

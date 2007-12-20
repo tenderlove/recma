@@ -10,7 +10,7 @@ class ParserTest < Test::Unit::TestCase
       [
         [:var,
           [[:var_decl, :a,
-            [:assign, [:bracket_access, [:resolve, "foo"], [:lit, "10"]]],
+            [:assign, [:bracket_access, [:resolve, "foo"], [:lit, 10]]],
           ]]
         ]
       ],
@@ -33,7 +33,7 @@ class ParserTest < Test::Unit::TestCase
                   [[:var_decl, :foo, [:assign,
                     [:func_expr, nil, [],
                       [:func_body,
-                        [:var, [[:var_decl, :a, [:assign, [:lit, "10"]]]]]
+                        [:var, [[:var_decl, :a, [:assign, [:lit, 10]]]]]
                       ]
                     ]
                   ]]]
@@ -102,7 +102,7 @@ class ParserTest < Test::Unit::TestCase
   def test_empty_statement
     assert_sexp(
       [
-        [:const, [[:const_decl, :foo, [:assign, [:lit, "10"]]]]],
+        [:const, [[:const_decl, :foo, [:assign, [:lit, 10]]]]],
         [:empty]
       ],
       @parser.parse('const foo = 10; ;')
@@ -132,7 +132,7 @@ class ParserTest < Test::Unit::TestCase
 
   def test_const_statement
     assert_sexp(
-      [[:const, [[:const_decl, :foo, [:assign, [:lit, "10"]]]]]],
+      [[:const, [[:const_decl, :foo, [:assign, [:lit, 10]]]]]],
       @parser.parse('const foo = 10;')
     )
   end
@@ -141,8 +141,8 @@ class ParserTest < Test::Unit::TestCase
     assert_sexp(
       [[:const,
         [
-          [:const_decl, :foo, [:assign, [:lit, "10"]]],
-          [:const_decl, :bar, [:assign, [:lit, "1"]]],
+          [:const_decl, :foo, [:assign, [:lit, 10]]],
+          [:const_decl, :bar, [:assign, [:lit, 1]]],
       ]]],
       @parser.parse('const foo = 10, bar = 1;')
     )
@@ -157,14 +157,14 @@ class ParserTest < Test::Unit::TestCase
 
   def test_const_statement_error
     assert_sexp(
-      [[:const, [[:const_decl, :foo, [:assign, [:lit, "10"]]]]]],
+      [[:const, [[:const_decl, :foo, [:assign, [:lit, 10]]]]]],
       @parser.parse('const foo = 10')
     )
   end
 
   def test_variable_statement
     assert_sexp(
-      [[:var, [[:var_decl, :foo, [:assign, [:lit, "10"]]]]]],
+      [[:var, [[:var_decl, :foo, [:assign, [:lit, 10]]]]]],
       @parser.parse('var foo = 10;')
     )
   end
@@ -185,7 +185,7 @@ class ParserTest < Test::Unit::TestCase
 
   def test_variable_statement_no_semi
     assert_sexp(
-      [[:var, [[:var_decl, :foo, [:assign, [:lit, "10"]]]]]],
+      [[:var, [[:var_decl, :foo, [:assign, [:lit, 10]]]]]],
       @parser.parse('var foo = 10')
     )
   end
@@ -194,8 +194,8 @@ class ParserTest < Test::Unit::TestCase
     assert_sexp(
       [[:var,
         [
-          [:var_decl, :foo, [:assign, [:lit, "10"]]],
-          [:var_decl, :bar, [:assign, [:lit, "1"]]],
+          [:var_decl, :foo, [:assign, [:lit, 10]]],
+          [:var_decl, :bar, [:assign, [:lit, 1]]],
       ]]],
       @parser.parse('var foo = 10, bar = 1;')
     )
