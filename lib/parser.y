@@ -584,10 +584,9 @@ rule
       debug(result)
     }
   | ExprNoBF error {
-      raise
-      result = ExprStatementNode.new($1)
+      result = ExpressionStatementNode.new(val.first)
       debug(result)
-      #AUTO_SEMICOLON
+      yyabort unless allow_auto_semi?(val.last)
     }
   ;
 

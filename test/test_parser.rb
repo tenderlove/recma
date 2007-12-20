@@ -244,6 +244,10 @@ class ParserTest < Test::Unit::TestCase
                 [[:expression, [:dot_access, [:resolve, "foo"], "bar"]]],
                 @parser.parse('foo.bar;')
                )
+    assert_sexp(
+                [[:expression, [:dot_access, [:resolve, "foo"], "bar"]]],
+                @parser.parse('foo.bar')
+               )
   end
 
   def test_dot_access
