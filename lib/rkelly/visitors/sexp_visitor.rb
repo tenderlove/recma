@@ -85,6 +85,14 @@ module RKelly
         [ :property, o.name, o.value.accept(self) ]
       end
 
+      def visit_GetterPropertyNode(o)
+        [ :getter, o.name, o.value.accept(self) ]
+      end
+
+      def visit_SetterPropertyNode(o)
+        [ :setter, o.name, o.value.accept(self) ]
+      end
+
       def visit_ReturnNode(o)
         o.value ? [:return, o.value.accept(self)] : [:return]
       end

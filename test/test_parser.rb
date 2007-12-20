@@ -124,6 +124,28 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('var foo = { 5: 10 }'))
   end
 
+  def test_object_literal_getter
+    assert_sexp(
+                [[:var,
+                  [[:var_decl, :foo, [:assign,
+                    [:object, [[:getter, 'a', [:func_expr, nil, [], [:func_body, []]]]]]
+                  ]]]
+                ]],
+                @parser.parse('var foo = { get a() { } }'))
+  end
+
+  def test_object_literal_setter
+    assert_sexp(
+                [[:var,
+                  [[:var_decl, :foo, [:assign,
+                    [:object, [[:setter, 'a',
+                      [:func_expr, nil, [[:param, 'foo']], [:func_body, []]]
+                    ]]]
+                  ]]]
+                ]],
+                @parser.parse('var foo = { set a(foo) { } }'))
+  end
+
   def test_object_literal_multi
     assert_sexp(
                 [[:var,

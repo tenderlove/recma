@@ -83,9 +83,15 @@ rule
     }
   | STRING ':' AssignmentExpr { result = PropertyNode.new(val.first, val.last) }
   | NUMBER ':' AssignmentExpr { result = PropertyNode.new(val.first, val.last) }
-  | IDENT IDENT '(' ')' '{' FunctionBody '}'  { raise "Not implemented" }
+  | IDENT IDENT '(' ')' '{' FunctionBody '}'  {
+      klass = property_class_for(val.first)
+      yyabort unless klass
+      result = klass.new(val[1], FunctionExprNode.new(nil, val[5]))
+    }
   | IDENT IDENT '(' FormalParameterList ')' '{' FunctionBody '}' {
-      raise "Not implemented"
+      klass = property_class_for(val.first)
+      yyabort unless klass
+      result = klass.new(val[1], FunctionExprNode.new(nil, val[6], val[3]))
     }
   ;
 
@@ -853,6 +859,15 @@ end
 
   def allow_auto_semi?(error_token)
     error_token == false || error_token == '}'
+  end
+
+  def property_class_for(ident)
+    case ident
+    when 'get'
+      GetterPropertyNode
+    when 'set'
+      SetterPropertyNode
+    end
   end
 
   def debug(*args)
