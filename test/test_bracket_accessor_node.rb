@@ -10,7 +10,7 @@ class BracketAccessorNodeTest < NodeTestCase
         [:resolve, 'foo'],
         [:lit, 10],
       ],
-      node.to_sexp
+      node
     )
   end
 end

@@ -8,7 +8,7 @@ class ConstStatementNodeTest < NodeTestCase
 
     assert_sexp(
       [:const, [[:const_decl, :foo, [:assign, [:lit, 10]]]]],
-      stmt.to_sexp
+      stmt
     )
   end
 end

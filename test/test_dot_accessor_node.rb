@@ -4,6 +4,6 @@ class DotAccessorNodeTest < NodeTestCase
   def test_to_sexp
     resolve = ResolveNode.new('foo')
     node = DotAccessorNode.new(resolve, 'bar')
-    assert_sexp([:dot_access, [:resolve, 'foo'], 'bar', ], node.to_sexp)
+    assert_sexp([:dot_access, [:resolve, 'foo'], 'bar', ], node)
   end
 end

@@ -6,6 +6,6 @@ class NodeTestCase < Test::Unit::TestCase
   undef :default_test
 
   def assert_sexp(expected, actual)
-    assert_equal(expected, actual)
+    assert_equal(expected, actual.to_sexp)
   end
 end

@@ -649,26 +649,22 @@ rule
 
   ContinueStatement:
     CONTINUE ';' {
-      raise
-      result = ContinueNode.new()
+      result = ContinueNode.new(nil)
       debug(result)
     }
   | CONTINUE error {
-      raise
-      result = ContinueNode.new()
+      result = ContinueNode.new(nil)
       debug(result)
-      #AUTO_SEMICOLON
+      yyabort unless allow_auto_semi?(val[1])
     }
   | CONTINUE IDENT ';' {
-      raise
-      result = ContinueNode.new($2)
+      result = ContinueNode.new(val[1])
       debug(result)
     }
   | CONTINUE IDENT error {
-      raise
-      result = ContinueNode.new($2)
+      result = ContinueNode.new(val[1])
       debug(result)
-      #AUTO_SEMICOLON
+      yyabort unless allow_auto_semi?(val[2])
     }
   ;
 

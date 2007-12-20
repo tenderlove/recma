@@ -216,6 +216,13 @@ class ParserTest < Test::Unit::TestCase
     assert_sexp([[:break, 'foo']], @parser.parse('break foo'))
   end
 
+  def test_continue_statement
+    assert_sexp([[:continue]], @parser.parse('continue;'))
+    assert_sexp([[:continue]], @parser.parse('continue'))
+    assert_sexp([[:continue, 'foo']], @parser.parse('continue foo;'))
+    assert_sexp([[:continue, 'foo']], @parser.parse('continue foo'))
+  end
+
   def test_variable_declaration_list
     assert_sexp(
       [[:var,

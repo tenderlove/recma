@@ -65,6 +65,10 @@ module RKelly
         [:break, o.value].compact
       end
 
+      def visit_ContinueNode(o)
+        [:continue, o.value].compact
+      end
+
       def visit_ReturnNode(o)
         o.value ? [:return, o.value.accept(self)] : [:return]
       end

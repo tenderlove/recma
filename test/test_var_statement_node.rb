@@ -8,7 +8,7 @@ class VarStatementNodeTest < NodeTestCase
 
     assert_sexp(
       [:var, [[:var_decl, :foo, [:assign, [:lit, 10]]]]],
-      stmt.to_sexp
+      stmt
     )
   end
 end
