@@ -755,7 +755,7 @@ rule
   ;
 
   LabelledStatement:
-    IDENT ':' Statement                 { $3.pushLabel($1); result = LabelNode.new($1, $3); }
+    IDENT ':' Statement { result = LabelNode.new(val[0], val[2]) }
   ;
 
   ThrowStatement:

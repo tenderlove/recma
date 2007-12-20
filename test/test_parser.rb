@@ -81,6 +81,13 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse("var foo = function aaron(a, b) { }"))
   end
 
+  def test_labelled_statement
+    assert_sexp([[:label, "foo", [:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]]]],
+                @parser.parse('foo: var x = 10;'))
+    assert_sexp([[:label, "foo", [:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]]]],
+                @parser.parse('foo: var x = 10'))
+  end
+
   def test_dot_access
     assert_sexp(
       [[:var,
