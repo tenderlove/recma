@@ -852,8 +852,9 @@ rule
 
   FormalParameterList:
     IDENT                               { result = [ParameterNode.new(val[0])] }
-  | FormalParameterList ',' IDENT       { raise; result.head = $1.head;
-                                          result.tail = ParameterNode.new($1.tail, $3); }
+  | FormalParameterList ',' IDENT       {
+      result = [val.first, ParameterNode.new(val.last)].flatten
+    }
   ;
 
   FunctionBody:
