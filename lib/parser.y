@@ -839,14 +839,12 @@ rule
       debug(val[5])
     }
   | FUNCTION IDENT '(' ')' '{' FunctionBody '}' {
-      raise
-      result = FunctionExprNode.new($2, $6)
-      debug($6)
+      result = FunctionExprNode.new(val[1], val[5])
+      debug(val[5])
     }
   | FUNCTION IDENT '(' FormalParameterList ')' '{' FunctionBody '}' {
-      raise
-      result = FunctionExprNode.new($2, $7, $4.head)
-      debug($7)
+      result = FunctionExprNode.new(val[1], val[6], val[3])
+      debug(val[6])
     }
   ;
 
@@ -859,7 +857,7 @@ rule
 
   FunctionBody:
     /* not in spec */           { result = FunctionBodyNode.new(SourceElements.new([])) }
-  | SourceElements              { raise; result = FunctionBodyNode.new($1.release()); }
+  | SourceElements              { result = FunctionBodyNode.new(val[0]) }
   ;
 end
 

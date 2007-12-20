@@ -27,6 +27,20 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse("var foo = function() { }"))
   end
 
+  def test_function_body_expr_anon_no_args
+    assert_sexp(
+                [[:var,
+                  [[:var_decl, :foo, [:assign,
+                    [:func_expr, nil, [],
+                      [:func_body,
+                        [:var, [[:var_decl, :a, [:assign, [:lit, "10"]]]]]
+                      ]
+                    ]
+                  ]]]
+                ]],
+                @parser.parse("var foo = function() { var a = 10; }"))
+  end
+
   def test_function_expr_anon_single_arg
     assert_sexp(
                 [[:var,
@@ -45,6 +59,26 @@ class ParserTest < Test::Unit::TestCase
                   ]]]
                 ]],
                 @parser.parse("var foo = function(a,b) { }"))
+  end
+
+  def test_function_expr_no_args
+    assert_sexp(
+                [[:var,
+                  [[:var_decl, :foo, [:assign,
+                    [:func_expr, 'aaron', [], [:func_body, []]]
+                  ]]]
+                ]],
+                @parser.parse("var foo = function aaron() { }"))
+  end
+
+  def test_function_expr_with_args
+    assert_sexp(
+                [[:var,
+                  [[:var_decl, :foo, [:assign,
+                    [:func_expr, 'aaron', [[:param, 'a'], [:param, 'b']], [:func_body, []]]
+                  ]]]
+                ]],
+                @parser.parse("var foo = function aaron(a, b) { }"))
   end
 
   def test_dot_access
