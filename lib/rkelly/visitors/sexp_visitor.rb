@@ -93,6 +93,14 @@ module RKelly
         [ :setter, o.name, o.value.accept(self) ]
       end
 
+      def visit_ElementNode(o)
+        [:element, o.value.accept(self)]
+      end
+
+      def visit_ArrayNode(o)
+        [:array, o.value.map { |x| x ? x.accept(self) : nil }]
+      end
+
       def visit_ThisNode(o)
         [:this]
       end

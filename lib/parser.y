@@ -117,13 +117,17 @@ rule
 
   ArrayLiteral:
     '[' ElisionOpt ']'                  { raise "Not implemented" }
-  | '[' ElementList ']'                 { raise "Not implemented" }
+  | '[' ElementList ']'                 { result = ArrayNode.new(val[1]) }
   | '[' ElementList ',' ElisionOpt ']'  { raise "Not implemented" }
   ;
 
   ElementList:
-    ElisionOpt AssignmentExpr { raise "Not implemented" }
-  | ElementList ',' ElisionOpt AssignmentExpr { raise "Not implemented" }
+    ElisionOpt AssignmentExpr {
+      result = [nil] * val[0] + [ElementNode.new(val[1])]
+    }
+  | ElementList ',' ElisionOpt AssignmentExpr {
+      result = [val[0], [nil] * val[2], ElementNode.new(val[3])].flatten
+    }
   ;
 
   ElisionOpt:
