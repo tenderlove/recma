@@ -61,6 +61,10 @@ module RKelly
         [:param, o.value]
       end
 
+      def visit_BreakNode(o)
+        [:break, o.value].compact
+      end
+
       def visit_ReturnNode(o)
         o.value ? [:return, o.value.accept(self)] : [:return]
       end

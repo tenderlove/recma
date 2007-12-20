@@ -674,26 +674,22 @@ rule
 
   BreakStatement:
     BREAK ';' {
-      raise
-      result = BreakNode.new()
+      result = BreakNode.new(nil)
       debug(result)
     }
   | BREAK error {
-      raise
-      result = BreakNode.new()
+      result = BreakNode.new(nil)
       debug(result)
-      #AUTO_SEMICOLON
+      yyabort unless allow_auto_semi?(val[1])
     }
   | BREAK IDENT ';' {
-      raise
-      result = BreakNode.new($2)
+      result = BreakNode.new(val[1])
       debug(result)
     }
   | BREAK IDENT error {
-      raise
-      result = BreakNode.new($2)
+      result = BreakNode.new(val[1])
       debug(result)
-      #AUTO_SEMICOLON
+      yyabort unless allow_auto_semi?(val[2])
     }
   ;
 
