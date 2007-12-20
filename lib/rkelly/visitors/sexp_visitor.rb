@@ -97,6 +97,10 @@ module RKelly
         [:element, o.value.accept(self)]
       end
 
+      def visit_ExpressionStatementNode(o)
+        [:expression, o.value.accept(self)]
+      end
+
       def visit_ArrayNode(o)
         [:array, o.value.map { |x| x ? x.accept(self) : nil }]
       end

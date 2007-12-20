@@ -239,6 +239,13 @@ class ParserTest < Test::Unit::TestCase
       @parser.parse('var a = (10);'))
   end
 
+  def test_expression_statement
+    assert_sexp(
+                [[:expression, [:dot_access, [:resolve, "foo"], "bar"]]],
+                @parser.parse('foo.bar;')
+               )
+  end
+
   def test_dot_access
     assert_sexp(
       [[:var,
