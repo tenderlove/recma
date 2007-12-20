@@ -116,9 +116,11 @@ rule
   ;
 
   ArrayLiteral:
-    '[' ElisionOpt ']'                  { raise "Not implemented" }
+    '[' ElisionOpt ']'           { result = ArrayNode.new([] + [nil] * val[1]) }
   | '[' ElementList ']'                 { result = ArrayNode.new(val[1]) }
-  | '[' ElementList ',' ElisionOpt ']'  { raise "Not implemented" }
+  | '[' ElementList ',' ElisionOpt ']'  {
+      result = ArrayNode.new(val[1] + [nil] * val[3])
+    }
   ;
 
   ElementList:

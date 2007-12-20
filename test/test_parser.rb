@@ -204,6 +204,31 @@ class ParserTest < Test::Unit::TestCase
                 ]]]]],
                 @parser.parse('var foo = [1,,,2];')
                )
+    assert_sexp(
+                [[:var, [[:var_decl, :foo, [:assign,
+                  [:array, [
+                    [:element, [:lit, 1]],
+                    nil,
+                    nil,
+                  ]]
+                ]]]]],
+                @parser.parse('var foo = [1,,,];')
+               )
+    assert_sexp(
+                [[:var, [[:var_decl, :foo, [:assign,
+                  [:array, [
+                  ]]
+                ]]]]],
+                @parser.parse('var foo = [];')
+               )
+    assert_sexp(
+                [[:var, [[:var_decl, :foo, [:assign,
+                  [:array, [
+                    nil, nil
+                  ]]
+                ]]]]],
+                @parser.parse('var foo = [,,];')
+               )
   end
 
   def test_dot_access
