@@ -93,6 +93,10 @@ module RKelly
         [ :setter, o.name, o.value.accept(self) ]
       end
 
+      def visit_ThisNode(o)
+        [:this]
+      end
+
       def visit_ReturnNode(o)
         o.value ? [:return, o.value.accept(self)] : [:return]
       end

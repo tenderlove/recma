@@ -169,6 +169,13 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('var foo = { bar: 10, baz: 1, }'))
   end
 
+  def test_this
+    assert_sexp(
+                [[:var, [[:var_decl, :foo, [:assign, [:this]]]]]],
+                @parser.parse('var foo = this;')
+               )
+  end
+
   def test_dot_access
     assert_sexp(
       [[:var,

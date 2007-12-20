@@ -108,7 +108,7 @@ rule
   ;
 
   PrimaryExprNoBrace:
-    THIS          { raise "Not implemented" }
+    THIS          { result = ThisNode.new(val.first) }
   | Literal
   | ArrayLiteral
   | IDENT         { result = ResolveNode.new(val.first) }
