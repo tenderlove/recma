@@ -112,7 +112,7 @@ rule
   | Literal
   | ArrayLiteral
   | IDENT         { result = ResolveNode.new(val.first) }
-  | '(' Expr ')'  { raise "Not implemented" }
+  | '(' Expr ')'  { result = val[1] }
   ;
 
   ArrayLiteral:

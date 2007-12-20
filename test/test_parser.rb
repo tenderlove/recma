@@ -231,6 +231,14 @@ class ParserTest < Test::Unit::TestCase
                )
   end
 
+  def test_primary_expr_paren
+    assert_sexp(
+      [[:var,
+        [[:var_decl, :a, [:assign, [:lit, 10]]]]
+      ]],
+      @parser.parse('var a = (10);'))
+  end
+
   def test_dot_access
     assert_sexp(
       [[:var,
