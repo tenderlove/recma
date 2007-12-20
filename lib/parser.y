@@ -78,9 +78,11 @@ rule
   ;
 
   Property:
-    IDENT ':' AssignmentExpr                  { raise "Not implemented" }
-  | STRING ':' AssignmentExpr                 { raise "Not implemented" }
-  | NUMBER ':' AssignmentExpr                 { raise "Not implemented" }
+    IDENT ':' AssignmentExpr {
+      result = PropertyNode.new(val[0], val[2])
+    }
+  | STRING ':' AssignmentExpr { result = PropertyNode.new(val.first, val.last) }
+  | NUMBER ':' AssignmentExpr { result = PropertyNode.new(val.first, val.last) }
   | IDENT IDENT '(' ')' '{' FunctionBody '}'  { raise "Not implemented" }
   | IDENT IDENT '(' FormalParameterList ')' '{' FunctionBody '}' {
       raise "Not implemented"
@@ -88,15 +90,15 @@ rule
   ;
 
   PropertyList:
-    Property                    { raise "Not implemented" }
-  | PropertyList ',' Property   { raise "Not implemented" }
+    Property                    { result = val }
+  | PropertyList ',' Property   { result = [val.first, val.last].flatten }
   ;
 
   PrimaryExpr:
     PrimaryExprNoBrace
-  | '{' '}'                   { raise "Not implemented" }
-  | '{' PropertyList '}'      { raise "Not implemented" }
-  | '{' PropertyList ',' '}'  { raise "Not implemented" }
+  | '{' '}'                   { result = ObjectLiteralNode.new([]) }
+  | '{' PropertyList '}'      { result = ObjectLiteralNode.new(val[1]) }
+  | '{' PropertyList ',' '}'  { result = ObjectLiteralNode.new(val[1]) }
   ;
 
   PrimaryExprNoBrace:

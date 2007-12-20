@@ -77,6 +77,14 @@ module RKelly
         [:throw, o.value.accept(self)]
       end
 
+      def visit_ObjectLiteralNode(o)
+        [:object, o.value.map { |x| x.accept(self) }]
+      end
+
+      def visit_PropertyNode(o)
+        [ :property, o.name, o.value.accept(self) ]
+      end
+
       def visit_ReturnNode(o)
         o.value ? [:return, o.value.accept(self)] : [:return]
       end

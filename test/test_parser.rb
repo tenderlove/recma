@@ -93,6 +93,60 @@ class ParserTest < Test::Unit::TestCase
     assert_sexp([[:throw, [:lit, 10]]], @parser.parse('throw 10'))
   end
 
+  def test_object_literal
+    assert_sexp(
+                [[:var,
+                  [[:var_decl, :foo, [:assign,
+                    [:object, [[:property, "bar", [:lit, 10]]]]
+                  ]]]
+                ]],
+                @parser.parse('var foo = { bar: 10 }'))
+    assert_sexp(
+                [[:var,
+                  [[:var_decl, :foo, [:assign,
+                    [:object, []]
+                  ]]]
+                ]],
+                @parser.parse('var foo = { }'))
+    assert_sexp(
+                [[:var,
+                  [[:var_decl, :foo, [:assign,
+                    [:object, [[:property, '"bar"', [:lit, 10]]]]
+                  ]]]
+                ]],
+                @parser.parse('var foo = { "bar": 10 }'))
+    assert_sexp(
+                [[:var,
+                  [[:var_decl, :foo, [:assign,
+                    [:object, [[:property, 5, [:lit, 10]]]]
+                  ]]]
+                ]],
+                @parser.parse('var foo = { 5: 10 }'))
+  end
+
+  def test_object_literal_multi
+    assert_sexp(
+                [[:var,
+                  [[:var_decl, :foo, [:assign,
+                    [:object, [
+                      [:property, "bar", [:lit, 10]],
+                      [:property, "baz", [:lit, 1]]
+                    ]]
+                  ]]]
+                ]],
+                @parser.parse('var foo = { bar: 10, baz: 1 }'))
+    assert_sexp(
+                [[:var,
+                  [[:var_decl, :foo, [:assign,
+                    [:object, [
+                      [:property, "bar", [:lit, 10]],
+                      [:property, "baz", [:lit, 1]]
+                    ]]
+                  ]]]
+                ]],
+                @parser.parse('var foo = { bar: 10, baz: 1, }'))
+  end
+
   def test_dot_access
     assert_sexp(
       [[:var,
