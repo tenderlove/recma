@@ -278,6 +278,16 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('i /= 10'))
   end
 
+  def test_op_lshift_equal
+    assert_sexp([[:expression, [:op_lshift_equal, [:resolve, 'i'], [:lit, 10]]]],
+                @parser.parse('i <<= 10'))
+  end
+
+  def test_op_rshift_equal
+    assert_sexp([[:expression, [:op_rshift_equal, [:resolve, 'i'], [:lit, 10]]]],
+                @parser.parse('i >>= 10'))
+  end
+
   def test_dot_access
     assert_sexp(
       [[:var,

@@ -468,8 +468,8 @@ rule
   | MINUSEQUAL                          { result = OpMinusEqualNode }
   | MULTEQUAL                           { result = OpMultiplyEqualNode }
   | DIVEQUAL                            { result = OpDivideEqualNode }
-  | LSHIFTEQUAL                         { raise; result = OpLShift; }
-  | RSHIFTEQUAL                         { raise; result = OpRShift; }
+  | LSHIFTEQUAL                         { result = OpLShiftEqualNode }
+  | RSHIFTEQUAL                         { result = OpRShiftEqualNode }
   | URSHIFTEQUAL                        { raise; result = OpURShift; }
   | ANDEQUAL                            { raise; result = OpAndEq; }
   | XOREQUAL                            { raise; result = OpXOrEq; }

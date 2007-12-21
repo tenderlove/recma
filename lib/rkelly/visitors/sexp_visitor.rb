@@ -121,6 +121,14 @@ module RKelly
         [:op_divide_equal, o.left.accept(self), o.value.accept(self)]
       end
 
+      def visit_OpLShiftEqualNode(o)
+        [:op_lshift_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_OpRShiftEqualNode(o)
+        [:op_rshift_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
       def visit_CommaNode(o)
         [:comma, o.left.accept(self), o.value.accept(self)]
       end
