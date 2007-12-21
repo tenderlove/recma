@@ -463,11 +463,11 @@ rule
   ;
 
   AssignmentOperator:
-    '='                                 { result = OpEqualNode; }
-  | PLUSEQUAL                           { raise; result = OpPlusEq; }
-  | MINUSEQUAL                          { raise; result = OpMinusEq; }
-  | MULTEQUAL                           { raise; result = OpMultEq; }
-  | DIVEQUAL                            { raise; result = OpDivEq; }
+    '='                                 { result = OpEqualNode }
+  | PLUSEQUAL                           { result = OpPlusEqualNode }
+  | MINUSEQUAL                          { result = OpMinusEqualNode }
+  | MULTEQUAL                           { result = OpMultiplyEqualNode }
+  | DIVEQUAL                            { result = OpDivideEqualNode }
   | LSHIFTEQUAL                         { raise; result = OpLShift; }
   | RSHIFTEQUAL                         { raise; result = OpRShift; }
   | URSHIFTEQUAL                        { raise; result = OpURShift; }

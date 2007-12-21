@@ -35,6 +35,7 @@ module RKelly
       '+='  => :PLUSEQUAL,
       '-='  => :MINUSEQUAL,
       '*='  => :MULTEQUAL,
+      '/='  => :DIVEQUAL,
     }
 
     def initialize(&block)

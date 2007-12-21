@@ -105,6 +105,22 @@ module RKelly
         [:op_equal, o.left.accept(self), o.value.accept(self)]
       end
 
+      def visit_OpPlusEqualNode(o)
+        [:op_plus_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_OpMinusEqualNode(o)
+        [:op_minus_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_OpMultiplyEqualNode(o)
+        [:op_multiply_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_OpDivideEqualNode(o)
+        [:op_divide_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
       def visit_CommaNode(o)
         [:comma, o.left.accept(self), o.value.accept(self)]
       end

@@ -258,6 +258,26 @@ class ParserTest < Test::Unit::TestCase
                )
   end
 
+  def test_op_plus_equal
+    assert_sexp([[:expression, [:op_plus_equal, [:resolve, 'i'], [:lit, 10]]]],
+                @parser.parse('i += 10'))
+  end
+
+  def test_op_minus_equal
+    assert_sexp([[:expression, [:op_minus_equal, [:resolve, 'i'], [:lit, 10]]]],
+                @parser.parse('i -= 10'))
+  end
+
+  def test_op_multiply_equal
+    assert_sexp([[:expression, [:op_multiply_equal, [:resolve, 'i'], [:lit, 10]]]],
+                @parser.parse('i *= 10'))
+  end
+
+  def test_op_divide_equal
+    assert_sexp([[:expression, [:op_divide_equal, [:resolve, 'i'], [:lit, 10]]]],
+                @parser.parse('i /= 10'))
+  end
+
   def test_dot_access
     assert_sexp(
       [[:var,
