@@ -152,9 +152,11 @@ rule
 
   MemberExprNoBF:
     PrimaryExprNoBrace
-  | MemberExprNoBF '[' Expr ']' { raise; result = BracketAccessorNode.new(val[0], val[2]) }
+  | MemberExprNoBF '[' Expr ']' {
+      result = BracketAccessorNode.new(val[0], val[2])
+    }
   | MemberExprNoBF '.' IDENT    { result = DotAccessorNode.new(val[0], val[2]) }
-  | NEW MemberExpr Arguments    { raise; result = NewExprNode.new(val[1], val[2]); }
+  | NEW MemberExpr Arguments    { result = NewExprNode.new(val[1], val[2]) }
   ;
 
   NewExpr:

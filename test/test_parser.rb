@@ -313,6 +313,22 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('i %= 10'))
   end
 
+  def test_bracket_access_no_bf
+    assert_sexp(
+      [[:expression,
+            [:bracket_access, [:resolve, "foo"], [:lit, 10]],
+      ]],
+      @parser.parse('foo[10];'))
+  end
+
+  def test_new_member_expr_no_bf
+    assert_sexp(
+      [[:expression,
+            [:new_expr, [:resolve, "foo"], [:args, []]],
+      ]],
+      @parser.parse('new foo();'))
+  end
+
   def test_dot_access
     assert_sexp(
       [[:var,
