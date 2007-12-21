@@ -185,14 +185,12 @@ rule
 
   Arguments:
     '(' ')'               { result = ArgumentsNode.new([]) }
-  | '(' ArgumentList ')'  { raise; result = ArgumentsNode.new($2.head); }
+  | '(' ArgumentList ')'  { result = ArgumentsNode.new(val[1]); }
   ;
 
   ArgumentList:
-    AssignmentExpr                      { raise; result.head = ArgumentListNode.new($1);
-                                          result.tail = result.head; }
-  | ArgumentList ',' AssignmentExpr     { raise; result.head = $1.head;
-                                          result.tail = ArgumentListNode.new($1.tail, $3); }
+    AssignmentExpr                      { result = val }
+  | ArgumentList ',' AssignmentExpr     { result = [val[0], val[2]].flatten }
   ;
 
   LeftHandSideExpr:

@@ -337,6 +337,23 @@ class ParserTest < Test::Unit::TestCase
                   ]]
                 ]],
                 @parser.parse('var x = bar();'))
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:function_call, [:resolve, "bar"], [:args, [[:lit, 10]]]]]
+                  ]]
+                ]],
+                @parser.parse('var x = bar(10);'))
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:function_call, [:resolve, "bar"], [:args, [
+                      [:resolve, 'a'],
+                      [:lit, 10]
+                    ]]]]
+                  ]]
+                ]],
+                @parser.parse('var x = bar(a,10);'))
   end
 
   def test_dot_access
