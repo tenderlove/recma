@@ -34,6 +34,11 @@ module RKelly
       '>>'  => :RSHIFT,
       '>>=' => :RSHIFTEQUAL,
       '>>>' => :URSHIFT,
+      '>>>='=> :URSHIFTEQUAL,
+      '&='  => :ANDEQUAL,
+      '%='  => :MODEQUAL,
+      '^='  => :XOREQUAL,
+      '|='  => :OREQUAL,
       '+='  => :PLUSEQUAL,
       '-='  => :MINUSEQUAL,
       '*='  => :MULTEQUAL,
@@ -57,7 +62,7 @@ module RKelly
       token(:LITERALS,
         Regexp.new(LITERALS.keys.sort_by { |x|
           x.length
-        }.reverse.map { |x| "\\A#{x.gsub(/([|+*])/, '\\\\\1')}" }.join('|')
+        }.reverse.map { |x| "\\A#{x.gsub(/([|+*^])/, '\\\\\1')}" }.join('|')
       )) do |type, value|
         [LITERALS[value], value]
       end

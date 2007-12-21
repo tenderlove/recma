@@ -470,11 +470,11 @@ rule
   | DIVEQUAL                            { result = OpDivideEqualNode }
   | LSHIFTEQUAL                         { result = OpLShiftEqualNode }
   | RSHIFTEQUAL                         { result = OpRShiftEqualNode }
-  | URSHIFTEQUAL                        { raise; result = OpURShift; }
-  | ANDEQUAL                            { raise; result = OpAndEq; }
-  | XOREQUAL                            { raise; result = OpXOrEq; }
-  | OREQUAL                             { raise; result = OpOrEq; }
-  | MODEQUAL                            { raise; result = OpModEq; }
+  | URSHIFTEQUAL                        { result = OpURShiftEqualNode }
+  | ANDEQUAL                            { result = OpAndEqualNode }
+  | XOREQUAL                            { result = OpXOrEqualNode }
+  | OREQUAL                             { result = OpOrEqualNode }
+  | MODEQUAL                            { result = OpModEqualNode }
   ;
 
   Expr:

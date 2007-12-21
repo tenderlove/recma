@@ -129,6 +129,26 @@ module RKelly
         [:op_rshift_equal, o.left.accept(self), o.value.accept(self)]
       end
 
+      def visit_OpURShiftEqualNode(o)
+        [:op_urshift_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_OpAndEqualNode(o)
+        [:op_and_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_OpXOrEqualNode(o)
+        [:op_xor_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_OpOrEqualNode(o)
+        [:op_or_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_OpModEqualNode(o)
+        [:op_mod_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
       def visit_CommaNode(o)
         [:comma, o.left.accept(self), o.value.accept(self)]
       end

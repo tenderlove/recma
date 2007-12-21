@@ -288,6 +288,31 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('i >>= 10'))
   end
 
+  def test_op_rshift_equal
+    assert_sexp([[:expression, [:op_urshift_equal, [:resolve, 'i'], [:lit, 10]]]],
+                @parser.parse('i >>>= 10'))
+  end
+
+  def test_op_and_equal
+    assert_sexp([[:expression, [:op_and_equal, [:resolve, 'i'], [:lit, 10]]]],
+                @parser.parse('i &= 10'))
+  end
+
+  def test_op_xor_equal
+    assert_sexp([[:expression, [:op_xor_equal, [:resolve, 'i'], [:lit, 10]]]],
+                @parser.parse('i ^= 10'))
+  end
+
+  def test_op_or_equal
+    assert_sexp([[:expression, [:op_or_equal, [:resolve, 'i'], [:lit, 10]]]],
+                @parser.parse('i |= 10'))
+  end
+
+  def test_op_mod_equal
+    assert_sexp([[:expression, [:op_mod_equal, [:resolve, 'i'], [:lit, 10]]]],
+                @parser.parse('i %= 10'))
+  end
+
   def test_dot_access
     assert_sexp(
       [[:var,
