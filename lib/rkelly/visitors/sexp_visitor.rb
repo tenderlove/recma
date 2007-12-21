@@ -153,6 +153,10 @@ module RKelly
         [:comma, o.left.accept(self), o.value.accept(self)]
       end
 
+      def visit_FunctionCallNode(o)
+        [:function_call, o.value.accept(self), o.arguments.accept(self)]
+      end
+
       def visit_ArrayNode(o)
         [:array, o.value.map { |x| x ? x.accept(self) : nil }]
       end

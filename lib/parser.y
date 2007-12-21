@@ -170,7 +170,7 @@ rule
   ;
 
   CallExpr:
-    MemberExpr Arguments  { raise; result = makeFunctionCallNode($1, $2); }
+    MemberExpr Arguments  { result = FunctionCallNode.new(val[0], val[1]) }
   | CallExpr Arguments    { raise; result = makeFunctionCallNode($1, $2); }
   | CallExpr '[' Expr ']' { raise; result = BracketAccessorNode.new($1, $3); }
   | CallExpr '.' IDENT    { raise; result = DotAccessorNode.new($1, $3); }

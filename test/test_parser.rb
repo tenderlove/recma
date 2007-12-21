@@ -329,6 +329,16 @@ class ParserTest < Test::Unit::TestCase
       @parser.parse('new foo();'))
   end
 
+  def test_resolve_function_call
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:function_call, [:resolve, "bar"], [:args, []]]]
+                  ]]
+                ]],
+                @parser.parse('var x = bar();'))
+  end
+
   def test_dot_access
     assert_sexp(
       [[:var,
