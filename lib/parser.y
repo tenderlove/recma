@@ -512,7 +512,7 @@ rule
   | VAR VariableDeclarationList error {
       result = VarStatementNode.new(val[1])
       debug(result)
-      yyabort unless allow_auto_semi?(val.last)
+      raise "no auto semi!" unless allow_auto_semi?(val.last)
     }
   ;
 

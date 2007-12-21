@@ -250,6 +250,10 @@ class ParserTest < Test::Unit::TestCase
                )
   end
 
+  def test_expr_comma
+    @parser.parse('i = 10, j = 11;')
+  end
+
   def test_dot_access
     assert_sexp(
       [[:var,
