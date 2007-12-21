@@ -444,8 +444,9 @@ rule
 
   AssignmentExpr:
     ConditionalExpr
-  | LeftHandSideExpr AssignmentOperator AssignmentExpr
-                                        { raise; result = makeAssignNode($1, $2, $3); }
+  | LeftHandSideExpr AssignmentOperator AssignmentExpr {
+      result = val[1].new(val.first, val.last)
+    }
   ;
 
   AssignmentExprNoIn:
@@ -456,12 +457,13 @@ rule
 
   AssignmentExprNoBF:
     ConditionalExprNoBF
-  | LeftHandSideExprNoBF AssignmentOperator AssignmentExpr
-                                        { raise; result = makeAssignNode($1, $2, $3); }
+  | LeftHandSideExprNoBF AssignmentOperator AssignmentExpr {
+      result = val[1].new(val.first, val.last)
+    }
   ;
 
   AssignmentOperator:
-    '='                                 { raise; result = OpEqual; }
+    '='                                 { result = OpEqualNode; }
   | PLUSEQUAL                           { raise; result = OpPlusEq; }
   | MINUSEQUAL                          { raise; result = OpMinusEq; }
   | MULTEQUAL                           { raise; result = OpMultEq; }
@@ -487,7 +489,7 @@ rule
 
   ExprNoBF:
     AssignmentExprNoBF
-  | ExprNoBF ',' AssignmentExpr         { raise; result = CommaNode.new($1, $3); }
+  | ExprNoBF ',' AssignmentExpr       { result = CommaNode.new(val[0], val[2]) }
   ;
 
 

@@ -101,6 +101,14 @@ module RKelly
         [:expression, o.value.accept(self)]
       end
 
+      def visit_OpEqualNode(o)
+        [:op_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_CommaNode(o)
+        [:comma, o.left.accept(self), o.value.accept(self)]
+      end
+
       def visit_ArrayNode(o)
         [:array, o.value.map { |x| x ? x.accept(self) : nil }]
       end
