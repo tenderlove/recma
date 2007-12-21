@@ -368,6 +368,32 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('var x = bar()();'))
   end
 
+  def test_bracket_on_function
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:bracket_access,
+                      [:function_call, [:resolve, "bar"], [:args, []]],
+                      [:lit, 1]
+                    ]]
+                  ]]
+                ]],
+                @parser.parse('var x = bar()[1];'))
+  end
+
+  def test_dot_on_function
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:dot_access,
+                      [:function_call, [:resolve, "bar"], [:args, []]],
+                      'baz'
+                    ]]
+                  ]]
+                ]],
+                @parser.parse('var x = bar().baz;'))
+  end
+
   def test_dot_access
     assert_sexp(
       [[:var,

@@ -172,8 +172,8 @@ rule
   CallExpr:
     MemberExpr Arguments  { result = FunctionCallNode.new(val[0], val[1]) }
   | CallExpr Arguments    { result = FunctionCallNode.new(val[0], val[1]) }
-  | CallExpr '[' Expr ']' { raise; result = BracketAccessorNode.new($1, $3); }
-  | CallExpr '.' IDENT    { raise; result = DotAccessorNode.new($1, $3); }
+  | CallExpr '[' Expr ']' { result = BracketAccessorNode.new(val[0], val[2]) }
+  | CallExpr '.' IDENT    { result = DotAccessorNode.new(val[0], val[2]) }
   ;
 
   CallExprNoBF:
