@@ -30,6 +30,38 @@ module RKelly
         [:postfix, o.operand.accept(self), o.value]
       end
 
+      def visit_PrefixNode(o)
+        [:prefix, o.operand.accept(self), o.value]
+      end
+
+      def visit_DeleteNode(o)
+        [:delete, o.value.accept(self)]
+      end
+
+      def visit_VoidNode(o)
+        [:void, o.value.accept(self)]
+      end
+
+      def visit_TypeOfNode(o)
+        [:typeof, o.value.accept(self)]
+      end
+
+      def visit_UnaryPlusNode(o)
+        [:u_plus, o.value.accept(self)]
+      end
+
+      def visit_UnaryMinusNode(o)
+        [:u_minus, o.value.accept(self)]
+      end
+
+      def visit_BitwiseNotNode(o)
+        [:bitwise_not, o.value.accept(self)]
+      end
+
+      def visit_LogicalNotNode(o)
+        [:logical_not, o.value.accept(self)]
+      end
+
       def visit_ConstStatementNode(o)
         [:const, o.value.map { |x| x.accept(self) }]
       end

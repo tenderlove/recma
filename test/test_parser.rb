@@ -288,7 +288,7 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('i >>= 10'))
   end
 
-  def test_op_rshift_equal
+  def test_op_urshift_equal
     assert_sexp([[:expression, [:op_urshift_equal, [:resolve, 'i'], [:lit, 10]]]],
                 @parser.parse('i >>>= 10'))
   end
@@ -423,6 +423,48 @@ class ParserTest < Test::Unit::TestCase
     assert_sexp([[:expression,
                   [:postfix, [:lit, 10], '--']]],
                   @parser.parse('10--;'))
+  end
+
+  def test_unary_delete
+    assert_sexp([[:expression, [:delete, [:resolve, 'foo']]]],
+                @parser.parse('delete foo;'))
+  end
+
+  def test_unary_void
+    assert_sexp([[:expression, [:void, [:resolve, 'foo']]]],
+                @parser.parse('void foo;'))
+  end
+
+  def test_unary_typeof
+    assert_sexp([[:expression, [:typeof, [:resolve, 'foo']]]],
+                @parser.parse('typeof foo;'))
+  end
+
+  def test_unary_prefix
+    assert_sexp([[:expression, [:prefix, [:lit, 10], '++']]],
+                @parser.parse('++10;'))
+    assert_sexp([[:expression, [:prefix, [:lit, 10], '--']]],
+                @parser.parse('--10;'))
+  end
+
+  def test_unary_plus
+    assert_sexp([[:expression, [:u_plus, [:lit, 10]]]],
+                @parser.parse('+10;'))
+  end
+
+  def test_unary_minus
+    assert_sexp([[:expression, [:u_minus, [:lit, 10]]]],
+                @parser.parse('-10;'))
+  end
+
+  def test_unary_bitwise_not
+    assert_sexp([[:expression, [:bitwise_not, [:lit, 10]]]],
+                @parser.parse('~10;'))
+  end
+
+  def test_unary_logical_not
+    assert_sexp([[:expression, [:logical_not, [:lit, 10]]]],
+                @parser.parse('!10;'))
   end
 
   def test_function_call_on_function

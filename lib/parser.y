@@ -216,17 +216,19 @@ rule
   ;
 
   UnaryExprCommon:
-    DELETE UnaryExpr     { raise; result = makeDeleteNode($2); }
-  | VOID UnaryExpr       { raise; result = VoidNode.new($2); }
-  | TYPEOF UnaryExpr          { raise; result = makeTypeOfNode($2); }
-  | PLUSPLUS UnaryExpr        { raise; result = makePrefixNode($2, OpPlusPlus); }
-  | AUTOPLUSPLUS UnaryExpr    { raise; result = makePrefixNode($2, OpPlusPlus); }
-  | MINUSMINUS UnaryExpr      { raise; result = makePrefixNode($2, OpMinusMinus); }
-  | AUTOMINUSMINUS UnaryExpr  { raise; result = makePrefixNode($2, OpMinusMinus); }
-  | '+' UnaryExpr             { raise; result = UnaryPlusNode.new($2); }
-  | '-' UnaryExpr             { raise; result = makeNegateNode($2); }
-  | '~' UnaryExpr             { raise; result = BitwiseNotNode.new($2); }
-  | '!' UnaryExpr             { raise; result = LogicalNotNode.new($2); }
+    DELETE UnaryExpr     { result = DeleteNode.new(val[1]) }
+  | VOID UnaryExpr       { result = VoidNode.new(val[1]) }
+  | TYPEOF UnaryExpr          { result = TypeOfNode.new(val[1]) }
+  | PLUSPLUS UnaryExpr        { result = PrefixNode.new(val[1], '++') }
+  /* FIXME: Not sure when this can ever happen
+  | AUTOPLUSPLUS UnaryExpr    { result = makePrefixNode($2, OpPlusPlus); } */
+  | MINUSMINUS UnaryExpr      { result = PrefixNode.new(val[1], '--') }
+  /* FIXME: Not sure when this can ever happen
+  | AUTOMINUSMINUS UnaryExpr  { result = makePrefixNode($2, OpMinusMinus); } */
+  | '+' UnaryExpr             { result = UnaryPlusNode.new(val[1]) }
+  | '-' UnaryExpr             { result = UnaryMinusNode.new(val[1]) }
+  | '~' UnaryExpr             { result = BitwiseNotNode.new(val[1]) }
+  | '!' UnaryExpr             { result = LogicalNotNode.new(val[1]) }
   ;
 
   UnaryExpr:
