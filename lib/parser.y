@@ -205,14 +205,14 @@ rule
 
   PostfixExpr:
     LeftHandSideExpr
-  | LeftHandSideExpr PLUSPLUS   { raise; result = makePostfixNode($1, OpPlusPlus); }
-  | LeftHandSideExpr MINUSMINUS { raise; result = makePostfixNode($1, OpMinusMinus); }
+  | LeftHandSideExpr PLUSPLUS   { result = PostfixNode.new(val[0], '++') }
+  | LeftHandSideExpr MINUSMINUS { result = PostfixNode.new(val[0], '--') }
   ;
 
   PostfixExprNoBF:
     LeftHandSideExprNoBF
-  | LeftHandSideExprNoBF PLUSPLUS   { raise; result = makePostfixNode($1, OpPlusPlus); }
-  | LeftHandSideExprNoBF MINUSMINUS { raise; result = makePostfixNode($1, OpMinusMinus); }
+  | LeftHandSideExprNoBF PLUSPLUS   { result = PostfixNode.new(val[0], '++') }
+  | LeftHandSideExprNoBF MINUSMINUS { result = PostfixNode.new(val[0], '--') }
   ;
 
   UnaryExprCommon:

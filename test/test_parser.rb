@@ -403,6 +403,28 @@ class ParserTest < Test::Unit::TestCase
       @parser.parse('var a = new foo;'))
   end
 
+  def test_postfix_expr
+    assert_sexp([[:var,
+                [[:var_decl,
+                  :x,
+                  [:assign, [:postfix, [:lit, 10], '++']]]]]],
+                  @parser.parse('var x = 10++;'))
+    assert_sexp([[:var,
+                [[:var_decl,
+                  :x,
+                  [:assign, [:postfix, [:lit, 10], '--']]]]]],
+                  @parser.parse('var x = 10--;'))
+  end
+
+  def test_postfix_expr_no_bf
+    assert_sexp([[:expression,
+                  [:postfix, [:lit, 10], '++']]],
+                  @parser.parse('10++;'))
+    assert_sexp([[:expression,
+                  [:postfix, [:lit, 10], '--']]],
+                  @parser.parse('10--;'))
+  end
+
   def test_function_call_on_function
     assert_sexp([[:var,
                   [[:var_decl,

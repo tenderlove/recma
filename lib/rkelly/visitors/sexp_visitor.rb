@@ -26,6 +26,10 @@ module RKelly
         [:var, o.value.map { |x| x.accept(self) }]
       end
 
+      def visit_PostfixNode(o)
+        [:postfix, o.operand.accept(self), o.value]
+      end
+
       def visit_ConstStatementNode(o)
         [:const, o.value.map { |x| x.accept(self) }]
       end
