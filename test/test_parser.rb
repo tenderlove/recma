@@ -477,6 +477,11 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('var x = 5 * 10;'))
   end
 
+  def test_multiply_no_bf
+    assert_sexp([[:expression, [:multiply, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 * 10;'))
+  end
+
   def test_divide
     assert_sexp([[:var,
                   [[:var_decl,
@@ -487,6 +492,11 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('var x = 5 / 10;'))
   end
 
+  def test_divide_no_bf
+    assert_sexp([[:expression, [:divide, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 / 10;'))
+  end
+
   def test_modulus
     assert_sexp([[:var,
                   [[:var_decl,
@@ -495,6 +505,11 @@ class ParserTest < Test::Unit::TestCase
                   ]]
                 ]],
                 @parser.parse('var x = 5 % 10;'))
+  end
+
+  def test_modulus_no_bf
+    assert_sexp([[:expression, [:modulus, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 % 10;'))
   end
 
   def test_function_call_on_function

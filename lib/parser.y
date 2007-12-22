@@ -250,9 +250,9 @@ rule
 
   MultiplicativeExprNoBF:
     UnaryExprNoBF
-  | MultiplicativeExprNoBF '*' UnaryExpr { raise; result = MultNode.new($1, $3); }
-  | MultiplicativeExprNoBF '/' UnaryExpr { raise; result = DivNode.new($1, $3); }
-  | MultiplicativeExprNoBF '%' UnaryExpr { raise; result = ModNode.new($1, $3); }
+  | MultiplicativeExprNoBF '*' UnaryExpr { result = MultiplyNode.new(val[0], val[2]) }
+  | MultiplicativeExprNoBF '/' UnaryExpr { result = DivideNode.new(val[0],val[2]) }
+  | MultiplicativeExprNoBF '%' UnaryExpr { result = ModulusNode.new(val[0], val[2]) }
   ;
 
   AdditiveExpr:
