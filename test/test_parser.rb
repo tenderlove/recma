@@ -512,6 +512,36 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('5 % 10;'))
   end
 
+  def test_add
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:add, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 + 10;'))
+  end
+
+  def test_add_no_bf
+    assert_sexp([[:expression, [:add, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 + 10;'))
+  end
+
+  def test_subtract
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:subtract, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 - 10;'))
+  end
+
+  def test_subtract_no_bf
+    assert_sexp([[:expression, [:subtract, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 - 10;'))
+  end
+
   def test_function_call_on_function
     assert_sexp([[:var,
                   [[:var_decl,

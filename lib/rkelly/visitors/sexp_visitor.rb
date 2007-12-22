@@ -78,6 +78,14 @@ module RKelly
         [:modulus, o.left.accept(self), o.value.accept(self)]
       end
 
+      def visit_AddNode(o)
+        [:add, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_SubtractNode(o)
+        [:subtract, o.left.accept(self), o.value.accept(self)]
+      end
+
       def visit_EmptyStatementNode(o)
         [:empty]
       end

@@ -257,14 +257,14 @@ rule
 
   AdditiveExpr:
     MultiplicativeExpr
-  | AdditiveExpr '+' MultiplicativeExpr { raise; result = makeAddNode($1, $3); }
-  | AdditiveExpr '-' MultiplicativeExpr { raise; result = SubNode.new($1, $3); }
+  | AdditiveExpr '+' MultiplicativeExpr { result = AddNode.new(val[0], val[2]) }
+  | AdditiveExpr '-' MultiplicativeExpr { result = SubtractNode.new(val[0], val[2]) }
   ;
 
   AdditiveExprNoBF:
     MultiplicativeExprNoBF
-  | AdditiveExprNoBF '+' MultiplicativeExpr { raise; result = makeAddNode($1, $3); }
-  | AdditiveExprNoBF '-' MultiplicativeExpr { raise; result = SubNode.new($1, $3); }
+  | AdditiveExprNoBF '+' MultiplicativeExpr { result = AddNode.new(val[0], val[2]) }
+  | AdditiveExprNoBF '-' MultiplicativeExpr { result = SubtractNode.new(val[0], val[2]) }
   ;
 
   ShiftExpr:
