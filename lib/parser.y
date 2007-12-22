@@ -283,10 +283,10 @@ rule
 
   RelationalExpr:
     ShiftExpr
-  | RelationalExpr '<' ShiftExpr        { raise; result = makeLessNode($1, $3); }
-  | RelationalExpr '>' ShiftExpr        { raise; result = GreaterNode.new($1, $3); }
-  | RelationalExpr LE ShiftExpr         { raise; result = LessEqNode.new($1, $3); }
-  | RelationalExpr GE ShiftExpr         { raise; result = GreaterEqNode.new($1, $3); }
+  | RelationalExpr '<' ShiftExpr        { result = LessNode.new(val[0], val[2])}
+  | RelationalExpr '>' ShiftExpr        { result = GreaterNode.new(val[0], val[2]) }
+  | RelationalExpr LE ShiftExpr         { result = LessOrEqualNode.new(val[0], val[2]) }
+  | RelationalExpr GE ShiftExpr         { result = GreaterOrEqualNode.new(val[0], val[2]) }
   | RelationalExpr INSTANCEOF ShiftExpr { raise; result = InstanceOfNode.new($1, $3); }
   | RelationalExpr IN ShiftExpr    { raise; result = InNode.new($1, $3); }
   ;
@@ -303,10 +303,10 @@ rule
 
   RelationalExprNoBF:
     ShiftExprNoBF
-  | RelationalExprNoBF '<' ShiftExpr    { raise; result = makeLessNode($1, $3); }
-  | RelationalExprNoBF '>' ShiftExpr    { raise; result = GreaterNode.new($1, $3); }
-  | RelationalExprNoBF LE ShiftExpr     { raise; result = LessEqNode.new($1, $3); }
-  | RelationalExprNoBF GE ShiftExpr     { raise; result = GreaterEqNode.new($1, $3); }
+  | RelationalExprNoBF '<' ShiftExpr    { result = LessNode.new(val[0], val[2]) }
+  | RelationalExprNoBF '>' ShiftExpr    { result = GreaterNode.new(val[0], val[2]) }
+  | RelationalExprNoBF LE ShiftExpr     { result = LessOrEqualNode.new(val[0], val[2]) }
+  | RelationalExprNoBF GE ShiftExpr     { result = GreaterOrEqualNode.new(val[0], val[2]) }
   | RelationalExprNoBF INSTANCEOF ShiftExpr
                                         { raise; result = InstanceOfNode.new($1, $3); }
   | RelationalExprNoBF IN ShiftExpr     { raise; result = InNode.new($1, $3); }

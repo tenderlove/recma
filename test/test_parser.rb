@@ -587,6 +587,66 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('5 >>> 10;'))
   end
 
+  def test_less
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:less, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 < 10;'))
+  end
+
+  def test_less_no_bf
+    assert_sexp([[:expression, [:less, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 < 10;'))
+  end
+
+  def test_greater
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:greater, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 > 10;'))
+  end
+
+  def test_greater_no_bf
+    assert_sexp([[:expression, [:greater, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 > 10;'))
+  end
+
+  def test_less_or_equal
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:less_or_equal, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 <= 10;'))
+  end
+
+  def test_less_or_equal_no_bf
+    assert_sexp([[:expression, [:less_or_equal, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 <= 10;'))
+  end
+
+  def test_greater_or_equal
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:greater_or_equal, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 >= 10;'))
+  end
+
+  def test_greater_or_equal_no_bf
+    assert_sexp([[:expression, [:greater_or_equal, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 >= 10;'))
+  end
+
   def test_function_call_on_function
     assert_sexp([[:var,
                   [[:var_decl,

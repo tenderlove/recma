@@ -98,6 +98,22 @@ module RKelly
         [:subtract, o.left.accept(self), o.value.accept(self)]
       end
 
+      def visit_LessNode(o)
+        [:less, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_GreaterNode(o)
+        [:greater, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_LessOrEqualNode(o)
+        [:less_or_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_GreaterOrEqualNode(o)
+        [:greater_or_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
       def visit_EmptyStatementNode(o)
         [:empty]
       end
