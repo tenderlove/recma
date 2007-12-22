@@ -177,10 +177,10 @@ rule
   ;
 
   CallExprNoBF:
-    MemberExprNoBF Arguments  { raise; result = makeFunctionCallNode($1, $2); }
-  | CallExprNoBF Arguments    { raise; result = makeFunctionCallNode($1, $2); }
-  | CallExprNoBF '[' Expr ']' { raise; result = BracketAccessorNode.new($1, $3); }
-  | CallExprNoBF '.' IDENT    { raise; result = DotAccessorNode.new($1, $3); }
+    MemberExprNoBF Arguments  { result = FunctionCallNode.new(val[0], val[1]) }
+  | CallExprNoBF Arguments    { result = FunctionCallNode.new(val[0], val[1]) }
+  | CallExprNoBF '[' Expr ']' { result = BracketAccessorNode.new(val[0], val[2]) }
+  | CallExprNoBF '.' IDENT    { result = DotAccessorNode.new(val[0], val[2]) }
   ;
 
   Arguments:
