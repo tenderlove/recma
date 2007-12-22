@@ -66,6 +66,18 @@ module RKelly
         [:const, o.value.map { |x| x.accept(self) }]
       end
 
+      def visit_MultiplyNode(o)
+        [:multiply, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_DivideNode(o)
+        [:divide, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_ModulusNode(o)
+        [:modulus, o.left.accept(self), o.value.accept(self)]
+      end
+
       def visit_EmptyStatementNode(o)
         [:empty]
       end

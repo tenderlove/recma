@@ -467,6 +467,36 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('!10;'))
   end
 
+  def test_multiply
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:multiply, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 * 10;'))
+  end
+
+  def test_divide
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:divide, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 / 10;'))
+  end
+
+  def test_modulus
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:modulus, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 % 10;'))
+  end
+
   def test_function_call_on_function
     assert_sexp([[:var,
                   [[:var_decl,

@@ -243,9 +243,9 @@ rule
 
   MultiplicativeExpr:
     UnaryExpr
-  | MultiplicativeExpr '*' UnaryExpr  { raise; result = MultNode.new($1, $3); }
-  | MultiplicativeExpr '/' UnaryExpr  { raise; result = DivNode.new($1, $3); }
-  | MultiplicativeExpr '%' UnaryExpr  { raise; result = ModNode.new($1, $3); }
+  | MultiplicativeExpr '*' UnaryExpr { result = MultiplyNode.new(val[0],val[2])}
+  | MultiplicativeExpr '/' UnaryExpr { result = DivideNode.new(val[0], val[2]) }
+  | MultiplicativeExpr '%' UnaryExpr { result = ModulusNode.new(val[0], val[2])}
   ;
 
   MultiplicativeExprNoBF:
