@@ -542,6 +542,51 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('5 - 10;'))
   end
 
+  def test_lshift
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:lshift, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 << 10;'))
+  end
+
+  def test_lshift_no_bf
+    assert_sexp([[:expression, [:lshift, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 << 10;'))
+  end
+
+  def test_rshift
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:rshift, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 >> 10;'))
+  end
+
+  def test_rshift_no_bf
+    assert_sexp([[:expression, [:rshift, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 >> 10;'))
+  end
+
+  def test_urshift
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:urshift, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 >>> 10;'))
+  end
+
+  def test_urshift_no_bf
+    assert_sexp([[:expression, [:urshift, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 >>> 10;'))
+  end
+
   def test_function_call_on_function
     assert_sexp([[:var,
                   [[:var_decl,

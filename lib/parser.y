@@ -269,16 +269,16 @@ rule
 
   ShiftExpr:
     AdditiveExpr
-  | ShiftExpr LSHIFT AdditiveExpr   { raise; result = LeftShiftNode.new($1, $3); }
-  | ShiftExpr RSHIFT AdditiveExpr   { raise; result = RightShiftNode.new($1, $3); }
-  | ShiftExpr URSHIFT AdditiveExpr  { raise; result = UnsignedRightShiftNode.new($1, $3); }
+  | ShiftExpr LSHIFT AdditiveExpr   { result = LeftShiftNode.new(val[0], val[2]) }
+  | ShiftExpr RSHIFT AdditiveExpr   { result = RightShiftNode.new(val[0], val[2]) }
+  | ShiftExpr URSHIFT AdditiveExpr  { result = UnsignedRightShiftNode.new(val[0], val[2]) }
   ;
 
   ShiftExprNoBF:
     AdditiveExprNoBF
-  | ShiftExprNoBF LSHIFT AdditiveExpr   { raise; result = LeftShiftNode.new($1, $3); }
-  | ShiftExprNoBF RSHIFT AdditiveExpr   { raise; result = RightShiftNode.new($1, $3); }
-  | ShiftExprNoBF URSHIFT AdditiveExpr  { raise; result = UnsignedRightShiftNode.new($1, $3); }
+  | ShiftExprNoBF LSHIFT AdditiveExpr   { result = LeftShiftNode.new(val[0], val[2]) }
+  | ShiftExprNoBF RSHIFT AdditiveExpr   { result = RightShiftNode.new(val[0], val[2]) }
+  | ShiftExprNoBF URSHIFT AdditiveExpr  { result = UnsignedRightShiftNode.new(val[0], val[2]) }
   ;
 
   RelationalExpr:

@@ -82,6 +82,18 @@ module RKelly
         [:add, o.left.accept(self), o.value.accept(self)]
       end
 
+      def visit_LeftShiftNode(o)
+        [:lshift, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_RightShiftNode(o)
+        [:rshift, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_UnsignedRightShiftNode(o)
+        [:urshift, o.left.accept(self), o.value.accept(self)]
+      end
+
       def visit_SubtractNode(o)
         [:subtract, o.left.accept(self), o.value.accept(self)]
       end
