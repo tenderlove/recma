@@ -1,6 +1,6 @@
 module RKelly
   module Nodes
-    class UnsignedRightShiftNode < MathOpNode
+    class UnsignedRightShiftNode < BinaryNode
     end
   end
 end

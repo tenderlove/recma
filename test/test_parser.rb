@@ -647,6 +647,21 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('5 >= 10;'))
   end
 
+  def test_instance_of
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:instance_of, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 instanceof 10;'))
+  end
+
+  def test_instanceof_no_bf
+    assert_sexp([[:expression, [:instance_of, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 instanceof 10;'))
+  end
+
   def test_function_call_on_function
     assert_sexp([[:var,
                   [[:var_decl,

@@ -287,7 +287,7 @@ rule
   | RelationalExpr '>' ShiftExpr        { result = GreaterNode.new(val[0], val[2]) }
   | RelationalExpr LE ShiftExpr         { result = LessOrEqualNode.new(val[0], val[2]) }
   | RelationalExpr GE ShiftExpr         { result = GreaterOrEqualNode.new(val[0], val[2]) }
-  | RelationalExpr INSTANCEOF ShiftExpr { raise; result = InstanceOfNode.new($1, $3); }
+  | RelationalExpr INSTANCEOF ShiftExpr { result = InstanceOfNode.new(val[0], val[2]) }
   | RelationalExpr IN ShiftExpr    { raise; result = InNode.new($1, $3); }
   ;
 
@@ -308,7 +308,7 @@ rule
   | RelationalExprNoBF LE ShiftExpr     { result = LessOrEqualNode.new(val[0], val[2]) }
   | RelationalExprNoBF GE ShiftExpr     { result = GreaterOrEqualNode.new(val[0], val[2]) }
   | RelationalExprNoBF INSTANCEOF ShiftExpr
-                                        { raise; result = InstanceOfNode.new($1, $3); }
+                                        { result = InstanceOfNode.new(val[0], val[2]) }
   | RelationalExprNoBF IN ShiftExpr     { raise; result = InNode.new($1, $3); }
   ;
 

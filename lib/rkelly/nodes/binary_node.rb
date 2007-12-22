@@ -1,6 +1,6 @@
 module RKelly
   module Nodes
-    class MathOpNode < Node
+    class BinaryNode < Node
       attr_reader :left
       def initialize(left, right)
         super(right)

@@ -1,6 +1,6 @@
 module RKelly
   module Nodes
-    class GreaterOrEqualNode < BinaryNode
+    class InstanceOfNode < BinaryNode
     end
   end
 end

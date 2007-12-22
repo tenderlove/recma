@@ -1,6 +1,6 @@
 module RKelly
   module Nodes
-    class DivideNode < MathOpNode
+    class DivideNode < BinaryNode
     end
   end
 end

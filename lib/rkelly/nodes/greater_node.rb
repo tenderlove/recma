@@ -1,6 +1,6 @@
 module RKelly
   module Nodes
-    class GreaterNode < MathOpNode
+    class GreaterNode < BinaryNode
     end
   end
 end

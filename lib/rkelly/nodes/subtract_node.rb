@@ -1,6 +1,6 @@
 module RKelly
   module Nodes
-    class SubtractNode < MathOpNode
+    class SubtractNode < BinaryNode
     end
   end
 end

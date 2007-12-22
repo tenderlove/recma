@@ -1,6 +1,6 @@
 module RKelly
   module Nodes
-    class RightShiftNode < MathOpNode
+    class RightShiftNode < BinaryNode
     end
   end
 end

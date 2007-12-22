@@ -114,6 +114,10 @@ module RKelly
         [:greater_or_equal, o.left.accept(self), o.value.accept(self)]
       end
 
+      def visit_InstanceOfNode(o)
+        [:instance_of, o.left.accept(self), o.value.accept(self)]
+      end
+
       def visit_EmptyStatementNode(o)
         [:empty]
       end

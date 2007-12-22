@@ -1,6 +1,6 @@
 module RKelly
   module Nodes
-    class LessOrEqualNode < MathOpNode
+    class LessOrEqualNode < BinaryNode
     end
   end
 end
