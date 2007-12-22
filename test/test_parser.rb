@@ -393,6 +393,16 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('bar().baz;'))
   end
 
+  def test_new_expr_no_bf
+    assert_sexp([[:expression, [:new_expr, [:resolve, 'foo'], [:args, []]]]],
+      @parser.parse('new foo;'))
+  end
+
+  def test_new_expr
+    assert_sexp([[:var, [[:var_decl, :a, [:assign, [:new_expr, [:resolve, 'foo'], [:args, []]]]]]]],
+      @parser.parse('var a = new foo;'))
+  end
+
   def test_function_call_on_function
     assert_sexp([[:var,
                   [[:var_decl,

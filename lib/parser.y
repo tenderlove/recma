@@ -161,12 +161,12 @@ rule
 
   NewExpr:
     MemberExpr
-  | NEW NewExpr { raise; result = NewExprNode.new(val[1]); }
+  | NEW NewExpr { result = NewExprNode.new(val[1], ArgumentsNode.new([])) }
   ;
 
   NewExprNoBF:
     MemberExprNoBF
-  | NEW NewExpr { raise; result = NewExprNode.new(val[1]); }
+  | NEW NewExpr { result = NewExprNode.new(val[1], ArgumentsNode.new([])) }
   ;
 
   CallExpr:
