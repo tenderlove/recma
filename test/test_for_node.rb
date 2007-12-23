@@ -14,9 +14,9 @@ class ForNodeTest < NodeTestCase
     node = ForNode.new(nil, nil, nil, block)
     assert_sexp([:for, nil, nil, nil, [:block, [[:var, [[:var_decl, :foo, [:assign, [:lit, 10]]]]]]]], node)
 
-    node = ForNode.new([decl], compare, exec, block)
+    node = ForNode.new(stmt, compare, exec, block)
     assert_sexp([:for,
-                [[:var_decl, :foo, [:assign, [:lit, 10]]]],
+                [:var, [[:var_decl, :foo, [:assign, [:lit, 10]]]]],
                 [:less, [:resolve, 'foo'], [:lit, 10]],
                 [:postfix, [:resolve, 'foo'], '++'],
                 [:block, [[:var, [[:var_decl, :foo, [:assign, [:lit, 10]]]]]]]], node)

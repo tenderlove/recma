@@ -453,8 +453,9 @@ rule
 
   AssignmentExprNoIn:
     ConditionalExprNoIn
-  | LeftHandSideExpr AssignmentOperator AssignmentExprNoIn
-                                        { raise; result = makeAssignNode($1, $2, $3); }
+  | LeftHandSideExpr AssignmentOperator AssignmentExprNoIn {
+      result = val[1].new(val.first, val.last)
+    }
   ;
 
   AssignmentExprNoBF:
@@ -621,7 +622,7 @@ rule
     }
   | FOR '(' VAR VariableDeclarationListNoIn ';' ExprOpt ';' ExprOpt ')' Statement
     {
-      result = ForNode.new(val[3], val[5], val[7], val[9])
+      result = ForNode.new(VarStatementNode.new(val[3]), val[5], val[7], val[9])
       debug(result)
     }
   | FOR '(' LeftHandSideExpr IN Expr ')' Statement

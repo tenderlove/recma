@@ -861,11 +861,17 @@ class ParserTest < Test::Unit::TestCase
     ]], @parser.parse('for( ; ; ) var x = 10;'))
 
     assert_sexp([[:for,
-                [[:var_decl, :foo, [:assign, [:lit, 10]]]],
+                [:var, [[:var_decl, :foo, [:assign, [:lit, 10]]]]],
                 [:less, [:resolve, 'foo'], [:lit, 10]],
                 [:postfix, [:resolve, 'foo'], '++'],
                 [:block, [[:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]]]]]
     ], @parser.parse('for(var foo = 10; foo < 10; foo++) { var x = 10; }'))
+    assert_sexp([[:for,
+                [:op_equal, [:resolve, 'foo'], [:lit, 10]],
+                [:less, [:resolve, 'foo'], [:lit, 10]],
+                [:postfix, [:resolve, 'foo'], '++'],
+                [:block, [[:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]]]]]
+    ], @parser.parse('for(foo = 10; foo < 10; foo++) { var x = 10; }'))
   end
 
   def test_function_call_on_function

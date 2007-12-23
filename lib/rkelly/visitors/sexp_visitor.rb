@@ -168,7 +168,7 @@ module RKelly
 
       def visit_ForNode(o)
         [ :for,
-          o.init ? o.init.map { |x| x.accept(self) } : nil,
+          o.init ? o.init.accept(self) : nil,
           o.test ? o.test.accept(self) : nil,
           o.counter ? o.counter.accept(self) : nil,
           o.value.accept(self)
