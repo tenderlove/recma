@@ -401,7 +401,7 @@ rule
   LogicalANDExprNoIn:
     BitwiseORExprNoIn
   | LogicalANDExprNoIn AND BitwiseORExprNoIn
-                                        { raise; result = LogicalAndNode.new($1, $3); }
+                                        { result = LogicalAndNode.new(val[0], val[2]) }
   ;
 
   LogicalANDExprNoBF:
@@ -418,7 +418,7 @@ rule
   LogicalORExprNoIn:
     LogicalANDExprNoIn
   | LogicalORExprNoIn OR LogicalANDExprNoIn
-                                        { raise; result = LogicalOrNode.new($1, $3); }
+                                        { result = LogicalOrNode.new(val[0], val[2]) }
   ;
 
   LogicalORExprNoBF:

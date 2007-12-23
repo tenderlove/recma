@@ -864,6 +864,13 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('5 && 10;'))
   end
 
+  def test_and_no_in
+    assert_sexp(
+      for_loop_sexp([:and, [:resolve, 'foo'], [:lit, 10]]),
+      @parser.parse('for(foo && 10; foo < 10; foo++) { var x = 10; }')
+               )
+  end
+
   def test_or
     assert_sexp([[:var,
                   [[:var_decl,
@@ -877,6 +884,13 @@ class ParserTest < Test::Unit::TestCase
   def test_or_no_bf
     assert_sexp([[:expression, [:or, [:lit, 5], [:lit, 10]] ]],
                 @parser.parse('5 || 10;'))
+  end
+
+  def test_or_no_in
+    assert_sexp(
+      for_loop_sexp([:or, [:resolve, 'foo'], [:lit, 10]]),
+      @parser.parse('for(foo || 10; foo < 10; foo++) { var x = 10; }')
+               )
   end
 
   def test_block_node
