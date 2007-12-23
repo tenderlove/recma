@@ -59,7 +59,7 @@ module RKelly
       end
 
       def visit_LogicalNotNode(o)
-        [:logical_not, o.value.accept(self)]
+        [:not, o.value.accept(self)]
       end
 
       def visit_ConstStatementNode(o)
@@ -116,6 +116,53 @@ module RKelly
 
       def visit_InstanceOfNode(o)
         [:instance_of, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_EqualNode(o)
+        [:equal, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_NotEqualNode(o)
+        [:not_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_StrictEqualNode(o)
+        [:strict_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_NotStrictEqualNode(o)
+        [:not_strict_equal, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_BitAndNode(o)
+        [:bit_and, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_BitOrNode(o)
+        [:bit_or, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_BitXOrNode(o)
+        [:bit_xor, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_LogicalAndNode(o)
+        [:and, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_LogicalOrNode(o)
+        [:or, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_BlockNode(o)
+        [:block, o.value.accept(self)]
+      end
+
+      def visit_IfNode(o)
+        [:if, o.conditions.accept(self),
+              o.value.accept(self),
+              o.else ? o.else.accept(self) : nil
+        ].compact
       end
 
       def visit_EmptyStatementNode(o)

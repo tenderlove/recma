@@ -463,7 +463,7 @@ class ParserTest < Test::Unit::TestCase
   end
 
   def test_unary_logical_not
-    assert_sexp([[:expression, [:logical_not, [:lit, 10]]]],
+    assert_sexp([[:expression, [:not, [:lit, 10]]]],
                 @parser.parse('!10;'))
   end
 
@@ -660,6 +660,168 @@ class ParserTest < Test::Unit::TestCase
   def test_instanceof_no_bf
     assert_sexp([[:expression, [:instance_of, [:lit, 5], [:lit, 10]] ]],
                 @parser.parse('5 instanceof 10;'))
+  end
+
+  def test_equal_equal
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:equal, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 == 10;'))
+  end
+
+  def test_equal_equal_no_bf
+    assert_sexp([[:expression, [:equal, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 == 10;'))
+  end
+
+  def test_not_equal
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:not_equal, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 != 10;'))
+  end
+
+  def test_not_equal_no_bf
+    assert_sexp([[:expression, [:not_equal, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 != 10;'))
+  end
+
+  def test_strict_equal
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:strict_equal, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 === 10;'))
+  end
+
+  def test_strict_equal_no_bf
+    assert_sexp([[:expression, [:strict_equal, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 === 10;'))
+  end
+
+  def test_not_strict_equal
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:not_strict_equal, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 !== 10;'))
+  end
+
+  def test_not_strict_equal_no_bf
+    assert_sexp([[:expression, [:not_strict_equal, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 !== 10;'))
+  end
+
+  def test_bit_and
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:bit_and, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 & 10;'))
+  end
+
+  def test_bit_and_no_bf
+    assert_sexp([[:expression, [:bit_and, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 & 10;'))
+  end
+
+  def test_bit_xor
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:bit_xor, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 ^ 10;'))
+  end
+
+  def test_bit_xor_no_bf
+    assert_sexp([[:expression, [:bit_xor, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 ^ 10;'))
+  end
+
+  def test_bit_or
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:bit_or, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 | 10;'))
+  end
+
+  def test_bit_or_no_bf
+    assert_sexp([[:expression, [:bit_or, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 | 10;'))
+  end
+
+  def test_and
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:and, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 && 10;'))
+  end
+
+  def test_and_no_bf
+    assert_sexp([[:expression, [:and, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 && 10;'))
+  end
+
+  def test_or
+    assert_sexp([[:var,
+                  [[:var_decl,
+                    :x,
+                    [:assign, [:or, [:lit, 5], [:lit, 10]]]
+                  ]]
+                ]],
+                @parser.parse('var x = 5 || 10;'))
+  end
+
+  def test_or_no_bf
+    assert_sexp([[:expression, [:or, [:lit, 5], [:lit, 10]] ]],
+                @parser.parse('5 || 10;'))
+  end
+
+  def test_block_node
+    assert_sexp([[:block, []]], @parser.parse('{ }'))
+    assert_sexp([[:block, [[:var, [[:var_decl, :foo, [:assign, [:lit, 10]]]]]]]],
+                @parser.parse('{ var foo = 10; }'))
+
+    assert_sexp([
+                [:block, [[:var, [[:var_decl, :foo, [:assign, [:lit, 10]]]]]]],
+                [:var, [[:var_decl, :bax, [:assign, [:lit, 20]]]]],
+                ],
+                @parser.parse('{ var foo = 10 } var bax = 20;'))
+  end
+
+  def test_if_no_else
+    assert_sexp([[:if,
+                [:and, [:lit, 5], [:lit, 10]],
+                [:var, [[:var_decl, :foo, [:assign, [:lit, 20]]]]],
+    ]], @parser.parse('if(5 && 10) var foo = 20;'))
+  end
+
+  def test_if_else
+    assert_sexp([[:if,
+                [:and, [:lit, 5], [:lit, 10]],
+                [:var, [[:var_decl, :foo, [:assign, [:lit, 20]]]]],
+                [:var, [[:var_decl, :bar, [:assign, [:lit, 5]]]]],
+    ]], @parser.parse(' if(5 && 10) var foo = 20; else var bar = 5; '))
   end
 
   def test_function_call_on_function

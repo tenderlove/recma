@@ -34,8 +34,8 @@ token IDENT
 token AUTOPLUSPLUS AUTOMINUSMINUS IF_WITHOUT_ELSE
 
 prechigh
-  nonassoc IF_WITHOUT_ELSE
   nonassoc ELSE
+  nonassoc IF_WITHOUT_ELSE
 preclow
 
 rule
@@ -314,10 +314,10 @@ rule
 
   EqualityExpr:
     RelationalExpr
-  | EqualityExpr EQEQ RelationalExpr    { raise; result = EqualNode.new($1, $3); }
-  | EqualityExpr NE RelationalExpr      { raise; result = NotEqualNode.new($1, $3); }
-  | EqualityExpr STREQ RelationalExpr   { raise; result = StrictEqualNode.new($1, $3); }
-  | EqualityExpr STRNEQ RelationalExpr  { raise; result = NotStrictEqualNode.new($1, $3); }
+  | EqualityExpr EQEQ RelationalExpr    { result = EqualNode.new(val[0], val[2]) }
+  | EqualityExpr NE RelationalExpr      { result = NotEqualNode.new(val[0], val[2]) }
+  | EqualityExpr STREQ RelationalExpr   { result = StrictEqualNode.new(val[0], val[2]) }
+  | EqualityExpr STRNEQ RelationalExpr  { result = NotStrictEqualNode.new(val[0], val[2]) }
   ;
 
   EqualityExprNoIn:
@@ -335,17 +335,17 @@ rule
   EqualityExprNoBF:
     RelationalExprNoBF
   | EqualityExprNoBF EQEQ RelationalExpr
-                                        { raise; result = EqualNode.new($1, $3); }
-  | EqualityExprNoBF NE RelationalExpr  { raise; result = NotEqualNode.new($1, $3); }
+                                        { result = EqualNode.new(val[0], val[2]) }
+  | EqualityExprNoBF NE RelationalExpr  { result = NotEqualNode.new(val[0], val[2]) }
   | EqualityExprNoBF STREQ RelationalExpr
-                                        { raise; result = StrictEqualNode.new($1, $3); }
+                                        { result = StrictEqualNode.new(val[0], val[2]) }
   | EqualityExprNoBF STRNEQ RelationalExpr
-                                        { raise; result = NotStrictEqualNode.new($1, $3); }
+                                        { result = NotStrictEqualNode.new(val[0], val[2]) }
   ;
 
   BitwiseANDExpr:
     EqualityExpr
-  | BitwiseANDExpr '&' EqualityExpr     { raise; result = BitAndNode.new($1, $3); }
+  | BitwiseANDExpr '&' EqualityExpr     { result = BitAndNode.new(val[0], val[2]) }
   ;
 
   BitwiseANDExprNoIn:
@@ -356,12 +356,12 @@ rule
 
   BitwiseANDExprNoBF:
     EqualityExprNoBF
-  | BitwiseANDExprNoBF '&' EqualityExpr { raise; result = BitAndNode.new($1, $3); }
+  | BitwiseANDExprNoBF '&' EqualityExpr { result = BitAndNode.new(val[0], val[2]) }
   ;
 
   BitwiseXORExpr:
     BitwiseANDExpr
-  | BitwiseXORExpr '^' BitwiseANDExpr   { raise; result = BitXOrNode.new($1, $3); }
+  | BitwiseXORExpr '^' BitwiseANDExpr   { result = BitXOrNode.new(val[0], val[2]) }
   ;
 
   BitwiseXORExprNoIn:
@@ -373,12 +373,12 @@ rule
   BitwiseXORExprNoBF:
     BitwiseANDExprNoBF
   | BitwiseXORExprNoBF '^' BitwiseANDExpr
-                                        { raise; result = BitXOrNode.new($1, $3); }
+                                        { result = BitXOrNode.new(val[0], val[2]) }
   ;
 
   BitwiseORExpr:
     BitwiseXORExpr
-  | BitwiseORExpr '|' BitwiseXORExpr    { raise; result = BitOrNode.new($1, $3); }
+  | BitwiseORExpr '|' BitwiseXORExpr    { result = BitOrNode.new(val[0], val[2]) }
   ;
 
   BitwiseORExprNoIn:
@@ -390,12 +390,12 @@ rule
   BitwiseORExprNoBF:
     BitwiseXORExprNoBF
   | BitwiseORExprNoBF '|' BitwiseXORExpr
-                                        { raise; result = BitOrNode.new($1, $3); }
+                                        { result = BitOrNode.new(val[0], val[2]) }
   ;
 
   LogicalANDExpr:
     BitwiseORExpr
-  | LogicalANDExpr AND BitwiseORExpr    { raise; result = LogicalAndNode.new($1, $3); }
+  | LogicalANDExpr AND BitwiseORExpr    { result = LogicalAndNode.new(val[0], val[2]) }
   ;
 
   LogicalANDExprNoIn:
@@ -407,12 +407,12 @@ rule
   LogicalANDExprNoBF:
     BitwiseORExprNoBF
   | LogicalANDExprNoBF AND BitwiseORExpr
-                                        { raise; result = LogicalAndNode.new($1, $3); }
+                                        { result = LogicalAndNode.new(val[0], val[2]) }
   ;
 
   LogicalORExpr:
     LogicalANDExpr
-  | LogicalORExpr OR LogicalANDExpr     { raise; result = LogicalOrNode.new($1, $3); }
+  | LogicalORExpr OR LogicalANDExpr     { result = LogicalOrNode.new(val[0], val[2]) }
   ;
 
   LogicalORExprNoIn:
@@ -423,7 +423,7 @@ rule
 
   LogicalORExprNoBF:
     LogicalANDExprNoBF
-  | LogicalORExprNoBF OR LogicalANDExpr { raise; result = LogicalOrNode.new($1, $3); }
+  | LogicalORExprNoBF OR LogicalANDExpr { result = LogicalOrNode.new(val[0], val[2]) }
   ;
 
   ConditionalExpr:
@@ -497,13 +497,11 @@ rule
 
   Block:
     '{' '}' {
-      raise
-      result = BlockNode.new(SourceElements.new)
+      result = BlockNode.new(SourceElements.new([]))
       debug(result)
     }
   | '{' SourceElements '}' {
-      raise
-      result = BlockNode.new($2.release())
+      result = BlockNode.new(SourceElements.new([val[1]].flatten))
       debug(result)
     }
   ;
@@ -595,14 +593,12 @@ rule
   ;
 
   IfStatement:
-    IF '(' Expr ')' Statement {
-      raise
-      result = IfNode.new($3, $5, 0)
+    IF '(' Expr ')' Statement =IF_WITHOUT_ELSE {
+      result = IfNode.new(val[2], val[4])
       debug(result)
-    } =IF_WITHOUT_ELSE
+    }
   | IF '(' Expr ')' Statement ELSE Statement {
-      raise
-      result = IfNode.new($3, $5, $7)
+      result = IfNode.new(val[2], val[4], val[6])
       debug(result)
     }
   ;
