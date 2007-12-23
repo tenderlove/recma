@@ -293,12 +293,12 @@ rule
 
   RelationalExprNoIn:
     ShiftExpr
-  | RelationalExprNoIn '<' ShiftExpr    { raise; result = makeLessNode($1, $3); }
-  | RelationalExprNoIn '>' ShiftExpr    { raise; result = GreaterNode.new($1, $3); }
-  | RelationalExprNoIn LE ShiftExpr     { raise; result = LessEqNode.new($1, $3); }
-  | RelationalExprNoIn GE ShiftExpr     { raise; result = GreaterEqNode.new($1, $3); }
+  | RelationalExprNoIn '<' ShiftExpr    { result = LessNode.new(val[0], val[2])}
+  | RelationalExprNoIn '>' ShiftExpr    { result = GreaterNode.new(val[0], val[2]) }
+  | RelationalExprNoIn LE ShiftExpr     { result = LessOrEqualNode.new(val[0], val[2]) }
+  | RelationalExprNoIn GE ShiftExpr     { result = GreaterOrEqualNode.new(val[0], val[2]) }
   | RelationalExprNoIn INSTANCEOF ShiftExpr
-                                        { raise; result = InstanceOfNode.new($1, $3); }
+                                        { result = InstanceOfNode.new(val[0], val[2]) }
   ;
 
   RelationalExprNoBF:
@@ -323,13 +323,13 @@ rule
   EqualityExprNoIn:
     RelationalExprNoIn
   | EqualityExprNoIn EQEQ RelationalExprNoIn
-                                        { raise; result = EqualNode.new($1, $3); }
+                                        { result = EqualNode.new(val[0], val[2]) }
   | EqualityExprNoIn NE RelationalExprNoIn
-                                        { raise; result = NotEqualNode.new($1, $3); }
+                                        { result = NotEqualNode.new(val[0], val[2]) }
   | EqualityExprNoIn STREQ RelationalExprNoIn
-                                        { raise; result = StrictEqualNode.new($1, $3); }
+                                        { result = StrictEqualNode.new(val[0], val[2]) }
   | EqualityExprNoIn STRNEQ RelationalExprNoIn
-                                        { raise; result = NotStrictEqualNode.new($1, $3); }
+                                        { result = NotStrictEqualNode.new(val[0], val[2]) }
   ;
 
   EqualityExprNoBF:
@@ -351,7 +351,7 @@ rule
   BitwiseANDExprNoIn:
     EqualityExprNoIn
   | BitwiseANDExprNoIn '&' EqualityExprNoIn
-                                        { raise; result = BitAndNode.new($1, $3); }
+                                        { result = BitAndNode.new(val[0], val[2]) }
   ;
 
   BitwiseANDExprNoBF:
@@ -367,7 +367,7 @@ rule
   BitwiseXORExprNoIn:
     BitwiseANDExprNoIn
   | BitwiseXORExprNoIn '^' BitwiseANDExprNoIn
-                                        { raise; result = BitXOrNode.new($1, $3); }
+                                        { result = BitXOrNode.new(val[0], val[2]) }
   ;
 
   BitwiseXORExprNoBF:
@@ -384,7 +384,7 @@ rule
   BitwiseORExprNoIn:
     BitwiseXORExprNoIn
   | BitwiseORExprNoIn '|' BitwiseXORExprNoIn
-                                        { raise; result = BitOrNode.new($1, $3); }
+                                        { result = BitOrNode.new(val[0], val[2]) }
   ;
 
   BitwiseORExprNoBF:

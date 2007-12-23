@@ -602,6 +602,13 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('5 < 10;'))
   end
 
+  def test_less_no_in
+    assert_sexp(
+      for_loop_sexp([:less, [:resolve, 'foo'], [:lit, 10]]),
+      @parser.parse('for(foo < 10; foo < 10; foo++) { var x = 10; }')
+               )
+  end
+
   def test_greater
     assert_sexp([[:var,
                   [[:var_decl,
@@ -615,6 +622,13 @@ class ParserTest < Test::Unit::TestCase
   def test_greater_no_bf
     assert_sexp([[:expression, [:greater, [:lit, 5], [:lit, 10]] ]],
                 @parser.parse('5 > 10;'))
+  end
+
+  def test_greater_no_in
+    assert_sexp(
+      for_loop_sexp([:greater, [:resolve, 'foo'], [:lit, 10]]),
+      @parser.parse('for(foo > 10; foo < 10; foo++) { var x = 10; }')
+               )
   end
 
   def test_less_or_equal
@@ -632,6 +646,13 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('5 <= 10;'))
   end
 
+  def test_less_or_equal_no_in
+    assert_sexp(
+      for_loop_sexp([:less_or_equal, [:resolve, 'foo'], [:lit, 10]]),
+      @parser.parse('for(foo <= 10; foo < 10; foo++) { var x = 10; }')
+               )
+  end
+
   def test_greater_or_equal
     assert_sexp([[:var,
                   [[:var_decl,
@@ -645,6 +666,13 @@ class ParserTest < Test::Unit::TestCase
   def test_greater_or_equal_no_bf
     assert_sexp([[:expression, [:greater_or_equal, [:lit, 5], [:lit, 10]] ]],
                 @parser.parse('5 >= 10;'))
+  end
+
+  def test_greater_or_equal_no_in
+    assert_sexp(
+      for_loop_sexp([:greater_or_equal, [:resolve, 'foo'], [:lit, 10]]),
+      @parser.parse('for(foo >= 10; foo < 10; foo++) { var x = 10; }')
+               )
   end
 
   def test_instance_of
@@ -662,6 +690,11 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('5 instanceof 10;'))
   end
 
+  def test_instanceof_no_in
+    assert_sexp(for_loop_sexp([:instance_of, [:resolve, 'foo'], [:lit, 10]]),
+      @parser.parse('for(foo instanceof 10; foo < 10; foo++) { var x = 10; }'))
+  end
+
   def test_equal_equal
     assert_sexp([[:var,
                   [[:var_decl,
@@ -675,6 +708,13 @@ class ParserTest < Test::Unit::TestCase
   def test_equal_equal_no_bf
     assert_sexp([[:expression, [:equal, [:lit, 5], [:lit, 10]] ]],
                 @parser.parse('5 == 10;'))
+  end
+
+  def test_equal_equal_no_in
+    assert_sexp(
+      for_loop_sexp([:equal, [:resolve, 'foo'], [:lit, 10]]),
+      @parser.parse('for(foo == 10; foo < 10; foo++) { var x = 10; }')
+               )
   end
 
   def test_not_equal
@@ -692,6 +732,13 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('5 != 10;'))
   end
 
+  def test_not_equal_no_in
+    assert_sexp(
+      for_loop_sexp([:not_equal, [:resolve, 'foo'], [:lit, 10]]),
+      @parser.parse('for(foo != 10; foo < 10; foo++) { var x = 10; }')
+               )
+  end
+
   def test_strict_equal
     assert_sexp([[:var,
                   [[:var_decl,
@@ -705,6 +752,13 @@ class ParserTest < Test::Unit::TestCase
   def test_strict_equal_no_bf
     assert_sexp([[:expression, [:strict_equal, [:lit, 5], [:lit, 10]] ]],
                 @parser.parse('5 === 10;'))
+  end
+
+  def test_strict_equal_no_in
+    assert_sexp(
+      for_loop_sexp([:strict_equal, [:resolve, 'foo'], [:lit, 10]]),
+      @parser.parse('for(foo === 10; foo < 10; foo++) { var x = 10; }')
+               )
   end
 
   def test_not_strict_equal
@@ -722,6 +776,13 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('5 !== 10;'))
   end
 
+  def test_not_strict_equal_no_in
+    assert_sexp(
+      for_loop_sexp([:not_strict_equal, [:resolve, 'foo'], [:lit, 10]]),
+      @parser.parse('for(foo !== 10; foo < 10; foo++) { var x = 10; }')
+               )
+  end
+
   def test_bit_and
     assert_sexp([[:var,
                   [[:var_decl,
@@ -735,6 +796,13 @@ class ParserTest < Test::Unit::TestCase
   def test_bit_and_no_bf
     assert_sexp([[:expression, [:bit_and, [:lit, 5], [:lit, 10]] ]],
                 @parser.parse('5 & 10;'))
+  end
+
+  def test_bit_and_no_in
+    assert_sexp(
+      for_loop_sexp([:bit_and, [:resolve, 'foo'], [:lit, 10]]),
+      @parser.parse('for(foo & 10; foo < 10; foo++) { var x = 10; }')
+               )
   end
 
   def test_bit_xor
@@ -752,6 +820,13 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('5 ^ 10;'))
   end
 
+  def test_bit_xor_no_in
+    assert_sexp(
+      for_loop_sexp([:bit_xor, [:resolve, 'foo'], [:lit, 10]]),
+      @parser.parse('for(foo ^ 10; foo < 10; foo++) { var x = 10; }')
+               )
+  end
+
   def test_bit_or
     assert_sexp([[:var,
                   [[:var_decl,
@@ -765,6 +840,13 @@ class ParserTest < Test::Unit::TestCase
   def test_bit_or_no_bf
     assert_sexp([[:expression, [:bit_or, [:lit, 5], [:lit, 10]] ]],
                 @parser.parse('5 | 10;'))
+  end
+
+  def test_bit_or_no_in
+    assert_sexp(
+      for_loop_sexp([:bit_or, [:resolve, 'foo'], [:lit, 10]]),
+      @parser.parse('for(foo | 10; foo < 10; foo++) { var x = 10; }')
+               )
   end
 
   def test_and
@@ -1067,5 +1149,9 @@ class ParserTest < Test::Unit::TestCase
 
   def assert_sexp(expected, node)
     assert_equal(expected, node.to_sexp)
+  end
+
+  def for_loop_sexp(init, test = [:less, [:resolve, 'foo'], [:lit, 10]], exec = [:postfix, [:resolve, 'foo'], '++'])
+    [[:for, init, test, exec, [:block, [[:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]]]]]]
   end
 end
