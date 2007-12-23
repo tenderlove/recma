@@ -154,6 +154,18 @@ module RKelly
         [:or, o.left.accept(self), o.value.accept(self)]
       end
 
+      def visit_InNode(o)
+        [:in, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_DoWhileNode(o)
+        [:do_while, o.left.accept(self), o.value.accept(self)]
+      end
+
+      def visit_WhileNode(o)
+        [:while, o.left.accept(self), o.value.accept(self)]
+      end
+
       def visit_BlockNode(o)
         [:block, o.value.accept(self)]
       end

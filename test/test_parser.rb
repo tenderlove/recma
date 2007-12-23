@@ -824,6 +824,37 @@ class ParserTest < Test::Unit::TestCase
     ]], @parser.parse(' if(5 && 10) var foo = 20; else var bar = 5; '))
   end
 
+  def test_in
+    assert_sexp([[:var,
+                  [[:var_decl, :x, [:assign,
+                    [:in, [:lit, 0], [:resolve, "foo"]]
+                  ]]]
+                ]],
+                @parser.parse('var x = 0 in foo;'))
+  end
+
+  def test_in_no_bf
+    assert_sexp([[:expression, [:in, [:lit, 0], [:resolve, "foo"]]]],
+                @parser.parse('0 in foo;'))
+  end
+
+  def test_do_while
+    assert_sexp([[:do_while, [:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]],
+                  [:true]]],
+                @parser.parse('do var x = 10; while(true);'))
+    assert_sexp([[:do_while, [:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]],
+                  [:true]]],
+                @parser.parse('do var x = 10; while(true)'))
+  end
+
+  def test_while
+    assert_sexp([[:while,
+                  [:true],
+                  [:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]],
+                ]],
+                @parser.parse('while(true) var x = 10;'))
+  end
+
   def test_function_call_on_function
     assert_sexp([[:var,
                   [[:var_decl,

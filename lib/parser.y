@@ -288,7 +288,7 @@ rule
   | RelationalExpr LE ShiftExpr         { result = LessOrEqualNode.new(val[0], val[2]) }
   | RelationalExpr GE ShiftExpr         { result = GreaterOrEqualNode.new(val[0], val[2]) }
   | RelationalExpr INSTANCEOF ShiftExpr { result = InstanceOfNode.new(val[0], val[2]) }
-  | RelationalExpr IN ShiftExpr    { raise; result = InNode.new($1, $3); }
+  | RelationalExpr IN ShiftExpr    { result = InNode.new(val[0], val[2]) }
   ;
 
   RelationalExprNoIn:
@@ -309,7 +309,7 @@ rule
   | RelationalExprNoBF GE ShiftExpr     { result = GreaterOrEqualNode.new(val[0], val[2]) }
   | RelationalExprNoBF INSTANCEOF ShiftExpr
                                         { result = InstanceOfNode.new(val[0], val[2]) }
-  | RelationalExprNoBF IN ShiftExpr     { raise; result = InNode.new($1, $3); }
+  | RelationalExprNoBF IN ShiftExpr     { result = InNode.new(val[0], val[2]) }
   ;
 
   EqualityExpr:
@@ -605,18 +605,15 @@ rule
 
   IterationStatement:
     DO Statement WHILE '(' Expr ')' ';' {
-      raise
-      result = DoWhileNode.new($2, $5)
+      result = DoWhileNode.new(val[1], val[4])
       debug(result)
     }
   | DO Statement WHILE '(' Expr ')' error {
-      raise
-      result = DoWhileNode.new($2, $5)
+      result = DoWhileNode.new(val[1], val[4])
       debug(result)
     } /* Always performs automatic semicolon insertion. */
   | WHILE '(' Expr ')' Statement {
-      raise
-      result = WhileNode.new($3, $5)
+      result = WhileNode.new(val[2], val[4])
       debug(result)
     }
   | FOR '(' ExprNoInOpt ';' ExprOpt ';' ExprOpt ')' Statement {
