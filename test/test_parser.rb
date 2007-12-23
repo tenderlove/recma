@@ -893,6 +893,29 @@ class ParserTest < Test::Unit::TestCase
                )
   end
 
+  def test_conditional_expr
+    assert_sexp([
+      var_sexp('x', [:conditional, [:less, [:lit, 5], [:lit, 10]], [:lit, 20], [:lit, 30]])
+      ],
+      @parser.parse('var x = 5 < 10 ? 20 : 30;')
+               )
+  end
+
+  def test_conditional_expr_no_bf
+    assert_sexp([[:expression,
+        [:conditional, [:less, [:lit, 5], [:lit, 10]], [:lit, 20], [:lit, 30]]
+      ]],
+      @parser.parse('5 < 10 ? 20 : 30;')
+               )
+  end
+
+  def test_conditional_expr_no_in
+    assert_sexp(
+      for_loop_sexp([:conditional, [:less, [:lit, 5], [:lit, 10]], [:lit, 20], [:lit, 30]]),
+      @parser.parse('for(5 < 10 ? 20 : 30; foo < 10; foo++) { var x = 10; }')
+               )
+  end
+
   def test_block_node
     assert_sexp([[:block, []]], @parser.parse('{ }'))
     assert_sexp([[:block, [[:var, [[:var_decl, :foo, [:assign, [:lit, 10]]]]]]]],
@@ -1163,6 +1186,10 @@ class ParserTest < Test::Unit::TestCase
 
   def assert_sexp(expected, node)
     assert_equal(expected, node.to_sexp)
+  end
+
+  def var_sexp(variable_name, val = [:lit, 10])
+    [:var, [[:var_decl, variable_name.to_sym, [:assign, val]]]]
   end
 
   def for_loop_sexp(init, test = [:less, [:resolve, 'foo'], [:lit, 10]], exec = [:postfix, [:resolve, 'foo'], '++'])

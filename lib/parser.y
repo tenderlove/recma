@@ -428,20 +428,23 @@ rule
 
   ConditionalExpr:
     LogicalORExpr
-  | LogicalORExpr '?' AssignmentExpr ':' AssignmentExpr
-                                        { raise; result = ConditionalNode.new($1, $3, $5); }
+  | LogicalORExpr '?' AssignmentExpr ':' AssignmentExpr {
+      result = ConditionalNode.new(val[0], val[2], val[4])
+    }
   ;
 
   ConditionalExprNoIn:
     LogicalORExprNoIn
-  | LogicalORExprNoIn '?' AssignmentExprNoIn ':' AssignmentExprNoIn
-                                        { raise; result = ConditionalNode.new($1, $3, $5); }
+  | LogicalORExprNoIn '?' AssignmentExprNoIn ':' AssignmentExprNoIn {
+      result = ConditionalNode.new(val[0], val[2], val[4])
+    }
   ;
 
   ConditionalExprNoBF:
     LogicalORExprNoBF
-  | LogicalORExprNoBF '?' AssignmentExpr ':' AssignmentExpr
-                                        { raise; result = ConditionalNode.new($1, $3, $5); }
+  | LogicalORExprNoBF '?' AssignmentExpr ':' AssignmentExpr {
+      result = ConditionalNode.new(val[0], val[2], val[4])
+    }
   ;
 
   AssignmentExpr:

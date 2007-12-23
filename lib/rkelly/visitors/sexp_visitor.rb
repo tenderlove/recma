@@ -186,6 +186,13 @@ module RKelly
         ].compact
       end
 
+      def visit_ConditionalNode(o)
+        [:conditional, o.conditions.accept(self),
+              o.value.accept(self),
+              o.else.accept(self)
+        ]
+      end
+
       def visit_EmptyStatementNode(o)
         [:empty]
       end
