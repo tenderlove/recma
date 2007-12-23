@@ -526,8 +526,7 @@ rule
   ;
 
   VariableDeclarationListNoIn:
-    VariableDeclarationNoIn             { raise; result.head = $1; 
-                                          result.tail = result.head; }
+    VariableDeclarationNoIn             { result = val }
   | VariableDeclarationListNoIn ',' VariableDeclarationNoIn
                                         { raise; result.head = $1.head;
                                           $1.tail.next = $3;
@@ -541,7 +540,7 @@ rule
 
   VariableDeclarationNoIn:
     IDENT                               { raise; result = VarDeclNode.new($1, 0, VarDeclNode::Variable); }
-  | IDENT InitializerNoIn               { raise; result = VarDeclNode.new($1, $2, VarDeclNode::Variable); }
+  | IDENT InitializerNoIn               { result = VarDeclNode.new(val[0], val[1]) }
   ;
 
   ConstStatement:
@@ -573,7 +572,7 @@ rule
   ;
 
   InitializerNoIn:
-    '=' AssignmentExprNoIn              { raise; result = AssignExprNode.new($2); }
+    '=' AssignmentExprNoIn              { result = AssignExprNode.new(val[1]) }
   ;
 
   EmptyStatement:
@@ -617,14 +616,12 @@ rule
       debug(result)
     }
   | FOR '(' ExprNoInOpt ';' ExprOpt ';' ExprOpt ')' Statement {
-      raise
-      result = ForNode.new($3, $5, $7, $9)
+      result = ForNode.new(val[2], val[4], val[6], val[8])
       debug(result)
     }
   | FOR '(' VAR VariableDeclarationListNoIn ';' ExprOpt ';' ExprOpt ')' Statement
     {
-      raise
-      result = ForNode.new($4.head, $6, $8, $10)
+      result = ForNode.new(val[3], val[5], val[7], val[9])
       debug(result)
     }
   | FOR '(' LeftHandSideExpr IN Expr ')' Statement
@@ -647,12 +644,12 @@ rule
   ;
 
   ExprOpt:
-    /* nothing */                       { raise; result = 0; }
+    /* nothing */                       { result = nil }
   | Expr
   ;
 
   ExprNoInOpt:
-    /* nothing */                       { raise; result = 0; }
+    /* nothing */                       { result = nil }
   | ExprNoIn
   ;
 

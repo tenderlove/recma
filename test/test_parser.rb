@@ -855,6 +855,19 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('while(true) var x = 10;'))
   end
 
+  def test_for_with_semi
+    assert_sexp([[:for, nil, nil, nil,
+                [:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]],
+    ]], @parser.parse('for( ; ; ) var x = 10;'))
+
+    assert_sexp([[:for,
+                [[:var_decl, :foo, [:assign, [:lit, 10]]]],
+                [:less, [:resolve, 'foo'], [:lit, 10]],
+                [:postfix, [:resolve, 'foo'], '++'],
+                [:block, [[:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]]]]]
+    ], @parser.parse('for(var foo = 10; foo < 10; foo++) { var x = 10; }'))
+  end
+
   def test_function_call_on_function
     assert_sexp([[:var,
                   [[:var_decl,

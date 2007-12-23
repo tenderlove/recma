@@ -166,6 +166,15 @@ module RKelly
         [:while, o.left.accept(self), o.value.accept(self)]
       end
 
+      def visit_ForNode(o)
+        [ :for,
+          o.init ? o.init.map { |x| x.accept(self) } : nil,
+          o.test ? o.test.accept(self) : nil,
+          o.counter ? o.counter.accept(self) : nil,
+          o.value.accept(self)
+        ]
+      end
+
       def visit_BlockNode(o)
         [:block, o.value.accept(self)]
       end
