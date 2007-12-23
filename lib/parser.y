@@ -490,7 +490,7 @@ rule
 
   ExprNoIn:
     AssignmentExprNoIn
-  | ExprNoIn ',' AssignmentExprNoIn     { raise; result = CommaNode.new($1, $3); }
+  | ExprNoIn ',' AssignmentExprNoIn     { result = CommaNode.new(val[0], val[2]) }
   ;
 
   ExprNoBF:
@@ -531,10 +531,9 @@ rule
 
   VariableDeclarationListNoIn:
     VariableDeclarationNoIn             { result = val }
-  | VariableDeclarationListNoIn ',' VariableDeclarationNoIn
-                                        { raise; result.head = $1.head;
-                                          $1.tail.next = $3;
-                                          result.tail = $3; }
+  | VariableDeclarationListNoIn ',' VariableDeclarationNoIn {
+      result = [val.first, val.last].flatten
+    }
   ;
 
   VariableDeclaration:
@@ -543,7 +542,7 @@ rule
   ;
 
   VariableDeclarationNoIn:
-    IDENT                               { raise; result = VarDeclNode.new($1, 0, VarDeclNode::Variable); }
+    IDENT                               { result = VarDeclNode.new(val[0],nil) }
   | IDENT InitializerNoIn               { result = VarDeclNode.new(val[0], val[1]) }
   ;
 
@@ -591,7 +590,7 @@ rule
   | ExprNoBF error {
       result = ExpressionStatementNode.new(val.first)
       debug(result)
-      yyabort unless allow_auto_semi?(val.last)
+      raise 'no auto semi' unless allow_auto_semi?(val.last)
     }
   ;
 

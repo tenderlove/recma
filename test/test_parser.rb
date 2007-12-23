@@ -909,6 +909,17 @@ class ParserTest < Test::Unit::TestCase
                )
   end
 
+  def test_expr_comma
+    @parser.parse('for(y = 20, x = 10; foo < 10; foo++) {}')
+    assert_sexp(
+      for_loop_sexp([:comma,
+                    [:op_equal, [:resolve, 'y'], [:lit, 20]],
+                    [:op_equal, [:resolve, 'x'], [:lit, 10]]]
+                    ),
+      @parser.parse('for(y = 20, x = 10; foo < 10; foo++) { var x = 10; }')
+               )
+  end
+
   def test_conditional_expr_no_in
     assert_sexp(
       for_loop_sexp([:conditional, [:less, [:lit, 5], [:lit, 10]], [:lit, 20], [:lit, 30]]),
@@ -991,6 +1002,13 @@ class ParserTest < Test::Unit::TestCase
                 [:postfix, [:resolve, 'foo'], '++'],
                 [:block, [[:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]]]]]
     ], @parser.parse('for(foo = 10; foo < 10; foo++) { var x = 10; }'))
+
+    assert_sexp(for_loop_sexp([:var, [[:var_decl, :x, [:assign, [:lit, 10]]],
+                              [:var_decl, :y, [:assign, [:lit, 20]]]]]),
+    @parser.parse('for(var x = 10, y = 20; foo < 10; foo++) { var x = 10; }'))
+
+    assert_sexp(for_loop_sexp([:var, [[:var_decl, :foo, nil]]]),
+    @parser.parse('for(var foo; foo < 10; foo++) { var x = 10; }'))
   end
 
   def test_function_call_on_function
