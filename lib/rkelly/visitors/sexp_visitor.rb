@@ -1,10 +1,6 @@
 module RKelly
   module Visitors
     class SexpVisitor < Visitor
-      #def visit_Node(o)
-      #  [:lit, o.value]
-      #end
-
       def visit_NumberNode(o)
         [:lit, o.value]
       end
