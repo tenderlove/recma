@@ -727,38 +727,42 @@ rule
 
   SwitchStatement:
     SWITCH '(' Expr ')' CaseBlock {
-      raise
-      result = SwitchNode.new($3, $5)
+      result = SwitchNode.new(val[2], val[4])
       debug(result)
     }
   ;
 
   CaseBlock:
-    '{' CaseClausesOpt '}'              { raise; result = CaseBlockNode.new($2.head, 0, 0); }
-  | '{' CaseClausesOpt DefaultClause CaseClausesOpt '}'
-                                        { raise; result = CaseBlockNode.new($2.head, $3, $4.head); }
+    '{' CaseClausesOpt '}'              { result = CaseBlockNode.new(val[1]) }
+  | '{' CaseClausesOpt DefaultClause CaseClausesOpt '}' {
+      result = CaseBlockNode.new([val[1], val[2], val[3]].flatten)
+    }
   ;
 
   CaseClausesOpt:
-    /* nothing */                       { raise; result.head = 0; result.tail = 0; }
+    /* nothing */                       { result = [] }
   | CaseClauses
   ;
 
   CaseClauses:
-    CaseClause                          { raise; result.head = ClauseListNode.new($1);
-                                          result.tail = result.head; }
-  | CaseClauses CaseClause              { raise; result.head = $1.head; 
-                                          result.tail = ClauseListNode.new($1.tail, $2); }
+    CaseClause                          { result = val }
+  | CaseClauses CaseClause              { result = val.flatten }
   ;
 
   CaseClause:
-    CASE Expr ':'                       { raise; result = CaseClauseNode.new($2); }
-  | CASE Expr ':' SourceElements        { raise; result = CaseClauseNode.new($2, $4.release()); }
+    CASE Expr ':'                       { result = CaseClauseNode.new(val[1]) }
+  | CASE Expr ':' SourceElements        {
+      result = CaseClauseNode.new(val[1], SourceElements.new([val[3]].flatten))
+    }
   ;
 
   DefaultClause:
-    DEFAULT ':'                         { raise; result = CaseClauseNode.new(0); }
-  | DEFAULT ':' SourceElements          { raise; result = CaseClauseNode.new(0, $3.release()); }
+    DEFAULT ':'                         {
+      result = CaseClauseNode.new(nil, SourceElements.new([]))
+    }
+  | DEFAULT ':' SourceElements          {
+      result = CaseClauseNode.new(nil, SourceElements.new([val[2]].flatten))
+    }
   ;
 
   LabelledStatement:

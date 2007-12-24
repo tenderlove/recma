@@ -170,6 +170,18 @@ module RKelly
         [:with, o.left.accept(self), o.value.accept(self)]
       end
 
+      def visit_CaseClauseNode(o)
+        [:case, o.left ? o.left.accept(self) : nil, o.value.accept(self)]
+      end
+
+      def visit_CaseBlockNode(o)
+        [:case_block, o.value.map { |x| x.accept(self) }]
+      end
+
+      def visit_SwitchNode(o)
+        [:switch, o.left.accept(self), o.value.accept(self)]
+      end
+
       def visit_ForNode(o)
         [ :for,
           o.init ? o.init.accept(self) : nil,

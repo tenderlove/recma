@@ -1082,6 +1082,59 @@ class ParserTest < Test::Unit::TestCase
                )
   end
 
+  def test_switch_no_case
+    assert_sexp([[:switch, [:resolve, 'o'], [:case_block, []]]],
+                @parser.parse('switch(o) { }')
+               )
+  end
+
+  def test_switch_case_no_statement
+    assert_sexp([[:switch, [:resolve, 'o'], [:case_block, [[:case, [:resolve, 'j'], []]]]]],
+                @parser.parse('switch(o) { case j: }')
+               )
+  end
+
+  def test_switch_case
+    assert_sexp([[:switch, [:resolve, 'o'],
+                  [:case_block,
+                    [[:case, [:resolve, 'j'], [[:expression, [:resolve, 'foo']]]]]
+                  ]
+                ]],
+                @parser.parse('switch(o) { case j: foo; }')
+               )
+  end
+
+  def test_switch_case_case
+    assert_sexp([[:switch, [:resolve, 'o'],
+                  [:case_block,[
+                    [:case, [:resolve, 'j'], [[:expression, [:resolve, 'foo']]]],
+                    [:case, [:resolve, 'k'], [[:expression, [:resolve, 'bar']]]],
+                  ]]
+                ]],
+                @parser.parse('switch(o) { case j: foo; case k: bar; }')
+               )
+  end
+
+  def test_switch_default
+    assert_sexp([[:switch, [:resolve, 'o'],
+                  [:case_block,[
+                    [:case, nil, [[:expression, [:resolve, 'bar']]]],
+                  ]]
+                ]],
+                @parser.parse('switch(o) { default: bar; }')
+               )
+  end
+
+  def test_switch_default_no_expr
+    assert_sexp([[:switch, [:resolve, 'o'],
+                  [:case_block,[
+                    [:case, nil, []],
+                  ]]
+                ]],
+                @parser.parse('switch(o) { default: }')
+               )
+  end
+
   def test_function_call_on_function
     assert_sexp([[:var,
                   [[:var_decl,
