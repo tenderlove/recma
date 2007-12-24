@@ -847,7 +847,7 @@ rule
 
   FunctionBody:
     /* not in spec */           { result = FunctionBodyNode.new(SourceElements.new([])) }
-  | SourceElements              { result = FunctionBodyNode.new(val[0]) }
+  | SourceElements              { result = FunctionBodyNode.new(SourceElements.new([val[0]].flatten)) }
   ;
 end
 

@@ -33,7 +33,7 @@ class ParserTest < Test::Unit::TestCase
                   [[:var_decl, :foo, [:assign,
                     [:func_expr, nil, [],
                       [:func_body,
-                        [:var, [[:var_decl, :a, [:assign, [:lit, 10]]]]]
+                        [[:var, [[:var_decl, :a, [:assign, [:lit, 10]]]]]]
                       ]
                     ]
                   ]]]

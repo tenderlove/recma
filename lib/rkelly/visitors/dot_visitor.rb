@@ -53,7 +53,7 @@ module RKelly
           add_arrow_for(node)
           @nodes << node
           @stack.push(node)
-          o.value.accept(self)
+          o.value && o.value.accept(self)
           @stack.pop
         end
       end
@@ -126,7 +126,7 @@ module RKelly
       end
 
       def visit_ForNode(o)
-        node = Node.new(@node_index += 1, [type])
+        node = Node.new(@node_index += 1, ['ForNode'])
         add_arrow_for(node)
         @nodes << node
         @stack.push(node)
@@ -150,7 +150,7 @@ module RKelly
       end
 
       def visit_ForInNode(o)
-        node = Node.new(@node_index += 1, [type])
+        node = Node.new(@node_index += 1, ['ForInNode'])
         add_arrow_for(node)
         @nodes << node
         @stack.push(node)
@@ -161,7 +161,7 @@ module RKelly
       end
 
       def visit_TryNode(o)
-        node = Node.new(@node_index += 1, [type, o.catch_var || 'NULL'])
+        node = Node.new(@node_index += 1, ['TryNode', o.catch_var || 'NULL'])
         add_arrow_for(node)
         @nodes << node
         @stack.push(node)
@@ -172,7 +172,7 @@ module RKelly
       end
 
       def visit_BracketAccessorNode(o)
-        node = Node.new(@node_index += 1, [type])
+        node = Node.new(@node_index += 1, ['BracketAccessorNode'])
         add_arrow_for(node)
         @nodes << node
         @stack.push(node)
@@ -201,15 +201,14 @@ module RKelly
           add_arrow_for(node)
           @nodes << node
           @stack.push(node)
-          [:arguments, :function_body].each do |method|
-            o.send(method) && o.send(method).accept(self)
-          end
+          o.arguments.each { |a| a && a.accept(self) }
+          o.function_body && o.function_body.accept(self)
           @stack.pop
         end
       end
 
       def visit_DotAccessorNode(o)
-        node = Node.new(@node_index += 1, [type, o.accessor])
+        node = Node.new(@node_index += 1, ['DotAccessorNode', o.accessor])
         add_arrow_for(node)
         @nodes << node
         @stack.push(node)
