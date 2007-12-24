@@ -201,6 +201,15 @@ module RKelly
         ]
       end
 
+      def visit_TryNode(o)
+        [ :try,
+          o.value.accept(self),
+          o.catch_var ? o.catch_var : nil,
+          o.catch_block ? o.catch_block.accept(self) : nil,
+          o.finally_block ? o.finally_block.accept(self) : nil
+        ]
+      end
+
       def visit_EmptyStatementNode(o)
         [:empty]
       end

@@ -1032,6 +1032,50 @@ class ParserTest < Test::Unit::TestCase
                )
   end
 
+  def test_try_finally
+    assert_sexp([[ :try,
+                  [:block,
+                    [[:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]]]
+                  ],
+                  nil,
+                  nil,
+                  [:block,
+                    [[:var, [[:var_decl, :x, [:assign, [:lit, 20]]]]]]
+                  ]
+    ]],
+                @parser.parse('try { var x = 10; } finally { var x = 20; }'))
+  end
+
+  def test_try_catch
+    assert_sexp([[ :try,
+                  [:block,
+                    [[:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]]]
+                  ],
+                  'a',
+                  [:block,
+                    [[:var, [[:var_decl, :x, [:assign, [:lit, 20]]]]]]
+                  ],
+                  nil,
+    ]],
+                @parser.parse('try { var x = 10; } catch(a) { var x = 20; }'))
+  end
+
+  def test_try_catch_finally
+    assert_sexp([[ :try,
+                  [:block,
+                    [[:var, [[:var_decl, :baz, [:assign, [:lit, 69]]]]]]
+                  ],
+                  'a',
+                  [:block,
+                    [[:var, [[:var_decl, :bar, [:assign, [:lit, 20]]]]]]
+                  ],
+                  [:block,
+                    [[:var, [[:var_decl, :foo, [:assign, [:lit, 10]]]]]]
+                  ]
+    ]],
+                @parser.parse('try { var baz = 69; } catch(a) { var bar = 20; } finally { var foo = 10; }'))
+  end
+
   def test_function_call_on_function
     assert_sexp([[:var,
                   [[:var_decl,

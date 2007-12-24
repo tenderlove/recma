@@ -780,18 +780,15 @@ rule
 
   TryStatement:
     TRY Block FINALLY Block {
-      raise
-      result = TryNode.new($2, CommonIdentifiers::shared().nullIdentifier, 0, $4)
+      result = TryNode.new(val[1], nil, nil, val[3])
       debug(result)
     }
   | TRY Block CATCH '(' IDENT ')' Block {
-      raise
-      result = TryNode.new($2, $5, $7, 0)
+      result = TryNode.new(val[1], val[4], val[6])
       debug(result)
     }
   | TRY Block CATCH '(' IDENT ')' Block FINALLY Block {
-      raise
-      result = TryNode.new($2, $5, $7, $9)
+      result = TryNode.new(val[1], val[4], val[6], val[8])
       debug(result)
     }
   ;
