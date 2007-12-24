@@ -858,7 +858,7 @@ end
   include RKelly::Nodes
 
   def allow_auto_semi?(error_token)
-    error_token == false || error_token == '}'
+    error_token == false || error_token == '}' || @terminator
   end
 
   def property_class_for(ident)
@@ -871,5 +871,5 @@ end
   end
 
   def debug(*args)
-    logger.debug(*args) if @logger
+    logger.debug(*args) if logger
   end

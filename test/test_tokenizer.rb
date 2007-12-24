@@ -7,14 +7,12 @@ class TokenizerTest < Test::Unit::TestCase
 
   def test_comments
     tokens = @tokenizer.tokenize("/** Fooo */")
-    assert_equal 1, tokens.length
-    assert_equal([[:COMMENT, '/** Fooo */']], tokens)
+    assert_tokens([[:COMMENT, '/** Fooo */']], tokens)
   end
 
   def test_string_single_quote
     tokens = @tokenizer.tokenize("foo = 'hello world';")
-    assert_equal 4, tokens.length
-    assert_equal([
+    assert_tokens([
                  [:IDENT, 'foo'],
                  ['=', '='],
                  [:STRING, "'hello world'"],
@@ -24,8 +22,7 @@ class TokenizerTest < Test::Unit::TestCase
 
   def test_string_double_quote
     tokens = @tokenizer.tokenize('foo = "hello world";')
-    assert_equal 4, tokens.length
-    assert_equal([
+    assert_tokens([
                  [:IDENT, 'foo'],
                  ['=', '='],
                  [:STRING, '"hello world"'],
@@ -35,14 +32,12 @@ class TokenizerTest < Test::Unit::TestCase
 
   def test_identifier
     tokens = @tokenizer.tokenize("foo")
-    assert_equal 1, tokens.length
-    assert_equal([[:IDENT, 'foo']], tokens)
+    assert_tokens([[:IDENT, 'foo']], tokens)
   end
 
   def test_increment
     tokens = @tokenizer.tokenize("foo += 1;")
-    assert_equal 4, tokens.length
-    assert_equal([
+    assert_tokens([
                  [:IDENT, 'foo'],
                  [:PLUSEQUAL, '+='],
                  [:NUMBER, 1],
@@ -52,8 +47,7 @@ class TokenizerTest < Test::Unit::TestCase
 
   def test_regex
     tokens = @tokenizer.tokenize("foo = /=asdf/;")
-    assert_equal 4, tokens.length
-    assert_equal([
+    assert_tokens([
                  [:IDENT, 'foo'],
                  ['=', '='],
                  [:REGEXP, '/=asdf/'],
@@ -61,10 +55,19 @@ class TokenizerTest < Test::Unit::TestCase
     ], tokens)
   end
 
+  def test_regular_expression_escape
+    tokens = @tokenizer.tokenize('foo = /\/asdf/gi;')
+    assert_tokens([
+                 [:IDENT, 'foo'],
+                 ['=', '='],
+                 [:REGEXP, '/\/asdf/gi'],
+                 [';', ';'],
+    ], tokens)
+  end
+
   def test_comment_assign
     tokens = @tokenizer.tokenize("foo = /**/;")
-    assert_equal 4, tokens.length
-    assert_equal([
+    assert_tokens([
                  [:IDENT, 'foo'],
                  ['=', '='],
                  [:COMMENT, '/**/'],
@@ -72,12 +75,15 @@ class TokenizerTest < Test::Unit::TestCase
     ], tokens)
 
     tokens = @tokenizer.tokenize("foo = //;")
-    assert_equal 3, tokens.length
-    assert_equal([
+    assert_tokens([
                  [:IDENT, 'foo'],
                  ['=', '='],
                  [:COMMENT, '//;'],
     ], tokens)
+  end
+
+  def assert_tokens(expected, actual)
+    assert_equal(expected, actual.select { |x| x[0] != :S })
   end
 
   %w{

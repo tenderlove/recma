@@ -49,10 +49,10 @@ module RKelly
       @lexemes = []
 
       token(:COMMENT, /\A\/(?:\*(?:.)*?\*\/|\/[^\n]*)/m)
-      token(:STRING, /\A"(?:\\.|[^"])*"|\A'(?:[^']|\\.)*'/m)
+      token(:STRING, /\A"(?:[^"\\]*(?:\\.[^"\\]*)*)"|\A'(?:[^'\\]*(?:\\.[^'\\]*)*)'/m)
 
       # A regexp to match floating point literals (but not integer literals).
-      token(:NUMBER, Regexp.new("\\A\\d+\\.\\d*(?:[eE][-+]?\\d+)?|\\A\\d+(?:\\.\\d*)?[eE][-+]?\\d+|\\A\\.\\d+(?:[eE][-+]?\\d+)?", Regexp::MULTILINE)) do |type, value|
+      token(:NUMBER, /\A\d+\.\d*(?:[eE][-+]?\d+)?|\A\d+(?:\.\d*)?[eE][-+]?\d+|\A\.\d+(?:[eE][-+]?\d+)?/m) do |type, value|
         [type, eval(value)]
       end
       token(:NUMBER, /\A0[xX][\da-fA-F]+|\A0[0-7]*|\A\d+/) do |type, value|
@@ -77,7 +77,7 @@ module RKelly
         end
       end
 
-      token(:REGEXP, /\A\/((?:\\.|[^\/])+)\/([gi]*)/m)
+      token(:REGEXP, /\A\/(?:[^\/\r\n\\]*(?:\\[^\r\n][^\/\r\n\\]*)*)\/[gi]*/)
       token(:S, /\A[\s\r\n]*/m)
 
       token(:SINGLE_CHAR, /\A./) do |type, value|
@@ -178,7 +178,7 @@ module RKelly
         }
 
         string = string.slice(Range.new(longest_token.value.length, -1))
-        tokens << longest_token unless longest_token.name == :S
+        tokens << longest_token
       end
       tokens.map { |x| x.to_racc_token }
     end
