@@ -485,7 +485,7 @@ rule
 
   Expr:
     AssignmentExpr
-  | Expr ',' AssignmentExpr             { raise; result = CommaNode.new($1, $3); }
+  | Expr ',' AssignmentExpr             { result = CommaNode.new(val[0], val[2]) }
   ;
 
   ExprNoIn:

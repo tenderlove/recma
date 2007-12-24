@@ -954,6 +954,17 @@ class ParserTest < Test::Unit::TestCase
     ]], @parser.parse(' if(5 && 10) var foo = 20; else var bar = 5; '))
   end
 
+  def test_if_comma
+    assert_sexp(
+                [[:if,
+                  [:comma,
+                   [:op_equal, [:resolve, "i"], [:lit, 10]],
+                   [:op_equal, [:resolve, "j"], [:lit, 11]]],
+                  [:block, []]]],
+                @parser.parse('if(i = 10, j = 11) { }')
+               )
+  end
+
   def test_in
     assert_sexp([[:var,
                   [[:var_decl, :x, [:assign,
