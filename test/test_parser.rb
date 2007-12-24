@@ -909,7 +909,7 @@ class ParserTest < Test::Unit::TestCase
                )
   end
 
-  def test_expr_comma
+  def test_for_expr_comma
     @parser.parse('for(y = 20, x = 10; foo < 10; foo++) {}')
     assert_sexp(
       for_loop_sexp([:comma,
@@ -1009,6 +1009,27 @@ class ParserTest < Test::Unit::TestCase
 
     assert_sexp(for_loop_sexp([:var, [[:var_decl, :foo, nil]]]),
     @parser.parse('for(var foo; foo < 10; foo++) { var x = 10; }'))
+  end
+
+  def test_for_expr_in_expr
+    assert_sexp(
+                for_in_sexp([:resolve, 'foo'], [:resolve, 'bar']),
+                @parser.parse('for(foo in bar) { var x = 10; }')
+               )
+  end
+
+  def test_for_var_ident_in_expr
+    assert_sexp(
+                for_in_sexp([:var_decl, :foo, nil], [:resolve, 'bar']),
+                @parser.parse('for(var foo in bar) { var x = 10; }')
+               )
+  end
+
+  def test_for_var_ident_init_in_expr
+    assert_sexp(
+                for_in_sexp([:var_decl, :foo, [:assign,[:lit, 10]]], [:resolve, 'bar']),
+                @parser.parse('for(var foo = 10 in bar) { var x = 10; }')
+               )
   end
 
   def test_function_call_on_function
@@ -1208,6 +1229,10 @@ class ParserTest < Test::Unit::TestCase
 
   def var_sexp(variable_name, val = [:lit, 10])
     [:var, [[:var_decl, variable_name.to_sym, [:assign, val]]]]
+  end
+
+  def for_in_sexp(variable, list)
+    [[:for_in, variable, list, [:block, [[:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]]]]]]
   end
 
   def for_loop_sexp(init, test = [:less, [:resolve, 'foo'], [:lit, 10]], exec = [:postfix, [:resolve, 'foo'], '++'])

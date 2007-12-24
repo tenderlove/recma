@@ -627,21 +627,20 @@ rule
       result = ForNode.new(VarStatementNode.new(val[3]), val[5], val[7], val[9])
       debug(result)
     }
-  | FOR '(' LeftHandSideExpr IN Expr ')' Statement
-                                        {
-                                            n = $3;
-                                            yyabort if (!n.isLocation())
-                                            result = ForInNode.new(n, $5, $7);
-                                            debug(result);
-                                        }
+  | FOR '(' LeftHandSideExpr IN Expr ')' Statement {
+      #yyabort if (!n.isLocation())
+      result = ForInNode.new(val[2], val[4], val[6])
+      debug(result);
+    }
   | FOR '(' VAR IDENT IN Expr ')' Statement {
-      raise
-      result = ForInNode.new($4, 0, $6, $8)
+      result = ForInNode.new(
+        VarDeclNode.new(val[3], nil), val[5], val[7])
       debug(result)
     }
   | FOR '(' VAR IDENT InitializerNoIn IN Expr ')' Statement {
-      raise
-      result = ForInNode.new($4, $5, $7, $9)
+      result = ForInNode.new(
+        VarDeclNode.new(val[3], val[4]), val[6], val[8]
+      )
       debug(result)
     }
   ;

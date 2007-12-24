@@ -193,6 +193,14 @@ module RKelly
         ]
       end
 
+      def visit_ForInNode(o)
+        [ :for_in,
+          o.left.accept(self),
+          o.right.accept(self),
+          o.value.accept(self)
+        ]
+      end
+
       def visit_EmptyStatementNode(o)
         [:empty]
       end
