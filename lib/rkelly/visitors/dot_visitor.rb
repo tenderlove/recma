@@ -2,10 +2,11 @@ module RKelly
   module Visitors
     class DotVisitor < Visitor
       class Node < Struct.new(:node_id, :fields)
+        ESCAPE = /([<>"\\])/
         def to_s
           counter = 0
           label = fields.map { |f|
-            s = "<f#{counter}> #{f}"
+            s = "<f#{counter}> #{f.to_s.gsub(ESCAPE, '\\\\\1').gsub(/[\r\n]/,' ')}"
             counter += 1
             s
           }.join('|')
@@ -13,7 +14,7 @@ module RKelly
         end
       end
 
-      class Arrow < Struct.new(:from, :to)
+      class Arrow < Struct.new(:from, :to, :label)
         def to_s
           "\"#{from.node_id}\":f0 -> \"#{to.node_id}\":f0"
         end
@@ -25,10 +26,6 @@ module RKelly
         @node_index = 0
         @nodes  = []
         @arrows = []
-      end
-
-      def add_arrow_for(node)
-        @arrows << Arrow.new(@stack.last, node) if @stack.length > 0
       end
 
       ## Terminal nodes
@@ -86,140 +83,147 @@ module RKelly
       end
       # End Binary nodes
 
-      def visit_VarDeclNode(o)
-        [ o.constant? ? :const_decl : :var_decl,
-          o.name.to_sym, o.value ? o.value.accept(self) : nil]
+      # Array Value Nodes
+      %w{
+        ArgumentsNode ArrayNode CaseBlockNode ConstStatementNode
+        ObjectLiteralNode SourceElements VarStatementNode
+      }.each do |type|
+        define_method(:"visit_#{type}") do |o|
+          node = Node.new(@node_index += 1, [type])
+          add_arrow_for(node)
+          @nodes << node
+          @stack.push(node)
+          o.value && o.value.each { |v| v && v.accept(self) }
+          @stack.pop
+        end
       end
+      # END Array Value Nodes
 
-      def visit_VarStatementNode(o)
-        [:var, o.value.map { |x| x.accept(self) }]
+      # Name and Value Nodes
+      %w{
+        LabelNode PropertyNode GetterPropertyNode SetterPropertyNode VarDeclNode
+      }.each do |type|
+        define_method(:"visit_#{type}") do |o|
+          node = Node.new(@node_index += 1, [type, o.name || 'NULL'])
+          add_arrow_for(node)
+          @nodes << node
+          @stack.push(node)
+          o.value && o.value.accept(self)
+          @stack.pop
+        end
       end
+      # END Name and Value Nodes
 
-      def visit_PostfixNode(o)
-        [:postfix, o.operand.accept(self), o.value]
-      end
-
-      def visit_PrefixNode(o)
-        [:prefix, o.operand.accept(self), o.value]
-      end
-
-      def visit_ConstStatementNode(o)
-        [:const, o.value.map { |x| x.accept(self) }]
-      end
-
-      def visit_CaseBlockNode(o)
-        [:case_block, o.value.map { |x| x.accept(self) }]
+      %w{ PostfixNode PrefixNode }.each do |type|
+        define_method(:"visit_#{type}") do |o|
+          node = Node.new(@node_index += 1, [type, o.value])
+          add_arrow_for(node)
+          @nodes << node
+          @stack.push(node)
+          o.operand && o.operand.accept(self)
+          @stack.pop
+        end
       end
 
       def visit_ForNode(o)
-        [ :for,
-          o.init ? o.init.accept(self) : nil,
-          o.test ? o.test.accept(self) : nil,
-          o.counter ? o.counter.accept(self) : nil,
-          o.value.accept(self)
-        ]
+        node = Node.new(@node_index += 1, [type])
+        add_arrow_for(node)
+        @nodes << node
+        @stack.push(node)
+        [:init, :test, :counter, :value].each do |method|
+          o.send(method) && o.send(method).accept(self)
+        end
+        @stack.pop
       end
 
-      def visit_IfNode(o)
-        [:if, o.conditions.accept(self),
-              o.value.accept(self),
-              o.else ? o.else.accept(self) : nil
-        ].compact
-      end
-
-      def visit_ConditionalNode(o)
-        [:conditional, o.conditions.accept(self),
-              o.value.accept(self),
-              o.else.accept(self)
-        ]
+      %w{ IfNode ConditionalNode }.each do |type|
+        define_method(:"visit_#{type}") do |o|
+          node = Node.new(@node_index += 1, [type])
+          add_arrow_for(node)
+          @nodes << node
+          @stack.push(node)
+          [:conditions, :value, :else].each do |method|
+            o.send(method) && o.send(method).accept(self)
+          end
+          @stack.pop
+        end
       end
 
       def visit_ForInNode(o)
-        [ :for_in,
-          o.left.accept(self),
-          o.right.accept(self),
-          o.value.accept(self)
-        ]
+        node = Node.new(@node_index += 1, [type])
+        add_arrow_for(node)
+        @nodes << node
+        @stack.push(node)
+        [:left, :right, :value].each do |method|
+          o.send(method) && o.send(method).accept(self)
+        end
+        @stack.pop
       end
 
       def visit_TryNode(o)
-        [ :try,
-          o.value.accept(self),
-          o.catch_var ? o.catch_var : nil,
-          o.catch_block ? o.catch_block.accept(self) : nil,
-          o.finally_block ? o.finally_block.accept(self) : nil
-        ]
-      end
-
-      def visit_SourceElements(o)
-        o.value.map { |x| x.accept(self) }
+        node = Node.new(@node_index += 1, [type, o.catch_var || 'NULL'])
+        add_arrow_for(node)
+        @nodes << node
+        @stack.push(node)
+        [:value, :catch_block, :finally_block].each do |method|
+          o.send(method) && o.send(method).accept(self)
+        end
+        @stack.pop
       end
 
       def visit_BracketAccessorNode(o)
-        [:bracket_access,
-          o.value.accept(self),
-          o.accessor.accept(self)
-        ]
+        node = Node.new(@node_index += 1, [type])
+        add_arrow_for(node)
+        @nodes << node
+        @stack.push(node)
+        [:value, :accessor].each do |method|
+          o.send(method) && o.send(method).accept(self)
+        end
+        @stack.pop
       end
 
-      def visit_NewExprNode(o)
-        [:new_expr, o.value.accept(self), o.arguments.accept(self)]
+      %w{ NewExprNode FunctionCallNode }.each do |type|
+        define_method(:"visit_#{type}") do |o|
+          node = Node.new(@node_index += 1, [type])
+          add_arrow_for(node)
+          @nodes << node
+          @stack.push(node)
+          [:value, :arguments].each do |method|
+            o.send(method) && o.send(method).accept(self)
+          end
+          @stack.pop
+        end
       end
 
-      def visit_LabelNode(o)
-        [:label, o.name, o.value.accept(self)]
-      end
-
-      def visit_ObjectLiteralNode(o)
-        [:object, o.value.map { |x| x.accept(self) }]
-      end
-
-      def visit_PropertyNode(o)
-        [ :property, o.name, o.value.accept(self) ]
-      end
-
-      def visit_GetterPropertyNode(o)
-        [ :getter, o.name, o.value.accept(self) ]
-      end
-
-      def visit_SetterPropertyNode(o)
-        [ :setter, o.name, o.value.accept(self) ]
-      end
-
-      def visit_FunctionCallNode(o)
-        [:function_call, o.value.accept(self), o.arguments.accept(self)]
-      end
-
-      def visit_ArrayNode(o)
-        [:array, o.value.map { |x| x ? x.accept(self) : nil }]
-      end
-
-      def visit_FunctionExprNode(o)
-        [ :func_expr,
-          o.value ? o.value : nil,
-          o.arguments.map { |x| x.accept(self) },
-          o.function_body.accept(self)
-        ]
-      end
-
-      def visit_FunctionDeclNode(o)
-        [ :func_decl,
-          o.value ? o.value : nil,
-          o.arguments.map { |x| x.accept(self) },
-          o.function_body.accept(self)
-        ]
-      end
-
-      def visit_ArgumentsNode(o)
-        [:args, o.value.map { |x| x.accept(self) }]
+      %w{ FunctionExprNode FunctionDeclNode }.each do |type|
+        define_method(:"visit_#{type}") do |o|
+          node = Node.new(@node_index += 1, [type, o.value || 'NULL'])
+          add_arrow_for(node)
+          @nodes << node
+          @stack.push(node)
+          [:arguments, :function_body].each do |method|
+            o.send(method) && o.send(method).accept(self)
+          end
+          @stack.pop
+        end
       end
 
       def visit_DotAccessorNode(o)
-        [:dot_access,
-          o.value.accept(self),
-          o.accessor
-        ]
+        node = Node.new(@node_index += 1, [type, o.accessor])
+        add_arrow_for(node)
+        @nodes << node
+        @stack.push(node)
+        [:value].each do |method|
+          o.send(method) && o.send(method).accept(self)
+        end
+        @stack.pop
       end
+
+      private
+      def add_arrow_for(node, label = nil)
+        @arrows << Arrow.new(@stack.last, node, label) if @stack.length > 0
+      end
+
     end
   end
 end

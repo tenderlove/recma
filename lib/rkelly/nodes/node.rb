@@ -18,7 +18,7 @@ module RKelly
         visitor.accept(self)
         header = <<-END
 digraph g {
-graph [ rankdir = "LR" ];
+graph [ rankdir = "TB" ];
 node [
   fontsize = "16"
   shape = "ellipse"
