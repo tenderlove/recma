@@ -1076,6 +1076,12 @@ class ParserTest < Test::Unit::TestCase
                 @parser.parse('try { var baz = 69; } catch(a) { var bar = 20; } finally { var foo = 10; }'))
   end
 
+  def test_with
+    assert_sexp([[:with, [:resolve, 'o'], [:expression, [:resolve, 'x']]]],
+                @parser.parse('with (o) x;')
+               )
+  end
+
   def test_function_call_on_function
     assert_sexp([[:var,
                   [[:var_decl,

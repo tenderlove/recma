@@ -518,7 +518,7 @@ rule
   | VAR VariableDeclarationList error {
       result = VarStatementNode.new(val[1])
       debug(result)
-      raise "no auto semi!" unless allow_auto_semi?(val.last)
+      yyabort unless allow_auto_semi?(val.last)
     }
   ;
 
@@ -590,7 +590,7 @@ rule
   | ExprNoBF error {
       result = ExpressionStatementNode.new(val.first)
       debug(result)
-      raise 'no auto semi' unless allow_auto_semi?(val.last)
+      yyabort unless allow_auto_semi?(val.last)
     }
   ;
 
@@ -720,8 +720,7 @@ rule
 
   WithStatement:
     WITH '(' Expr ')' Statement {
-      raise
-      result = WithNode.new($3, $5)
+      result = WithNode.new(val[2], val[4])
       debug(result)
     }
   ;

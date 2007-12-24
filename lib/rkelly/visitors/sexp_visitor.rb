@@ -166,6 +166,10 @@ module RKelly
         [:while, o.left.accept(self), o.value.accept(self)]
       end
 
+      def visit_WithNode(o)
+        [:with, o.left.accept(self), o.value.accept(self)]
+      end
+
       def visit_ForNode(o)
         [ :for,
           o.init ? o.init.accept(self) : nil,
