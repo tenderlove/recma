@@ -116,7 +116,7 @@ module RKelly
             function.js_call(chain, *arguments)
           }
         else
-          function.call(*arguments)
+          function.call(*(arguments.map { |x| x.value }))
         end
       end
 
