@@ -9,7 +9,7 @@ module RKelly
 
       def js_call(scope_chain, *params)
         arguments.zip(params).each do |name,value|
-          scope_chain[name.value] = value || :undefined
+          scope_chain[name.value] = value || RKelly::Runtime::UNDEFINED
         end
         function_visitor  = FunctionVisitor.new(scope_chain)
         var_visitor       = VariableVisitor.new(scope_chain)

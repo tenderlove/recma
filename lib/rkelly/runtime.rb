@@ -3,6 +3,8 @@ require 'rkelly/runtime/scope_chain'
 
 module RKelly
   class Runtime
+    UNDEFINED = RKelly::Runtime::Reference.new(:undefined, :undefined)
+
     def initialize
       @parser = Parser.new
       @scope  = ScopeChain.new

@@ -11,7 +11,7 @@ class VariableVisitorTest < Test::Unit::TestCase
     tree = @parser.parse(js_code)
     @visitor.accept(tree)
     actual.each do |property, value|
-      assert @visitor.scope_chain[property]
+      assert @visitor.scope_chain.has_property?(property)
       assert_equal value, @visitor.scope_chain[property].value
     end
   end

@@ -24,8 +24,17 @@ module RKelly
 
       def visit_VarDeclNode(o)
         @operand << o.name
-        o.value.accept(self)
+        o.value.accept(self) if o.value
         @operand.pop
+      end
+
+      def visit_IfNode(o)
+        truthiness = o.conditions.accept(self)
+        if truthiness.value && truthiness.value != 0
+          o.value.accept(self)
+        else
+          o.else && o.else.accept(self)
+        end
       end
 
       def visit_ResolveNode(o)
@@ -37,40 +46,66 @@ module RKelly
       end
 
       def visit_AddNode(o)
-        o.left.accept(self) + o.value.accept(self)
+        RKelly::Runtime::Reference.new(:add,
+          o.left.accept(self).value + o.value.accept(self).value
+        )
       end
 
       def visit_SubtractNode(o)
-        o.left.accept(self) - o.value.accept(self)
+        RKelly::Runtime::Reference.new(:subtract,
+          o.left.accept(self).value - o.value.accept(self).value
+        )
       end
 
       def visit_MultiplyNode(o)
-        o.left.accept(self) * o.value.accept(self)
+        RKelly::Runtime::Reference.new(:multiply,
+          o.left.accept(self).value * o.value.accept(self).value
+        )
       end
 
       def visit_DivideNode(o)
-        o.left.accept(self) / o.value.accept(self)
+        RKelly::Runtime::Reference.new(:divide,
+          o.left.accept(self).value / o.value.accept(self).value
+        )
       end
 
       def visit_OpEqualNode(o)
-        o.left.accept(self).value = o.value.accept(self)
+        o.left.accept(self).value = o.value.accept(self).value
       end
 
       def visit_OpPlusEqualNode(o)
-        o.left.accept(self).value += o.value.accept(self)
+        o.left.accept(self).value += o.value.accept(self).value
       end
 
       def visit_AssignExprNode(o)
-        scope_chain[@operand.last].value = o.value.accept(self)
+        scope_chain[@operand.last] = o.value.accept(self)
       end
 
       def visit_NumberNode(o)
-        o.value
+        RKelly::Runtime::Reference.new(o.value, o.value)
       end
 
       def visit_VoidNode(o)
         o.value.accept(self)
-        :undefined
+        RKelly::Runtime::UNDEFINED
+      end
+
+      def visit_NullNode(o)
+        RKelly::Runtime::Reference.new
+      end
+
+      def visit_TrueNode(o)
+        RKelly::Runtime::Reference.new(true, true)
+      end
+
+      def visit_FalseNode(o)
+        RKelly::Runtime::Reference.new(false, false)
+      end
+
+      def visit_StringNode(o)
+        RKelly::Runtime::Reference.new(:string,
+          o.value.gsub(/\A['"]/, '').gsub(/['"]$/, '')
+        )
       end
 
       def visit_FunctionCallNode(o)
@@ -86,7 +121,14 @@ module RKelly
       end
 
       def visit_EqualNode(o)
-        o.left.accept(self).value == o.value.accept(self).value
+        left = o.left.accept(self)
+        right = o.value.accept(self)
+
+        RKelly::Runtime::Reference.new(:equal_node, left.value == right.value)
+      end
+
+      def visit_BlockNode(o)
+        o.value.accept(self)
       end
 
       def visit_FunctionBodyNode(o)
@@ -104,22 +146,22 @@ module RKelly
 
       %w{
         ArrayNode BitAndNode BitOrNode
-        BitXOrNode BitwiseNotNode BlockNode BracketAccessorNode BreakNode
+        BitXOrNode BitwiseNotNode BracketAccessorNode BreakNode
         CaseBlockNode CaseClauseNode CommaNode ConditionalNode
         ConstStatementNode ContinueNode ContinueNode DeleteNode
         DoWhileNode DotAccessorNode ElementNode EmptyStatementNode
-        FalseNode ForInNode ForNode
+        ForInNode ForNode
         FunctionExprNode GetterPropertyNode GreaterNode GreaterOrEqualNode
-        IfNode InNode InstanceOfNode LabelNode LeftShiftNode LessNode
+        InNode InstanceOfNode LabelNode LeftShiftNode LessNode
         LessOrEqualNode LogicalAndNode LogicalNotNode LogicalOrNode ModulusNode
-        NewExprNode NotEqualNode NotStrictEqualNode NullNode
+        NewExprNode NotEqualNode NotStrictEqualNode
         ObjectLiteralNode OpAndEqualNode OpDivideEqualNode
         OpLShiftEqualNode OpMinusEqualNode OpModEqualNode
         OpMultiplyEqualNode OpOrEqualNode OpRShiftEqualNode
         OpURShiftEqualNode OpXOrEqualNode ParameterNode PostfixNode PrefixNode
         PropertyNode RegexpNode RightShiftNode
-        SetterPropertyNode StrictEqualNode StringNode
-        SwitchNode ThisNode ThrowNode TrueNode TryNode TypeOfNode
+        SetterPropertyNode StrictEqualNode
+        SwitchNode ThisNode ThrowNode TryNode TypeOfNode
         UnaryMinusNode UnaryPlusNode UnsignedRightShiftNode
         WhileNode WithNode
       }.each do |type|
