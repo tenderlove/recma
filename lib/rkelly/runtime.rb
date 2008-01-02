@@ -20,6 +20,15 @@ module RKelly
       @scope
     end
 
+    def call_function(function_name, *args)
+      function = @scope[function_name].value
+      @scope.new_scope { |chain|
+        function.js_call(chain, *(args.map { |x|
+          RKelly::Runtime::Reference.new(:param, x)
+        }))
+      }.value
+    end
+
     def define_function(function, &block)
       @scope[function.to_s].value = block
     end
