@@ -39,7 +39,7 @@ module RKelly
         AddNode ArgumentsNode ArrayNode AssignExprNode BitAndNode BitOrNode
         BitXOrNode BitwiseNotNode BlockNode BracketAccessorNode BreakNode
         CaseBlockNode CaseClauseNode CommaNode ConditionalNode
-        ConstStatementNode ContinueNode ContinueNode DeleteNode DivideNode
+        ConstStatementNode ContinueNode DeleteNode DivideNode
         DoWhileNode DotAccessorNode ElementNode EmptyStatementNode EqualNode
         ExpressionStatementNode FalseNode ForInNode ForNode FunctionBodyNode
         FunctionExprNode GetterPropertyNode GreaterNode GreaterOrEqualNode

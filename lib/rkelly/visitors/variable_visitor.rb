@@ -148,7 +148,7 @@ module RKelly
         ArrayNode BitAndNode BitOrNode
         BitXOrNode BitwiseNotNode BracketAccessorNode BreakNode
         CaseBlockNode CaseClauseNode CommaNode ConditionalNode
-        ConstStatementNode ContinueNode ContinueNode DeleteNode
+        ConstStatementNode ContinueNode DeleteNode
         DoWhileNode DotAccessorNode ElementNode EmptyStatementNode
         ForInNode ForNode
         FunctionExprNode GetterPropertyNode GreaterNode GreaterOrEqualNode

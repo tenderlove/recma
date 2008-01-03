@@ -30,7 +30,7 @@ module RKelly
 
       ## Terminal nodes
       %w{
-        BreakNode ContinueNode ContinueNode EmptyStatementNode FalseNode
+        BreakNode ContinueNode EmptyStatementNode FalseNode
         NullNode NumberNode ParameterNode RegexpNode ResolveNode StringNode
         ThisNode TrueNode
       }.each do |type|
