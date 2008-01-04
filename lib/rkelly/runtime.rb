@@ -1,5 +1,6 @@
 require 'rkelly/runtime/scope'
 require 'rkelly/runtime/scope_chain'
+require 'rkelly/js'
 
 module RKelly
   class Runtime
