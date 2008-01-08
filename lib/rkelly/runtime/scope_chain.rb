@@ -1,8 +1,10 @@
 module RKelly
   class Runtime
     class ScopeChain
+      include RKelly::JS
+
       def initialize(scope = Scope.new)
-        @chain = [scope]
+        @chain = [GlobalObject.new, scope]
       end
 
       def <<(scope)
@@ -11,9 +13,9 @@ module RKelly
 
       def has_property?(name)
         scope = @chain.reverse.find { |x|
-          x.properties.has_key?(name)
+          x.has_property?(name)
         }
-        scope ? scope.properties[name] : nil
+        scope ? scope[name] : nil
       end
       
       def [](name)

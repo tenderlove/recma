@@ -11,6 +11,15 @@ module RKelly
         @returned   = false
       end
 
+      def has_property?(name)
+        return true if self.properties.has_key?(name)
+      end
+
+      def [](name)
+        return self.properties[name] if has_property?(name)
+        RKelly::Runtime::UNDEFINED
+      end
+
       def return=(value)
         @returned = true
         @return = value

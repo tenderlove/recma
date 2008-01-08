@@ -6,6 +6,9 @@ module RKelly
         @properties = {}
         self['prototype'] = nil
         self['class']     = 'GlobalObject'
+        self['NaN']       = 0.0 / 0.0
+        self['NaN'].attributes << :dont_enum
+        self['NaN'].attributes << :dont_delete
       end
 
       def [](name)

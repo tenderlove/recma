@@ -11,6 +11,10 @@ class TestScopeChain < Test::Unit::TestCase
     @scope_chain << scope_2
   end
 
+  def test_global_object_in_chain
+    assert @scope_chain.has_property?('NaN')
+  end
+
   def test_has_property
     assert @scope_chain.has_property?(:foo)
     assert @scope_chain.has_property?(:bar)

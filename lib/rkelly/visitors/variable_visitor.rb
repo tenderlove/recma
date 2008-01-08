@@ -144,6 +144,35 @@ module RKelly
         o.value.map { |x| x.accept(self) }
       end
 
+      def visit_TypeOfNode(o)
+        val = o.value.accept(self)
+        return RKelly::Runtime::Reference.new(:string, 'object') if val.value.nil?
+        case val.value
+        when String
+          RKelly::Runtime::Reference.new(:string, 'string')
+        when Numeric
+          RKelly::Runtime::Reference.new(:string, 'number')
+        when true
+          RKelly::Runtime::Reference.new(:string, 'boolean')
+        when false
+          RKelly::Runtime::Reference.new(:string, 'boolean')
+        when :undefined
+          RKelly::Runtime::Reference.new(:string, 'undefined')
+        end
+      end
+
+      def visit_UnaryPlusNode(o)
+        v = o.value.accept(self)
+        v.value = 0 + v.value
+        v
+      end
+
+      def visit_UnaryMinusNode(o)
+        v = o.value.accept(self)
+        v.value = 0 - v.value
+        v
+      end
+
       %w{
         ArrayNode BitAndNode BitOrNode
         BitXOrNode BitwiseNotNode BracketAccessorNode BreakNode
@@ -161,8 +190,8 @@ module RKelly
         OpURShiftEqualNode OpXOrEqualNode ParameterNode PostfixNode PrefixNode
         PropertyNode RegexpNode RightShiftNode
         SetterPropertyNode StrictEqualNode
-        SwitchNode ThisNode ThrowNode TryNode TypeOfNode
-        UnaryMinusNode UnaryPlusNode UnsignedRightShiftNode
+        SwitchNode ThisNode ThrowNode TryNode
+        UnsignedRightShiftNode
         WhileNode WithNode
       }.each do |type|
         define_method(:"visit_#{type}") do |o|
