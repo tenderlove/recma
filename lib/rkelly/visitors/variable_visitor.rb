@@ -111,13 +111,17 @@ module RKelly
       def visit_FunctionCallNode(o)
         function  = o.value.accept(self).value
         arguments = o.arguments.accept(self)
-        if function.is_a?(RKelly::Visitors::Function)
+        if function.is_a?(RKelly::JS::Function)
           scope_chain.new_scope { |chain|
             function.js_call(chain, *arguments)
           }
         else
           function.call(*(arguments.map { |x| x.value }))
         end
+      end
+
+      def visit_DotAccessorNode(o)
+        o.value.accept(self)[o.accessor]
       end
 
       def visit_EqualNode(o)
@@ -158,6 +162,8 @@ module RKelly
           RKelly::JS::Property.new(:string, 'boolean')
         when :undefined
           RKelly::JS::Property.new(:string, 'undefined')
+        else
+          RKelly::JS::Property.new(:object, 'object')
         end
       end
 
@@ -178,7 +184,7 @@ module RKelly
         BitXOrNode BitwiseNotNode BracketAccessorNode BreakNode
         CaseBlockNode CaseClauseNode CommaNode ConditionalNode
         ConstStatementNode ContinueNode DeleteNode
-        DoWhileNode DotAccessorNode ElementNode EmptyStatementNode
+        DoWhileNode ElementNode EmptyStatementNode
         ForInNode ForNode
         FunctionExprNode GetterPropertyNode GreaterNode GreaterOrEqualNode
         InNode InstanceOfNode LabelNode LeftShiftNode LessNode

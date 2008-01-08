@@ -1,6 +1,6 @@
 module RKelly
   module JS
-    class Scope < GlobalObject
+    class Scope < Base
     end
   end
 end

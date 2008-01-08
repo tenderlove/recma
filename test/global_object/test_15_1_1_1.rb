@@ -1,3 +1,4 @@
+require File.dirname(__FILE__) + "/../helper"
 
 class GlobalObject_15_1_1_1_Test < Test::Unit::TestCase
   include RKelly::JS

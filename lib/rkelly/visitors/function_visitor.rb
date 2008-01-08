@@ -1,23 +1,5 @@
 module RKelly
   module Visitors
-    class Function
-      attr_reader :body, :arguments
-      def initialize(body, arguments = [])
-        @body = body
-        @arguments = arguments
-      end
-
-      def js_call(scope_chain, *params)
-        arguments.each_with_index { |name, i|
-          scope_chain[name.value] = params[i] || RKelly::Runtime::UNDEFINED
-        }
-        function_visitor  = FunctionVisitor.new(scope_chain)
-        var_visitor       = VariableVisitor.new(scope_chain)
-        body.accept(function_visitor)
-        body.accept(var_visitor)
-      end
-    end
-
     class FunctionVisitor < Visitor
       attr_reader :scope_chain
       def initialize(scope)
@@ -31,7 +13,7 @@ module RKelly
 
       def visit_FunctionDeclNode(o)
         if o.value
-          scope_chain[o.value].value = Function.new(o.function_body, o.arguments)
+          scope_chain[o.value].value = RKelly::JS::Function.new(o.function_body, o.arguments)
         end
       end
 
