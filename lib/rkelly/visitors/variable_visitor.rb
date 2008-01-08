@@ -46,25 +46,25 @@ module RKelly
       end
 
       def visit_AddNode(o)
-        RKelly::Runtime::Reference.new(:add,
+        RKelly::JS::Property.new(:add,
           o.left.accept(self).value + o.value.accept(self).value
         )
       end
 
       def visit_SubtractNode(o)
-        RKelly::Runtime::Reference.new(:subtract,
+        RKelly::JS::Property.new(:subtract,
           o.left.accept(self).value - o.value.accept(self).value
         )
       end
 
       def visit_MultiplyNode(o)
-        RKelly::Runtime::Reference.new(:multiply,
+        RKelly::JS::Property.new(:multiply,
           o.left.accept(self).value * o.value.accept(self).value
         )
       end
 
       def visit_DivideNode(o)
-        RKelly::Runtime::Reference.new(:divide,
+        RKelly::JS::Property.new(:divide,
           o.left.accept(self).value / o.value.accept(self).value
         )
       end
@@ -82,7 +82,7 @@ module RKelly
       end
 
       def visit_NumberNode(o)
-        RKelly::Runtime::Reference.new(o.value, o.value)
+        RKelly::JS::Property.new(o.value, o.value)
       end
 
       def visit_VoidNode(o)
@@ -91,19 +91,19 @@ module RKelly
       end
 
       def visit_NullNode(o)
-        RKelly::Runtime::Reference.new
+        RKelly::JS::Property.new(nil, nil)
       end
 
       def visit_TrueNode(o)
-        RKelly::Runtime::Reference.new(true, true)
+        RKelly::JS::Property.new(true, true)
       end
 
       def visit_FalseNode(o)
-        RKelly::Runtime::Reference.new(false, false)
+        RKelly::JS::Property.new(false, false)
       end
 
       def visit_StringNode(o)
-        RKelly::Runtime::Reference.new(:string,
+        RKelly::JS::Property.new(:string,
           o.value.gsub(/\A['"]/, '').gsub(/['"]$/, '')
         )
       end
@@ -124,7 +124,7 @@ module RKelly
         left = o.left.accept(self)
         right = o.value.accept(self)
 
-        RKelly::Runtime::Reference.new(:equal_node, left.value == right.value)
+        RKelly::JS::Property.new(:equal_node, left.value == right.value)
       end
 
       def visit_BlockNode(o)
@@ -146,18 +146,18 @@ module RKelly
 
       def visit_TypeOfNode(o)
         val = o.value.accept(self)
-        return RKelly::Runtime::Reference.new(:string, 'object') if val.value.nil?
+        return RKelly::JS::Property.new(:string, 'object') if val.value.nil?
         case val.value
         when String
-          RKelly::Runtime::Reference.new(:string, 'string')
+          RKelly::JS::Property.new(:string, 'string')
         when Numeric
-          RKelly::Runtime::Reference.new(:string, 'number')
+          RKelly::JS::Property.new(:string, 'number')
         when true
-          RKelly::Runtime::Reference.new(:string, 'boolean')
+          RKelly::JS::Property.new(:string, 'boolean')
         when false
-          RKelly::Runtime::Reference.new(:string, 'boolean')
+          RKelly::JS::Property.new(:string, 'boolean')
         when :undefined
-          RKelly::Runtime::Reference.new(:string, 'undefined')
+          RKelly::JS::Property.new(:string, 'undefined')
         end
       end
 

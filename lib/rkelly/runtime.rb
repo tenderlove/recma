@@ -1,10 +1,9 @@
 require 'rkelly/js'
-require 'rkelly/runtime/scope'
 require 'rkelly/runtime/scope_chain'
 
 module RKelly
   class Runtime
-    UNDEFINED = RKelly::Runtime::Reference.new(:undefined, :undefined)
+    UNDEFINED = RKelly::JS::Property.new(:undefined, :undefined)
 
     def initialize
       @parser = Parser.new
@@ -25,7 +24,7 @@ module RKelly
       function = @scope[function_name].value
       @scope.new_scope { |chain|
         function.js_call(chain, *(args.map { |x|
-          RKelly::Runtime::Reference.new(:param, x)
+          RKelly::JS::Property.new(:param, x)
         }))
       }.value
     end

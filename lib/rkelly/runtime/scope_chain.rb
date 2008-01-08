@@ -4,7 +4,7 @@ module RKelly
       include RKelly::JS
 
       def initialize(scope = Scope.new)
-        @chain = [GlobalObject.new, scope]
+        @chain = [GlobalObject.new]
       end
 
       def <<(scope)

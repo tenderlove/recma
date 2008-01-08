@@ -1,14 +1,16 @@
 module RKelly
   module JS
     class GlobalObject
-      attr_reader :properties
+      attr_reader :properties, :return
       def initialize
-        @properties = {}
+        @properties = Hash.new { |h,k| h[k] = Property.new(k, :undefined) }
         self['prototype'] = nil
         self['class']     = 'GlobalObject'
         self['NaN']       = 0.0 / 0.0
         self['NaN'].attributes << :dont_enum
         self['NaN'].attributes << :dont_delete
+        @return     = nil
+        @returned   = false
       end
 
       def [](name)
@@ -33,6 +35,7 @@ module RKelly
         if !has_property?(name)
           return true if self.properties['prototype'].nil?
           return true if self.properties['prototype'].value.nil?
+          return true if self.properties['prototype'].value == :undefined
           return self.properties['prototype'].value.can_put?(name)
         end
         !self.properties[name].read_only?
@@ -42,6 +45,7 @@ module RKelly
         return true if self.properties.has_key?(name)
         return false if self.properties['prototype'].nil?
         return false if self.properties['prototype'].value.nil?
+        return false if self.properties['prototype'].value == :undefined
         self.properties['prototype'].value.has_property?(name)
       end
 
@@ -51,6 +55,13 @@ module RKelly
         self.properties.delete(name)
         true
       end
+
+      def return=(value)
+        @returned = true
+        @return = value
+      end
+
+      def returned?; @returned; end
     end
   end
 end
