@@ -30,7 +30,7 @@ module RKelly
     end
 
     def define_function(function, &block)
-      @scope[function.to_s].value = block
+      @scope[function.to_s].function = block
     end
   end
 end

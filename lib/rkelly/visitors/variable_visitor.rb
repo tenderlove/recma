@@ -109,14 +109,17 @@ module RKelly
       end
 
       def visit_FunctionCallNode(o)
-        function  = o.value.accept(self).value
+        function  = o.value.accept(self)
         arguments = o.arguments.accept(self)
+        function  = function.function || function.value
         if function.is_a?(RKelly::JS::Function)
           scope_chain.new_scope { |chain|
             function.js_call(chain, *arguments)
           }
         else
-          function.call(*(arguments.map { |x| x.value }))
+          RKelly::JS::Property.new(:ruby,
+            function.call(*(arguments.map { |x| x.value }))
+          )
         end
       end
 
@@ -152,20 +155,20 @@ module RKelly
         val = o.value.accept(self)
         return RKelly::JS::Property.new(:string, 'object') if val.value.nil?
 
-	case val.value
-	when String
-	  RKelly::JS::Property.new(:string, 'string')
-	when Numeric
-	  RKelly::JS::Property.new(:string, 'number')
-	when true
-	  RKelly::JS::Property.new(:string, 'boolean')
-	when false
-	  RKelly::JS::Property.new(:string, 'boolean')
-	when :undefined
-	  RKelly::JS::Property.new(:string, 'undefined')
-	else
-	  RKelly::JS::Property.new(:object, 'object')
-	end
+        case val.value
+        when String
+          RKelly::JS::Property.new(:string, 'string')
+        when Numeric
+          RKelly::JS::Property.new(:string, 'number')
+        when true
+          RKelly::JS::Property.new(:string, 'boolean')
+        when false
+          RKelly::JS::Property.new(:string, 'boolean')
+        when :undefined
+          RKelly::JS::Property.new(:string, 'undefined')
+        else
+          RKelly::JS::Property.new(:object, 'object')
+        end
       end
 
       def visit_UnaryPlusNode(o)

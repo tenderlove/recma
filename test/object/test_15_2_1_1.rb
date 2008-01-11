@@ -34,9 +34,9 @@ class Object_15_2_1_1_Test < Test::Unit::TestCase
     js_assert_equal("'object'", 'typeof (Object(true))')
   end
 
-  #def test_true_value_of
-  #  js_assert_equal("true", 'Object(true).valueOf()')
-  #end
+  def test_true_value_of
+    js_assert_equal("true", 'Object(true).valueOf()')
+  end
 
   def js_assert_equal(expected, actual)
     @runtime.execute("assert_equal(#{expected}, #{actual});")
