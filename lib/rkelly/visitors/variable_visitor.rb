@@ -121,7 +121,7 @@ module RKelly
       end
 
       def visit_DotAccessorNode(o)
-        o.value.accept(self)[o.accessor]
+        o.value.accept(self).value[o.accessor]
       end
 
       def visit_EqualNode(o)
@@ -151,20 +151,21 @@ module RKelly
       def visit_TypeOfNode(o)
         val = o.value.accept(self)
         return RKelly::JS::Property.new(:string, 'object') if val.value.nil?
-        case val.value
-        when String
-          RKelly::JS::Property.new(:string, 'string')
-        when Numeric
-          RKelly::JS::Property.new(:string, 'number')
-        when true
-          RKelly::JS::Property.new(:string, 'boolean')
-        when false
-          RKelly::JS::Property.new(:string, 'boolean')
-        when :undefined
-          RKelly::JS::Property.new(:string, 'undefined')
-        else
-          RKelly::JS::Property.new(:object, 'object')
-        end
+
+	case val.value
+	when String
+	  RKelly::JS::Property.new(:string, 'string')
+	when Numeric
+	  RKelly::JS::Property.new(:string, 'number')
+	when true
+	  RKelly::JS::Property.new(:string, 'boolean')
+	when false
+	  RKelly::JS::Property.new(:string, 'boolean')
+	when :undefined
+	  RKelly::JS::Property.new(:string, 'undefined')
+	else
+	  RKelly::JS::Property.new(:object, 'object')
+	end
       end
 
       def visit_UnaryPlusNode(o)

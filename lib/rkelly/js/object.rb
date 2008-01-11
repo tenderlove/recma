@@ -6,6 +6,10 @@ module RKelly
         def create(*args)
           arg = args.first
           return self.new if arg.nil? || arg == :undefined
+	  case arg
+	  when true, false
+	    JS::Boolean.new(arg)
+	  end
         end
       end
 

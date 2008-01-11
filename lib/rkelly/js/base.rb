@@ -1,7 +1,7 @@
 module RKelly
   module JS
     class Base
-      attr_reader :properties, :return
+      attr_reader :properties, :return, :value
       def initialize
         @properties = Hash.new { |h,k| h[k] = Property.new(k, :undefined) }
         @return     = nil
