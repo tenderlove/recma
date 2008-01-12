@@ -3,7 +3,9 @@ module RKelly
     class Base
       attr_reader :properties, :return, :value
       def initialize
-        @properties = Hash.new { |h,k| h[k] = Property.new(k, :undefined) }
+        @properties = Hash.new { |h,k|
+          h[k] = Property.new(k, :undefined, self)
+        }
         @return     = nil
         @returned   = false
         @value      = self
@@ -11,7 +13,7 @@ module RKelly
 
       def [](name)
         return self.properties[name] if has_property?(name)
-        if self.properties['prototype'] && self.properties['prototype'].value
+        if self.properties['prototype'].value != :undefined
           self.properties['prototype'].value[name]
         else
           RKelly::Runtime::UNDEFINED
@@ -23,7 +25,7 @@ module RKelly
         if has_property?(name)
           self.properties[name].value = value
         else
-          self.properties[name] = Property.new(name, value)
+          self.properties[name] = Property.new(name, value, self)
         end
       end
 
@@ -58,6 +60,15 @@ module RKelly
       end
 
       def returned?; @returned; end
+
+      private
+      def unbound_lambda(name, &block)
+        name = "#{name}_#{self.class.to_s.split('::').last}"
+        RKelly::JS::Base.class_eval do
+          define_method(name, &block)
+        end
+        RKelly::JS::Base.instance_method(name)
+      end
     end
   end
 end

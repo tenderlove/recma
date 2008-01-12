@@ -70,7 +70,11 @@ module RKelly
       end
 
       def visit_OpEqualNode(o)
-        o.left.accept(self).value = o.value.accept(self).value
+        left = o.left.accept(self)
+        right = o.value.accept(self)
+        left.value = right.value
+        left.function = right.function
+        left
       end
 
       def visit_OpPlusEqualNode(o)
@@ -109,13 +113,18 @@ module RKelly
       end
 
       def visit_FunctionCallNode(o)
-        function  = o.value.accept(self)
+        left      = o.value.accept(self)
         arguments = o.arguments.accept(self)
-        function  = function.function || function.value
-        if function.is_a?(RKelly::JS::Function)
+        function  = left.function || left.value
+        case function
+        when RKelly::JS::Function
           scope_chain.new_scope { |chain|
             function.js_call(chain, *arguments)
           }
+        when UnboundMethod
+          RKelly::JS::Property.new(:ruby,
+            function.bind(left.owner).call(*(arguments.map { |x| x.value }))
+          )
         else
           RKelly::JS::Property.new(:ruby,
             function.call(*(arguments.map { |x| x.value }))

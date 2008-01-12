@@ -8,7 +8,7 @@ class GlobalObjectTest < Test::Unit::TestCase
   end
 
   def test_initialize
-    assert_equal nil, @object['prototype'].value
+    assert_equal :undefined, @object['prototype'].value
     assert_equal 'GlobalObject', @object['class'].value
   end
 

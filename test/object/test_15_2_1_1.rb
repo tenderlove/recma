@@ -38,6 +38,14 @@ class Object_15_2_1_1_Test < Test::Unit::TestCase
     js_assert_equal("true", 'Object(true).valueOf()')
   end
 
+  def test_to_string
+    @runtime.execute("
+                     var MYOB = Object(false);
+                     MYOB.toString = Object.prototype.toString;
+                     assert_equal('[object Boolean]', MYOB.toString());
+                     ")
+  end
+
   def js_assert_equal(expected, actual)
     @runtime.execute("assert_equal(#{expected}, #{actual});")
   end

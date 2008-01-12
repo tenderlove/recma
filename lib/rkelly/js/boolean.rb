@@ -3,8 +3,10 @@ module RKelly
     class Boolean < Base
       def initialize(*args)
         super()
+        self['Class'] = 'Boolean'
         self['valueOf'] = args.first
         self['valueOf'].function = lambda { args.first }
+        self['toString'] = args.first.to_s
       end
     end
   end

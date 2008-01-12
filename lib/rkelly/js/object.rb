@@ -15,8 +15,9 @@ module RKelly
 
       def initialize(*args)
         super()
+        self['prototype'] = JS::ObjectPrototype.new
+        self['Class'] = 'Object'
         if args.first.nil?
-          self['protytpe'] = self
           self['valueOf'] = lambda { self }
         end
       end

@@ -1,10 +1,11 @@
 module RKelly
   module JS
     class Property
-      attr_accessor :name, :value, :attributes, :function
-      def initialize(name, value, function = nil, attributes = [])
+      attr_accessor :name, :value, :attributes, :function, :owner
+      def initialize(name, value, owner = nil, function = nil, attributes = [])
         @name = name
         @value = value
+        @owner = owner
         @function = function
         @attributes = attributes
       end
