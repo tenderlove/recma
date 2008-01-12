@@ -11,6 +11,8 @@ module RKelly
             JS::Boolean.new(arg)
           when Numeric
             JS::Number.new(arg)
+          when ::String
+            JS::String.new(arg)
           end
         end
       end
