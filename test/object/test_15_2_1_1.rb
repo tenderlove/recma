@@ -160,6 +160,44 @@ class Object_15_2_1_1_Test < Test::Unit::TestCase
                      ")
   end
 
+  def test_number_positive_infinity_value
+    js_assert_equal(
+      "Number.POSITIVE_INFINITY",
+      'Object(Number.POSITIVE_INFINITY).valueOf()'
+    )
+  end
+
+  def test_number_positive_infinity_type
+    js_assert_equal("'object'", 'typeof Object(Number.POSITIVE_INFINITY)')
+  end
+
+  def test_number_positive_infinity_string
+    @runtime.execute("
+                     var MYOB = Object(Number.POSITIVE_INFINITY);
+                     MYOB.toString = Object.prototype.toString;
+                     assert_equal('[object Number]', MYOB.toString());
+                     ")
+  end
+
+  def test_number_negative_infinity_value
+    js_assert_equal(
+      "Number.NEGATIVE_INFINITY",
+      'Object(Number.NEGATIVE_INFINITY).valueOf()'
+    )
+  end
+
+  def test_number_negative_infinity_type
+    js_assert_equal("'object'", 'typeof Object(Number.NEGATIVE_INFINITY)')
+  end
+
+  def test_number_negative_infinity_string
+    @runtime.execute("
+                     var MYOB = Object(Number.NEGATIVE_INFINITY);
+                     MYOB.toString = Object.prototype.toString;
+                     assert_equal('[object Number]', MYOB.toString());
+                     ")
+  end
+
   def js_assert_equal(expected, actual)
     @runtime.execute("assert_equal(#{expected}, #{actual});")
   end
