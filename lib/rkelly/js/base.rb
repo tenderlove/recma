@@ -65,8 +65,10 @@ module RKelly
       private
       def unbound_method(name, object_id = nil, &block)
         name = "#{name}_#{self.class.to_s.split('::').last}_#{object_id}"
-        RKelly::JS::Base.class_eval do
-          define_method(name, &block)
+        unless RKelly::JS::Base.instance_methods.include?(name)
+          RKelly::JS::Base.class_eval do
+            define_method(name, &block)
+          end
         end
         RKelly::JS::Base.instance_method(name)
       end
