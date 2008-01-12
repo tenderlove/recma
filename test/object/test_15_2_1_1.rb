@@ -198,6 +198,22 @@ class Object_15_2_1_1_Test < Test::Unit::TestCase
                      ")
   end
 
+  def test_nan_value
+    js_assert_equal("Number.NaN", 'Object(Number.NaN).valueOf()')
+  end
+
+  def test_number_nan_type
+    js_assert_equal("'object'", 'typeof Object(Number.NaN)')
+  end
+
+  def test_number_nan_string
+    @runtime.execute("
+                     var MYOB = Object(Number.NaN);
+                     MYOB.toString = Object.prototype.toString;
+                     assert_equal('[object Number]', MYOB.toString());
+                     ")
+  end
+
   def js_assert_equal(expected, actual)
     @runtime.execute("assert_equal(#{expected}, #{actual});")
   end

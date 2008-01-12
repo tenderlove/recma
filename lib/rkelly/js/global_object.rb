@@ -4,7 +4,7 @@ module RKelly
       def initialize
         super
         self['class']     = 'GlobalObject'
-        self['NaN']       = 0.0 / 0.0
+        self['NaN']       = JS::NaN.new
         self['NaN'].attributes << :dont_enum
         self['NaN'].attributes << :dont_delete
         self['Object'] = JS::Object.new
