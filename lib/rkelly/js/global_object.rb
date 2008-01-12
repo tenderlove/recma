@@ -11,6 +11,7 @@ module RKelly
         self['Object'].function = lambda { |*args|
           JS::Object.create(*args)
         }
+        self['Number'] = JS::Number.new
       end
     end
   end

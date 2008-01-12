@@ -78,6 +78,88 @@ class Object_15_2_1_1_Test < Test::Unit::TestCase
                      ")
   end
 
+  # Diverts from the ECMA.  In ECMA, -0 is -0, not 0
+  def test_minus_0_value_of
+    js_assert_equal("0", 'Object(-0).valueOf()')
+  end
+
+  def test_minus_0_type_of
+    js_assert_equal("'object'", 'typeof Object(-0)')
+  end
+
+  def test_minus_0_to_string
+    @runtime.execute("
+                     var MYOB = Object(-0);
+                     MYOB.toString = Object.prototype.toString;
+                     assert_equal('[object Number]', MYOB.toString());
+                     ")
+  end
+  ## END Diversion. ;-)
+
+  def test_1_value_of
+    js_assert_equal("1", 'Object(1).valueOf()')
+  end
+
+  def test_1_type_of
+    js_assert_equal("'object'", 'typeof Object(1)')
+  end
+
+  def test_1_to_string
+    @runtime.execute("
+                     var MYOB = Object(1);
+                     MYOB.toString = Object.prototype.toString;
+                     assert_equal('[object Number]', MYOB.toString());
+                     ")
+  end
+
+  def test_minus_1_value_of
+    js_assert_equal("-1", 'Object(-1).valueOf()')
+  end
+
+  def test_minus_1_type_of
+    js_assert_equal("'object'", 'typeof Object(-1)')
+  end
+
+  def test_minus_1_to_string
+    @runtime.execute("
+                     var MYOB = Object(-1);
+                     MYOB.toString = Object.prototype.toString;
+                     assert_equal('[object Number]', MYOB.toString());
+                     ")
+  end
+
+  def test_number_max_value_of
+    js_assert_equal("1.797693134862315e308", 'Object(Number.MAX_VALUE).valueOf()')
+  end
+
+  def test_number_max_type_of
+    js_assert_equal("'object'", 'typeof Object(Number.MAX_VALUE)')
+  end
+
+  def test_number_max_to_string
+    @runtime.execute("
+                     var MYOB = Object(Number.MAX_VALUE);
+                     MYOB.toString = Object.prototype.toString;
+                     assert_equal('[object Number]', MYOB.toString());
+                     ")
+  end
+
+  def test_number_min_value_of
+    js_assert_equal("1.0e-306", 'Object(Number.MIN_VALUE).valueOf()')
+  end
+
+  def test_number_min_type_of
+    js_assert_equal("'object'", 'typeof Object(Number.MIN_VALUE)')
+  end
+
+  def test_number_min_to_string
+    @runtime.execute("
+                     var MYOB = Object(Number.MIN_VALUE);
+                     MYOB.toString = Object.prototype.toString;
+                     assert_equal('[object Number]', MYOB.toString());
+                     ")
+  end
+
   def js_assert_equal(expected, actual)
     @runtime.execute("assert_equal(#{expected}, #{actual});")
   end
