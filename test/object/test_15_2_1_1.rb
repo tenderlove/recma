@@ -214,17 +214,33 @@ class Object_15_2_1_1_Test < Test::Unit::TestCase
                      ")
   end
 
-  def test_string_value
+  def test_empty_string_value
     js_assert_equal("''", 'Object("").valueOf()')
   end
 
-  def test_string_type
+  def test_empty_string_type
     js_assert_equal("'object'", 'typeof Object("")')
+  end
+
+  def test_empty_string_to_string
+    @runtime.execute("
+                     var MYOB = Object('');
+                     MYOB.toString = Object.prototype.toString;
+                     assert_equal('[object String]', MYOB.toString());
+                     ")
+  end
+
+  def test_string_value
+    js_assert_equal("'a string'", 'Object("a string").valueOf()')
+  end
+
+  def test_string_type
+    js_assert_equal("'object'", 'typeof Object("a string")')
   end
 
   def test_string_to_string
     @runtime.execute("
-                     var MYOB = Object('');
+                     var MYOB = Object('a string');
                      MYOB.toString = Object.prototype.toString;
                      assert_equal('[object String]', MYOB.toString());
                      ")
