@@ -246,6 +246,22 @@ class Object_15_2_1_1_Test < Test::Unit::TestCase
                      ")
   end
 
+  def test_escape_string_value
+    js_assert_equal("'\r\t\b\n\v\f'", "Object('\r\t\b\n\v\f').valueOf()")
+  end
+
+  def test_escape_string_type
+    js_assert_equal("'object'", "typeof Object('\r\t\b\n\v\f')")
+  end
+
+  def test_escape_string_to_string
+    @runtime.execute("
+                     var MYOB = Object('\r\t\b\n\v\f');
+                     MYOB.toString = Object.prototype.toString;
+                     assert_equal('[object String]', MYOB.toString());
+                     ")
+  end
+
   def js_assert_equal(expected, actual)
     @runtime.execute("assert_equal(#{expected}, #{actual});")
   end
