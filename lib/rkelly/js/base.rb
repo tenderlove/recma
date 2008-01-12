@@ -9,6 +9,7 @@ module RKelly
         @return     = nil
         @returned   = false
         @value      = self
+        self['Class'] = self.class.to_s.split('::').last
       end
 
       def [](name)
@@ -62,8 +63,8 @@ module RKelly
       def returned?; @returned; end
 
       private
-      def unbound_lambda(name, &block)
-        name = "#{name}_#{self.class.to_s.split('::').last}"
+      def unbound_method(name, object_id = nil, &block)
+        name = "#{name}_#{self.class.to_s.split('::').last}_#{object_id}"
         RKelly::JS::Base.class_eval do
           define_method(name, &block)
         end

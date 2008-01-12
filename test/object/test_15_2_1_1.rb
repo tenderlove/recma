@@ -62,6 +62,22 @@ class Object_15_2_1_1_Test < Test::Unit::TestCase
                      ")
   end
 
+  def test_0_value_of
+    js_assert_equal("0", 'Object(0).valueOf()')
+  end
+
+  def test_0_type_of
+    js_assert_equal("'object'", 'typeof Object(0)')
+  end
+
+  def test_0_to_string
+    @runtime.execute("
+                     var MYOB = Object(0);
+                     MYOB.toString = Object.prototype.toString;
+                     assert_equal('[object Number]', MYOB.toString());
+                     ")
+  end
+
   def js_assert_equal(expected, actual)
     @runtime.execute("assert_equal(#{expected}, #{actual});")
   end

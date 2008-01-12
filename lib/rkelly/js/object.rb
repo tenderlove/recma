@@ -9,6 +9,8 @@ module RKelly
           case arg
           when true, false
             JS::Boolean.new(arg)
+          when Numeric
+            JS::Number.new(arg)
           end
         end
       end

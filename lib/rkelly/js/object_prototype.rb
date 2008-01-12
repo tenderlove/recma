@@ -5,7 +5,7 @@ module RKelly
     class ObjectPrototype < Base
       def initialize
         super
-        self['toString'].function = unbound_lambda(:toString) do
+        self['toString'].function = unbound_method(:toString) do
           "[object #{self['Class'].value}]"
         end
       end
