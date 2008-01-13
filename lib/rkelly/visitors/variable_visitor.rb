@@ -123,7 +123,7 @@ module RKelly
           }
         when UnboundMethod
           RKelly::JS::Property.new(:ruby,
-            function.bind(left.owner).call(*(arguments.map { |x| x.value }))
+            function.bind(left.binder).call(*(arguments.map { |x| x.value }))
           )
         else
           RKelly::JS::Property.new(:ruby,
@@ -133,7 +133,10 @@ module RKelly
       end
 
       def visit_DotAccessorNode(o)
-        o.value.accept(self).value[o.accessor]
+        left = o.value.accept(self)
+        right = left.value[o.accessor]
+        right.binder = left.value
+        right
       end
 
       def visit_EqualNode(o)
