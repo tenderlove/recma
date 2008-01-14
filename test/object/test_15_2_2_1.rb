@@ -13,11 +13,7 @@ class Object_15_2_2_1_Test < Test::Unit::TestCase
   end
 
   def test_null_to_string
-    @runtime.execute("
-                     MYOB = new Object(null);
-                     MYOB.toString = Object.prototype.toString;
-                     assert_equal('[object Object]', MYOB.toString());
-                     ")
+    js_assert_to_string('Object', 'null')
   end
 
   def test_void_0_typeof
@@ -25,62 +21,42 @@ class Object_15_2_2_1_Test < Test::Unit::TestCase
   end
 
   def test_void_0_to_string
-    @runtime.execute("
-                     MYOB = new Object(void 0);
-                     MYOB.toString = Object.prototype.toString;
-                     assert_equal('[object Object]', MYOB.toString());
-                     ")
+    js_assert_to_string('Object', 'void 0')
   end
 
-  def test_string_typeof
-    js_assert_equal("'object'", "typeof new Object('string')")
-  end
+  @@tests = {
+    'minus_1'       => ['-1', 'Number'],
+    '1'             => ['1', 'Number'],
+    'minus_0'       => ['-0', 'Number'],
+    '0'             => ['0', 'Number'],
+    'nan'           => ['Number.NaN', 'Number'],
+    'empty_string'  => ['""', 'String'],
+    'string'        => ['"string"', 'String'],
+    'true'          => ['true', 'Boolean'],
+    'false'         => ['false', 'Boolean'],
+  }
 
-  def test_string_value_of
-    js_assert_equal("'string'", "(new Object('string')).valueOf()")
-  end
-
-  def test_string_to_string
-    @runtime.execute("
-                     MYOB = new Object('string');
-                     MYOB.toString = Object.prototype.toString;
-                     assert_equal('[object String]', MYOB.toString());
-                     ")
-  end
-
-  def test_empty_string_typeof
-    js_assert_equal("'object'", "typeof new Object('')")
-  end
-
-  def test_empty_string_value_of
-    js_assert_equal("''", "(new Object('')).valueOf()")
-  end
-
-  def test_empty_string_to_string
-    @runtime.execute("
-                     MYOB = new Object('');
-                     MYOB.toString = Object.prototype.toString;
-                     assert_equal('[object String]', MYOB.toString());
-                     ")
-  end
-
-  def test_nan_typeof
-    js_assert_equal("'object'", "typeof new Object(Number.NaN)")
-  end
-
-  def test_nan_value_of
-    js_assert_equal("Number.NaN", "(new Object(Number.NaN)).valueOf()")
-  end
-
-  def test_nan_to_string
-    @runtime.execute("
-                     MYOB = new Object(Number.NaN);
-                     MYOB.toString = Object.prototype.toString;
-                     assert_equal('[object Number]', MYOB.toString());
-                     ")
+  @@tests.each do |name, info|
+    define_method(:"test_#{name}_typeof") do
+      js_assert_equal("'object'", "typeof new Object(#{info[0]})")
+    end
+    define_method(:"test_#{name}_valueof") do
+      js_assert_equal(info[0], "(new Object(#{info[0]})).valueOf()")
+    end
+    define_method(:"test_#{name}_tostring") do
+      js_assert_to_string(info[1], info[0])
+    end
   end
 
   def js_assert_equal(expected, actual)
     @runtime.execute("assert_equal(#{expected}, #{actual});")
+  end
+
+  def js_assert_to_string(expected_type, js_obj)
+    @runtime.execute("
+                     MYOB = new Object(#{js_obj});
+                     MYOB.toString = Object.prototype.toString;
+                     assert_equal('[object #{expected_type}]', MYOB.toString());
+                     ")
   end
 end
