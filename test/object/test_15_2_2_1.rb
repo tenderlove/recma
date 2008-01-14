@@ -34,6 +34,7 @@ class Object_15_2_2_1_Test < Test::Unit::TestCase
     'string'        => ['"string"', 'String'],
     'true'          => ['true', 'Boolean'],
     'false'         => ['false', 'Boolean'],
+    'boolean'       => ['Boolean()', 'Boolean'],
   }
 
   @@tests.each do |name, info|

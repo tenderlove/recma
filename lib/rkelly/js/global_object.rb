@@ -12,6 +12,10 @@ module RKelly
           JS::Object.create(*args)
         }
         self['Number'] = JS::Number.new
+        self['Boolean'] = JS::Boolean.new
+        self['Boolean'].function = lambda { |*args|
+          JS::Boolean.create(*args)
+        }
       end
     end
   end

@@ -1,10 +1,18 @@
 module RKelly
   module JS
     class Boolean < Base
+      class << self
+        def create(*args)
+          return false if args.length == 0
+        end
+      end
       def initialize(*args)
         super()
-        self['valueOf'] = args.first
-        self['valueOf'].function = lambda { args.first }
+        value = args.first.nil? ? false : args.first
+        self['valueOf'] = value
+        self['valueOf'].function = lambda {
+          value
+        }
         self['toString'] = args.first.to_s
       end
     end
