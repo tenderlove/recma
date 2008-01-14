@@ -13,10 +13,10 @@ module RKelly
     # Execute +js+
     def execute(js)
       function_visitor  = Visitors::FunctionVisitor.new(@scope)
-      var_visitor       = Visitors::VariableVisitor.new(@scope)
+      eval_visitor      = Visitors::EvaluationVisitor.new(@scope)
       tree = @parser.parse(js)
       function_visitor.accept(tree)
-      var_visitor.accept(tree)
+      eval_visitor.accept(tree)
       @scope
     end
 

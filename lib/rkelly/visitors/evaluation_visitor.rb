@@ -1,6 +1,6 @@
 module RKelly
   module Visitors
-    class VariableVisitor < Visitor
+    class EvaluationVisitor < Visitor
       attr_reader :scope_chain
       def initialize(scope)
         super()

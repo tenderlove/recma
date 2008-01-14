@@ -12,9 +12,9 @@ module RKelly
           scope_chain[name.value] = params[i] || RKelly::Runtime::UNDEFINED
         }
         function_visitor  = RKelly::Visitors::FunctionVisitor.new(scope_chain)
-        var_visitor       = RKelly::Visitors::VariableVisitor.new(scope_chain)
+        eval_visitor      = RKelly::Visitors::EvaluationVisitor.new(scope_chain)
         body.accept(function_visitor)
-        body.accept(var_visitor)
+        body.accept(eval_visitor)
       end
     end
   end

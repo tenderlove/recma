@@ -1,10 +1,10 @@
 require File.dirname(__FILE__) + "/helper"
 
-class VariableVisitorTest < Test::Unit::TestCase
+class EvaluationVisitorTest < Test::Unit::TestCase
   def setup
     @parser = RKelly::Parser.new
     @scope = RKelly::Runtime::ScopeChain.new
-    @visitor = RKelly::Visitors::VariableVisitor.new(@scope)
+    @visitor = RKelly::Visitors::EvaluationVisitor.new(@scope)
   end
 
   def assert_properties(actual, js_code)
