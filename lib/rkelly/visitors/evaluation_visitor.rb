@@ -133,23 +133,7 @@ module RKelly
       end
 
       def visit_NewExprNode(o)
-        left      = o.value.accept(self)
-        arguments = o.arguments.accept(self)
-        function  = left.function || left.value
-        case function
-        when RKelly::JS::Function
-          scope_chain.new_scope { |chain|
-            function.js_call(chain, *arguments)
-          }
-        when UnboundMethod
-          RKelly::JS::Property.new(:ruby,
-            function.bind(left.binder).call(*(arguments.map { |x| x.value }))
-          )
-        else
-          RKelly::JS::Property.new(:ruby,
-            function.call(*(arguments.map { |x| x.value }))
-          )
-        end
+        visit_FunctionCallNode(o)
       end
 
       def visit_DotAccessorNode(o)
