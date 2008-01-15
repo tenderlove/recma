@@ -41,6 +41,10 @@ module RKelly
         scope_chain[o.value]
       end
 
+      def visit_ThisNode(o)
+        scope_chain.this
+      end
+
       def visit_ExpressionStatementNode(o)
         o.value.accept(self)
       end
@@ -216,7 +220,7 @@ module RKelly
         OpURShiftEqualNode OpXOrEqualNode ParameterNode PostfixNode PrefixNode
         PropertyNode RegexpNode RightShiftNode
         SetterPropertyNode StrictEqualNode
-        SwitchNode ThisNode ThrowNode TryNode
+        SwitchNode ThrowNode TryNode
         UnsignedRightShiftNode
         WhileNode WithNode
       }.each do |type|

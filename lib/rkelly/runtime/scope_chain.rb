@@ -32,6 +32,10 @@ module RKelly
         @chain.pop
       end
 
+      def this
+        @chain.last
+      end
+
       def new_scope(&block)
         @chain << Scope.new
         result = yield(self)
