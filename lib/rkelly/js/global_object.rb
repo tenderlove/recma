@@ -12,6 +12,10 @@ module RKelly
         self['Infinity'].attributes << :dont_enum
         self['Infinity'].attributes << :dont_delete
 
+        self['undefined'] = :undefined
+        self['undefined'].attributes << :dont_enum
+        self['undefined'].attributes << :dont_delete
+
         self['Object'] = JS::Object.new
         self['Object'].function = lambda { |*args|
           JS::Object.create(*args)
