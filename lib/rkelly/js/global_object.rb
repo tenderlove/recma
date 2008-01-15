@@ -7,6 +7,11 @@ module RKelly
         self['NaN']       = JS::NaN.new
         self['NaN'].attributes << :dont_enum
         self['NaN'].attributes << :dont_delete
+
+        self['Infinity']  = 1.0/0.0
+        self['Infinity'].attributes << :dont_enum
+        self['Infinity'].attributes << :dont_delete
+
         self['Object'] = JS::Object.new
         self['Object'].function = lambda { |*args|
           JS::Object.create(*args)
