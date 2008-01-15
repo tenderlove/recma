@@ -1,13 +1,6 @@
 require File.dirname(__FILE__) + "/../helper"
 
-class Object_15_2_1_1_Test < Test::Unit::TestCase
-  def setup
-    @runtime = RKelly::Runtime.new
-    @runtime.define_function(:assert_equal) do |*args|
-      assert_equal(*args)
-    end
-  end
-
+class Object_15_2_1_1_Test < ECMAScriptTestCase
   def test_null_value_of
     @runtime.execute("
                      var NULL_OBJECT = Object(null);
@@ -260,9 +253,5 @@ class Object_15_2_1_1_Test < Test::Unit::TestCase
                      MYOB.toString = Object.prototype.toString;
                      assert_equal('[object String]', MYOB.toString());
                      ")
-  end
-
-  def js_assert_equal(expected, actual)
-    @runtime.execute("assert_equal(#{expected}, #{actual});")
   end
 end

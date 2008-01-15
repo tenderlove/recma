@@ -2,14 +2,10 @@ require File.dirname(__FILE__) + "/../helper"
 
 # ECMA-262
 # Section 15.1.1.1
-class GlobalObject_15_1_1_1_Test < Test::Unit::TestCase
-  include RKelly::JS
+class GlobalObject_15_1_1_1_Test < ECMAScriptTestCase
   def setup
+    super
     @object = GlobalObject.new
-    @runtime = RKelly::Runtime.new
-    @runtime.define_function(:assert_equal) do |*args|
-      assert_equal(*args)
-    end
   end
 
   def test_nan
@@ -29,9 +25,5 @@ class GlobalObject_15_1_1_1_Test < Test::Unit::TestCase
 
   def test_typeof_nan
     js_assert_equal("'number'", 'typeof NaN')
-  end
-
-  def js_assert_equal(expected, actual)
-    @runtime.execute("assert_equal(#{expected}, #{actual});")
   end
 end
