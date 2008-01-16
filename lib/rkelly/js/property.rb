@@ -15,6 +15,22 @@ module RKelly
           self.attributes.include?(property)
         end
       end
+
+      def to_number
+        return Property.new('0', 0) if value.nil?
+
+        return_val = case value
+                     when :undefined
+                       NaN.new
+                     when false
+                       0
+                     when true
+                       1
+                     when Numeric
+                       value
+                     end
+        Property.new(nil, return_val)
+      end
     end
   end
 end

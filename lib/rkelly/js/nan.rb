@@ -10,6 +10,8 @@ module RKelly
       def nan?
         true
       end
+
+      def +(o); self; end
     end
   end
 end

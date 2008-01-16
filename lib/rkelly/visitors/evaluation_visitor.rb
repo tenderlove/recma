@@ -167,6 +167,13 @@ module RKelly
         scope_chain.return = o.value.accept(self)
       end
 
+      def visit_PostfixNode(o)
+        orig = o.operand.accept(self)
+        number = orig.to_number
+        orig.value = number.value + 1
+        number
+      end
+
       def visit_ArgumentsNode(o)
         o.value.map { |x| x.accept(self) }
       end
@@ -217,7 +224,7 @@ module RKelly
         ObjectLiteralNode OpAndEqualNode OpDivideEqualNode
         OpLShiftEqualNode OpMinusEqualNode OpModEqualNode
         OpMultiplyEqualNode OpOrEqualNode OpRShiftEqualNode
-        OpURShiftEqualNode OpXOrEqualNode ParameterNode PostfixNode PrefixNode
+        OpURShiftEqualNode OpXOrEqualNode ParameterNode PrefixNode
         PropertyNode RegexpNode RightShiftNode
         SetterPropertyNode StrictEqualNode
         SwitchNode ThrowNode TryNode
