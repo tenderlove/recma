@@ -17,7 +17,7 @@ module RKelly
       end
 
       def to_number
-        return Property.new('0', 0) if value.nil?
+        return RKelly::JS::Property.new('0', 0) if value.nil?
 
         return_val = case value
                      when :undefined
@@ -29,7 +29,7 @@ module RKelly
                      when Numeric
                        value
                      end
-        Property.new(nil, return_val)
+        RKelly::JS::Property.new(nil, return_val)
       end
     end
   end
