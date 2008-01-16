@@ -5,9 +5,9 @@ class Expressions_11_3_1_Test < ECMAScriptTestCase
     @runtime.execute("var MYVAR; MYVAR++; assert_equal(NaN, MYVAR);")
   end
 
-  #def test_undefined
-  #  @runtime.execute("var MYVAR=(void 0); MYVAR++; assert_equal(NaN, MYVAR);")
-  #end
+  def test_undefined
+    @runtime.execute("var MYVAR=(void 0); MYVAR++; assert_equal(NaN, MYVAR);")
+  end
 
   @@tests = [
     :null   => [ 'null',  '0', '1'],

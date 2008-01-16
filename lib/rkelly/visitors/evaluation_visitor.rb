@@ -95,7 +95,7 @@ module RKelly
 
       def visit_VoidNode(o)
         o.value.accept(self)
-        RKelly::Runtime::UNDEFINED
+        RKelly::JS::Property.new(:undefined, :undefined)
       end
 
       def visit_NullNode(o)
