@@ -119,21 +119,7 @@ module RKelly
       def visit_FunctionCallNode(o)
         left      = o.value.accept(self)
         arguments = o.arguments.accept(self)
-        function  = left.function || left.value
-        case function
-        when RKelly::JS::Function
-          scope_chain.new_scope { |chain|
-            function.js_call(chain, *arguments)
-          }
-        when UnboundMethod
-          RKelly::JS::Property.new(:ruby,
-            function.bind(left.binder).call(*(arguments.map { |x| x.value }))
-          )
-        else
-          RKelly::JS::Property.new(:ruby,
-            function.call(*(arguments.map { |x| x.value }))
-          )
-        end
+        call_function(left, arguments)
       end
 
       def visit_NewExprNode(o)
@@ -169,7 +155,7 @@ module RKelly
 
       def visit_PostfixNode(o)
         orig = o.operand.accept(self)
-        number = orig.to_number
+        number = to_number(orig)
         orig.value = number.value + 1
         number
       end
@@ -233,6 +219,53 @@ module RKelly
       }.each do |type|
         define_method(:"visit_#{type}") do |o|
           raise "#{type} not defined"
+        end
+      end
+
+      private
+      def to_number(object)
+        return RKelly::JS::Property.new('0', 0) unless object.value
+
+        return_val = case object.value
+                     when :undefined
+                       RKelly::JS::NaN.new
+                     when false
+                       0
+                     when true
+                       1
+                     when Numeric
+                       object.value
+                     when RKelly::JS::Base
+                       return to_number(to_primitive(object, 'Number'))
+                     end
+        RKelly::JS::Property.new(nil, return_val)
+      end
+
+      def to_primitive(object, preferred_type)
+        return object unless object.value
+        case object.value
+        when false, true, :undefined, ::String, Numeric
+          object
+        when RKelly::JS::Base
+          call_function(object.value.default_value(preferred_type))
+        end
+      end
+
+      def call_function(property, arguments = [])
+        function  = property.function || property.value
+        case function
+        when RKelly::JS::Function
+          scope_chain.new_scope { |chain|
+            function.js_call(chain, *arguments)
+          }
+        when UnboundMethod
+          RKelly::JS::Property.new(:ruby,
+            function.bind(property.binder).call(*(arguments.map { |x| x.value}))
+          )
+        else
+          RKelly::JS::Property.new(:ruby,
+            function.call(*(arguments.map { |x| x.value }))
+          )
         end
       end
     end

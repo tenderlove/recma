@@ -17,6 +17,8 @@ class Expressions_11_3_1_Test < ECMAScriptTestCase
     :negative_infinity  => [ 'Number.NEGATIVE_INFINITY', 'Number.NEGATIVE_INFINITY', 'Number.NEGATIVE_INFINITY'],
     :nan    => [ 'Number.NaN', 'Number.NaN', 'Number.NaN'],
     :zero   => [ '0', '0', '1'],
+    :boolean_false => ['new Boolean(false)', '0', '1'],
+    :boolean_true => ['new Boolean(true)', '1', '2'],
   ]
 
   def test_positive_float

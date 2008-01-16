@@ -8,8 +8,7 @@ module RKelly
         self['NaN']       = JS::NaN.new
         self['POSITIVE_INFINITY'] = 1.0/0.0
         self['NEGATIVE_INFINITY'] = -1.0/0.0
-        self['valueOf'] = value
-        self['valueOf'].function = lambda { value }
+        self['valueOf'] = lambda { value }
         self['toString'] = value.to_s
       end
     end

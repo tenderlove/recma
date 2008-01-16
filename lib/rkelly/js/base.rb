@@ -55,6 +55,20 @@ module RKelly
         true
       end
 
+      def default_value(hint)
+        case hint
+        when 'Number'
+          value_of = self['valueOf']
+          if value_of.function || value_of.value.is_a?(RKelly::JS::Function)
+            return value_of
+          end
+          to_string = self['toString']
+          if to_string.function || to_string.value.is_a?(RKelly::JS::Function)
+            return to_string
+          end
+        end
+      end
+
       def return=(value)
         @returned = true
         @return = value
