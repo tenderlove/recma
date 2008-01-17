@@ -12,6 +12,7 @@ module RKelly
       end
 
       def +(o); self; end
+      def -(o); self; end
     end
   end
 end

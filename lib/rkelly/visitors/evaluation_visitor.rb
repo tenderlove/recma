@@ -156,7 +156,12 @@ module RKelly
       def visit_PostfixNode(o)
         orig = o.operand.accept(self)
         number = to_number(orig)
-        orig.value = number.value + 1
+        case o.value
+        when '++'
+          orig.value = number.value + 1
+        when '--'
+          orig.value = number.value - 1
+        end
         number
       end
 

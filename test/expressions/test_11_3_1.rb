@@ -2,14 +2,11 @@ require File.dirname(__FILE__) + "/../helper"
 
 class Expressions_11_3_1_Test < ECMAScriptTestCase
   def test_uninitialized
-    @runtime.execute("var MYVAR; MYVAR++; assert_equal(NaN, MYVAR);")
-  end
-
-  def test_undefined
-    @runtime.execute("var MYVAR=(void 0); MYVAR++; assert_equal(NaN, MYVAR);")
+    @runtime.execute("var MYVAR; assert_equal(NaN, MYVAR++); assert_equal(NaN, MYVAR);")
   end
 
   @@tests = [
+    :undefined          => [ '(void 0)', 'NaN', 'NaN'],
     :null               => [ 'null',  '0', '1'],
     :true               => [ 'true',  '1', '2'],
     :false              => [ 'false', '0', '1'],
