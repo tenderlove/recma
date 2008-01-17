@@ -165,6 +165,13 @@ module RKelly
         number
       end
 
+      def visit_PrefixNode(o)
+        orig = o.operand.accept(self)
+        number = to_number(orig)
+        orig.value = number.value + 1
+        orig
+      end
+
       def visit_ArgumentsNode(o)
         o.value.map { |x| x.accept(self) }
       end
@@ -215,7 +222,7 @@ module RKelly
         ObjectLiteralNode OpAndEqualNode OpDivideEqualNode
         OpLShiftEqualNode OpMinusEqualNode OpModEqualNode
         OpMultiplyEqualNode OpOrEqualNode OpRShiftEqualNode
-        OpURShiftEqualNode OpXOrEqualNode ParameterNode PrefixNode
+        OpURShiftEqualNode OpXOrEqualNode ParameterNode
         PropertyNode RegexpNode RightShiftNode
         SetterPropertyNode StrictEqualNode
         SwitchNode ThrowNode TryNode
