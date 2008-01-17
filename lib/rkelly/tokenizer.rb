@@ -53,6 +53,9 @@ module RKelly
 
       # A regexp to match floating point literals (but not integer literals).
       token(:NUMBER, /\A\d+\.\d*(?:[eE][-+]?\d+)?|\A\d+(?:\.\d*)?[eE][-+]?\d+|\A\.\d+(?:[eE][-+]?\d+)?/m) do |type, value|
+        value.gsub!(/\.(\D)/, '.0\1') if value =~ /\.\w/
+        value.gsub!(/\.$/, '.0') if value =~ /\.$/
+        value.gsub!(/^\./, '0.') if value =~ /^\./
         [type, eval(value)]
       end
       token(:NUMBER, /\A0[xX][\da-fA-F]+|\A0[0-7]*|\A\d+/) do |type, value|

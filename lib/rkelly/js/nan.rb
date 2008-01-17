@@ -4,7 +4,7 @@ module RKelly
     # In Ruby NaN != NaN, but in JS, NaN == NaN
     class NaN < ::Numeric
       def ==(other)
-        other.is_a?(::Numeric) && other.nan?
+        other.respond_to?(:nan?) && other.nan?
       end
 
       def nan?

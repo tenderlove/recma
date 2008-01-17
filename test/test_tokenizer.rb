@@ -30,6 +30,20 @@ class TokenizerTest < Test::Unit::TestCase
     ], tokens)
   end
 
+  def test_number_parse
+    tokens = @tokenizer.tokenize('3.')
+    assert_tokens([[:NUMBER, 3.0]], tokens)
+
+    tokens = @tokenizer.tokenize('3.e1')
+    assert_tokens([[:NUMBER, 30]], tokens)
+
+    tokens = @tokenizer.tokenize('.001')
+    assert_tokens([[:NUMBER, 0.001]], tokens)
+
+    tokens = @tokenizer.tokenize('3.e-1')
+    assert_tokens([[:NUMBER, 0.30]], tokens)
+  end
+
   def test_identifier
     tokens = @tokenizer.tokenize("foo")
     assert_tokens([[:IDENT, 'foo']], tokens)

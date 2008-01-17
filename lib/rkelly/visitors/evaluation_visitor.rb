@@ -50,9 +50,17 @@ module RKelly
       end
 
       def visit_AddNode(o)
-        RKelly::JS::Property.new(:add,
-          o.left.accept(self).value + o.value.accept(self).value
-        )
+        left  = to_primitive(o.left.accept(self))
+        right = to_primitive(o.value.accept(self))
+        if left.value.is_a?(::String) || right.value.is_a?(::String)
+          RKelly::JS::Property.new(:add,
+            "#{left.value}#{right.value}"
+          )
+        else
+          RKelly::JS::Property.new(:add,
+            left.value + right.value
+          )
+        end
       end
 
       def visit_SubtractNode(o)
@@ -202,9 +210,8 @@ module RKelly
       end
 
       def visit_UnaryPlusNode(o)
-        v = o.value.accept(self)
-        v.value = 0 + v.value
-        v
+        orig = o.value.accept(self)
+        to_number(orig)
       end
 
       def visit_UnaryMinusNode(o)
@@ -254,12 +261,19 @@ module RKelly
           when Numeric
             object.value
           when ::String
-            s = object.value
+            s = object.value.gsub(/(\A[\s\xB\xA0]*|[\s\xB\xA0]*\Z)/, '')
             if s.length == 0
               0
             else
-              if s =~ /\A-?\d+\.\d*(?:[eE][-+]?\d+)?$|\A-?\d+(?:\.\d*)?[eE][-+]?\d+$|\A-?\.\d+(?:[eE][-+]?\d+)?$/ || s =~ /\A-?0[xX][\da-fA-F]+$|\A-?0[0-7]*$|\A-?\d+$/
-                s = s.gsub(/^[0]*/, '') if /^\d+$/.match(s)
+              case s
+              when /^([+-])?Infinity/
+                $1 == '-' ? -1.0/0.0 : 1.0/0.0
+              when /\A[-+]?\d+\.\d*(?:[eE][-+]?\d+)?$|\A[-+]?\d+(?:\.\d*)?[eE][-+]?\d+$|\A[-+]?\.\d+(?:[eE][-+]?\d+)?$/, /\A[-+]?0[xX][\da-fA-F]+$|\A[+-]?0[0-7]*$|\A[+-]?\d+$/
+                s.gsub!(/\.(\D)/, '.0\1') if s =~ /\.\w/
+                s.gsub!(/\.$/, '.0') if s =~ /\.$/
+                s.gsub!(/^\./, '0.') if s =~ /^\./
+                s.gsub!(/^([+-])\./, '\10.') if s =~ /^[+-]\./
+                s = s.gsub(/^[0]*/, '') if /^0[1-9]+$/.match(s)
                 eval(s)
               else
                 RKelly::JS::NaN.new
@@ -271,11 +285,11 @@ module RKelly
         RKelly::JS::Property.new(nil, return_val)
       end
 
-      def to_primitive(object, preferred_type)
+      def to_primitive(object, preferred_type = nil)
         return object unless object.value
         case object.value
         when false, true, :undefined, ::String, Numeric
-          object.value
+          RKelly::JS::Property.new(nil, object.value)
         when RKelly::JS::Base
           call_function(object.value.default_value(preferred_type))
         end
