@@ -226,18 +226,31 @@ module RKelly
       def to_number(object)
         return RKelly::JS::Property.new('0', 0) unless object.value
 
-        return_val = case object.value
-                     when :undefined
-                       RKelly::JS::NaN.new
-                     when false
-                       0
-                     when true
-                       1
-                     when Numeric
-                       object.value
-                     when RKelly::JS::Base
-                       return to_number(to_primitive(object, 'Number'))
-                     end
+        return_val =
+          case object.value
+          when :undefined
+            RKelly::JS::NaN.new
+          when false
+            0
+          when true
+            1
+          when Numeric
+            object.value
+          when ::String
+            s = object.value
+            if s.length == 0
+              0
+            else
+              if s =~ /\A-?\d+\.\d*(?:[eE][-+]?\d+)?$|\A-?\d+(?:\.\d*)?[eE][-+]?\d+$|\A-?\.\d+(?:[eE][-+]?\d+)?$/ || s =~ /\A-?0[xX][\da-fA-F]+$|\A-?0[0-7]*$|\A-?\d+$/
+                s = s.gsub(/^[0]*/, '') if /^\d+$/.match(s)
+                eval(s)
+              else
+                RKelly::JS::NaN.new
+              end
+            end
+          when RKelly::JS::Base
+            return to_number(to_primitive(object, 'Number'))
+          end
         RKelly::JS::Property.new(nil, return_val)
       end
 

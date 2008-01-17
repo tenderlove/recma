@@ -19,6 +19,12 @@ class Expressions_11_3_1_Test < ECMAScriptTestCase
     :zero   => [ '0', '0', '1'],
     :boolean_false => ['new Boolean(false)', '0', '1'],
     :boolean_true => ['new Boolean(true)', '1', '2'],
+    :string_string => ["'string'", 'Number.NaN', 'Number.NaN'],
+    :number_s => ["'12345'", '12345', '12346'],
+    :negative_s => ["'-12345'", '-12345', '-12344'],
+    :hex_s => ["'0Xf'", '15', '16'],
+    :num_0_s => ["'077'", '77', '78'],
+    :empty_s => ["''", '0', '1'],
   ]
 
   def test_positive_float
