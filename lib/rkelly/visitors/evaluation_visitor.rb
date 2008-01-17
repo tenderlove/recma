@@ -258,7 +258,7 @@ module RKelly
         return object unless object.value
         case object.value
         when false, true, :undefined, ::String, Numeric
-          object
+          object.value
         when RKelly::JS::Base
           call_function(object.value.default_value(preferred_type))
         end

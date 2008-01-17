@@ -25,6 +25,10 @@ module RKelly
         self['Boolean'].function = lambda { |*args|
           JS::Boolean.create(*args)
         }
+        self['String'] = JS::String.new('')
+        self['String'].function = lambda { |*args|
+          JS::String.create(*args)
+        }
       end
     end
   end
