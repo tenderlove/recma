@@ -161,6 +161,12 @@ module RKelly
         scope_chain.return = o.value.accept(self)
       end
 
+      def visit_BitwiseNotNode(o)
+        orig = o.value.accept(self)
+        number = to_int_32(orig)
+        RKelly::JS::Property.new(nil, ~number.value)
+      end
+
       def visit_PostfixNode(o)
         orig = o.operand.accept(self)
         number = to_number(orig)
@@ -222,7 +228,7 @@ module RKelly
 
       %w{
         ArrayNode BitAndNode BitOrNode
-        BitXOrNode BitwiseNotNode BracketAccessorNode BreakNode
+        BitXOrNode BracketAccessorNode BreakNode
         CaseBlockNode CaseClauseNode CommaNode ConditionalNode
         ConstStatementNode ContinueNode DeleteNode
         DoWhileNode ElementNode EmptyStatementNode
@@ -283,6 +289,21 @@ module RKelly
             return to_number(to_primitive(object, 'Number'))
           end
         RKelly::JS::Property.new(nil, return_val)
+      end
+
+      def to_int_32(object)
+        number = to_number(object)
+        value = number.value
+        return number if value == 0
+        if value.respond_to?(:nan?) && (value.nan? || value.infinite?)
+          RKelly::JS::Property.new(nil, 0)
+        end
+        value = ((value < 0 ? -1 : 1) * value.abs.floor) % (2 ** 32)
+        if value >= 2 ** 31
+          RKelly::JS::Property.new(nil, value - (2 ** 32))
+        else
+          RKelly::JS::Property.new(nil, value)
+        end
       end
 
       def to_primitive(object, preferred_type = nil)
