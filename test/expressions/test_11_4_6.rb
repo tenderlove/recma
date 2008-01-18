@@ -65,11 +65,13 @@ class Expressions_11_4_6_Test < ECMAScriptTestCase
   0.upto(15) { |x|
     @@sign_tests << [sprintf("%#x", x), x]
     @@sign_tests << [sprintf("%#x", x).gsub(/x/, 'X'), x]
-    @@sign_tests << [sprintf("%#x", x).gsub(/([a-f])/) { |m| m.upcase }, x]
-    @@sign_tests << [sprintf("%#x", x).upcase, x]
+    if sprintf("%#x", x) =~ /[a-f]/
+      @@sign_tests << [sprintf("%#x", x).gsub(/([a-f])/) { |m| m.upcase }, x]
+      @@sign_tests << [sprintf("%#x", x).upcase, x]
+    end
   }
   @@sign_tests.each { |actual, expected|
-    define_method(:"test_num_#{actual.to_s.gsub(/[\.+-]/, '_')}") do
+    define_method(:"test_num_#{actual.to_s.gsub(/[\.+]/, '_')}") do
       @runtime.execute("
                        assert_equal(#{expected},  +('#{actual}'));
                        assert_equal(#{expected},  +('+#{actual}'));
