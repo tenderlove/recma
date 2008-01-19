@@ -66,9 +66,9 @@ class Expressions_11_5_2_Test < ECMAScriptTestCase
 
   def test_number_divide_by_0
     js_assert_equal("Number.POSITIVE_INFINITY", "1/0")
-    #js_assert_equal("Number.NEGATIVE_INFINITY", "1/-0") #sigh
+    js_assert_equal("Number.NEGATIVE_INFINITY", "1/-0")
     js_assert_equal("Number.NEGATIVE_INFINITY", "-1/0")
-    #js_assert_equal("Number.POSITIVE_INFINITY", "-1/-0") #sigh
+    js_assert_equal("Number.POSITIVE_INFINITY", "-1/-0")
   end
 
   def test_0_divide_by_infinity

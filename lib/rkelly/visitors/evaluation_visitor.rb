@@ -96,7 +96,7 @@ module RKelly
           elsif [left, right].all? { |x| x == 0 }
             RKelly::JS::NaN.new
           elsif right == 0
-            left * (1.0/0.0)
+            left * (right.eql?(0) ? (1.0/0.0) : (-1.0/0.0))
           else
             left / right
           end
@@ -271,7 +271,7 @@ module RKelly
       def visit_UnaryMinusNode(o)
         orig = o.value.accept(self)
         v = to_number(orig)
-        v.value = 0 - v.value
+        v.value = v.value == 0 ? v.value = (-1.0 / (1.0 / 0.0)) : 0 - v.value
         v
       end
 
