@@ -103,6 +103,26 @@ module RKelly
         RKelly::JS::Property.new(:divide, return_val)
       end
 
+      def visit_ModulusNode(o)
+        left = to_number(o.left.accept(self)).value
+        right = to_number(o.value.accept(self)).value
+        return_val = 
+          if [left, right].any? { |x| x.respond_to?(:nan?) && x.nan? }
+            RKelly::JS::NaN.new
+          elsif [left, right].all? { |x| x.respond_to?(:infinite?) && x.infinite? }
+            RKelly::JS::NaN.new
+          elsif right == 0
+            RKelly::JS::NaN.new
+          elsif left.respond_to?(:infinite?) && left.infinite?
+            RKelly::JS::NaN.new
+          elsif right.respond_to?(:infinite?) && right.infinite?
+            left
+          else
+            left % right
+          end
+        RKelly::JS::Property.new(:divide, return_val)
+      end
+
       def visit_OpEqualNode(o)
         left = o.left.accept(self)
         right = o.value.accept(self)
@@ -264,7 +284,7 @@ module RKelly
         ForInNode ForNode
         FunctionExprNode GetterPropertyNode GreaterNode GreaterOrEqualNode
         InNode InstanceOfNode LabelNode LeftShiftNode LessNode
-        LessOrEqualNode LogicalAndNode LogicalOrNode ModulusNode
+        LessOrEqualNode LogicalAndNode LogicalOrNode
         NotEqualNode NotStrictEqualNode
         ObjectLiteralNode OpAndEqualNode OpDivideEqualNode
         OpLShiftEqualNode OpMinusEqualNode OpModEqualNode
