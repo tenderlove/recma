@@ -191,6 +191,12 @@ module RKelly
         orig
       end
 
+      def visit_LogicalNotNode(o)
+        bool = to_boolean(o.value.accept(self))
+        bool.value = !bool.value
+        bool
+      end
+
       def visit_ArgumentsNode(o)
         o.value.map { |x| x.accept(self) }
       end
@@ -235,7 +241,7 @@ module RKelly
         ForInNode ForNode
         FunctionExprNode GetterPropertyNode GreaterNode GreaterOrEqualNode
         InNode InstanceOfNode LabelNode LeftShiftNode LessNode
-        LessOrEqualNode LogicalAndNode LogicalNotNode LogicalOrNode ModulusNode
+        LessOrEqualNode LogicalAndNode LogicalOrNode ModulusNode
         NotEqualNode NotStrictEqualNode
         ObjectLiteralNode OpAndEqualNode OpDivideEqualNode
         OpLShiftEqualNode OpMinusEqualNode OpModEqualNode
@@ -289,6 +295,27 @@ module RKelly
             return to_number(to_primitive(object, 'Number'))
           end
         RKelly::JS::Property.new(nil, return_val)
+      end
+
+      def to_boolean(object)
+        return RKelly::JS::Property.new(false, false) unless object.value
+        value = object.value
+        boolean =
+          case value
+          when :undefined
+            false
+          when true
+            true
+          when Numeric
+            value == 0 || value.respond_to?(:nan?) && value.nan? ? false : true
+          when ::String
+            value.length == 0 ? false : true
+          when RKelly::JS::Base
+            true
+          else
+            raise
+          end
+        RKelly::JS::Property.new(boolean, boolean)
       end
 
       def to_int_32(object)
