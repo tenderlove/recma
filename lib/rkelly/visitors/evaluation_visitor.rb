@@ -85,9 +85,22 @@ module RKelly
       end
 
       def visit_DivideNode(o)
-        RKelly::JS::Property.new(:divide,
-          o.left.accept(self).value / o.value.accept(self).value
-        )
+        left = to_number(o.left.accept(self)).value
+        right = to_number(o.value.accept(self)).value
+        return_val = 
+          if [left, right].any? { |x|
+            x.respond_to?(:nan?) && x.nan? ||
+            x.respond_to?(:intinite?) && x.infinite?
+          }
+            RKelly::JS::NaN.new
+          elsif [left, right].all? { |x| x == 0 }
+            RKelly::JS::NaN.new
+          elsif right == 0
+            left * (1.0/0.0)
+          else
+            left / right
+          end
+        RKelly::JS::Property.new(:divide, return_val)
       end
 
       def visit_OpEqualNode(o)
@@ -236,7 +249,8 @@ module RKelly
       end
 
       def visit_UnaryMinusNode(o)
-        v = o.value.accept(self)
+        orig = o.value.accept(self)
+        v = to_number(orig)
         v.value = 0 - v.value
         v
       end
