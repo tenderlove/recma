@@ -70,9 +70,18 @@ module RKelly
       end
 
       def visit_MultiplyNode(o)
-        RKelly::JS::Property.new(:multiply,
-          o.left.accept(self).value * o.value.accept(self).value
-        )
+        left = to_number(o.left.accept(self)).value
+        right = to_number(o.value.accept(self)).value
+        return_val = 
+          if [left, right].any? { |x| x.respond_to?(:nan?) && x.nan? }
+            RKelly::JS::NaN.new
+          else
+            [left, right].any? { |x|
+              x.respond_to?(:intinite?) && x.infinite?
+            } && [left, right].any? { |x| x == 0
+            } ? RKelly::JS::NaN.new : left * right
+          end
+        RKelly::JS::Property.new(:multiple, return_val)
       end
 
       def visit_DivideNode(o)
