@@ -6,9 +6,9 @@ module RKelly
           if args.length > 0
             parser = RKelly::Parser.new
             body = args.pop
-            arguments = args.map { |x| RKelly::Nodes::ParameterNode.new(x) }
-            body = RKelly::Nodes::FunctionBodyNode.new(parser.parse(body))
-            self.new(body, arguments)
+            tree = parser.parse("function x(#{args.join(',')}) { #{body} }")
+            func = tree.value.first
+            self.new(func.function_body, func.arguments)
           else
             self.new
           end
@@ -21,6 +21,7 @@ module RKelly
         @body = body
         @arguments = arguments
         self['toString'] = :undefined
+        self['length'] = arguments.length
       end
 
       def js_call(scope_chain, *params)
