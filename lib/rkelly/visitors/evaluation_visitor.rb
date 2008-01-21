@@ -50,16 +50,15 @@ module RKelly
       end
 
       def visit_AddNode(o)
-        left  = to_primitive(o.left.accept(self))
-        right = to_primitive(o.value.accept(self))
+        left  = to_primitive(o.left.accept(self), 'Number')
+        right = to_primitive(o.value.accept(self), 'Number')
+
         if left.value.is_a?(::String) || right.value.is_a?(::String)
           RKelly::JS::Property.new(:add,
             "#{left.value}#{right.value}"
           )
         else
-          RKelly::JS::Property.new(:add,
-            left.value + right.value
-          )
+          additive_operator(:+, left, right)
         end
       end
 
@@ -384,6 +383,18 @@ module RKelly
         when RKelly::JS::Base
           call_function(object.value.default_value(preferred_type))
         end
+      end
+
+      def additive_operator(operator, left, right)
+        left, right = to_number(left).value, to_number(right).value
+
+        left = left.respond_to?(:nan?) && left.nan? ? 0.0/0.0 : left
+        right = right.respond_to?(:nan?) && right.nan? ? 0.0/0.0 : right
+
+        result = left.send(operator, right)
+        result = result.respond_to?(:nan?) && result.nan? ? JS::NaN.new : result
+
+        RKelly::JS::Property.new(operator, result)
       end
 
       def call_function(property, arguments = [])
