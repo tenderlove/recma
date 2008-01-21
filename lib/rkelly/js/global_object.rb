@@ -28,6 +28,11 @@ module RKelly
 
         self['Math'] = JS::Math.new
 
+        self['Function'] = :undefined
+        self['Function'].function = lambda { |*args|
+          JS::Function.create(*args)
+        }
+
         self['Number'] = JS::Number.new
         self['Number'].function = lambda { |*args|
           JS::Number.create(*args)
