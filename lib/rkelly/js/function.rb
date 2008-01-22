@@ -20,6 +20,7 @@ module RKelly
         super()
         @body = body
         @arguments = arguments
+        self['prototype'] = JS::FunctionPrototype.new(self)
         self['toString'] = :undefined
         self['length'] = arguments.length
       end
