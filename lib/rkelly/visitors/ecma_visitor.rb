@@ -6,11 +6,15 @@ module RKelly
       end
 
       def visit_SourceElements(o)
-        o.value.map { |x| x.accept(self) }.join("\n")
+        o.value.map { |x| "#{indent}#{x.accept(self)}" }.join("\n")
       end
 
       def visit_VarStatementNode(o)
-        "#{indent}var #{o.value.map { |x| x.accept(self) }.join(', ')};"
+        "var #{o.value.map { |x| x.accept(self) }.join(', ')};"
+      end
+
+      def visit_ConstStatementNode(o)
+        "const #{o.value.map { |x| x.accept(self) }.join(', ')};"
       end
 
       def visit_VarDeclNode(o)
@@ -29,7 +33,7 @@ module RKelly
         init    = o.init ? o.init.accept(self) : ';'
         test    = o.test ? o.test.accept(self) : ''
         counter = o.counter ? o.counter.accept(self) : ''
-        "#{indent}for(#{init} #{test}; #{counter}) #{o.value.accept(self)}"
+        "for(#{init} #{test}; #{counter}) #{o.value.accept(self)}"
       end
 
       def visit_LessNode(o)
@@ -54,7 +58,7 @@ module RKelly
       end
 
       def visit_ExpressionStatementNode(o)
-        "#{indent}#{o.value.accept(self)};"
+        "#{o.value.accept(self)};"
       end
 
       def visit_OpEqualNode(o)
@@ -93,11 +97,11 @@ module RKelly
       end
 
       def visit_BreakNode(o)
-        "#{indent}break" + (o.value ? " #{o.value}" : '') + ';'
+        "break" + (o.value ? " #{o.value}" : '') + ';'
       end
 
       def visit_ContinueNode(o)
-        "#{indent}continue" + (o.value ? " #{o.value}" : '') + ';'
+        "continue" + (o.value ? " #{o.value}" : '') + ';'
       end
 
       def visit_TrueNode(o)
@@ -124,29 +128,129 @@ module RKelly
         "this"
       end
 
-      # Single value nodes
-      %w{
-        BitwiseNotNode DeleteNode ElementNode
-        LogicalNotNode ReturnNode
-        ThrowNode TypeOfNode UnaryMinusNode UnaryPlusNode VoidNode
-      }.each do |type|
-        define_method(:"visit_#{type}") do |o|
-          raise
+      def visit_BitwiseNotNode(o)
+        "~#{o.value.accept(self)}"
+      end
+
+      def visit_DeleteNode(o)
+        "delete #{o.value.accept(self)}"
+      end
+
+      def visit_ArrayNode(o)
+        "[#{o.value.map { |x| x ? x.accept(self) : '' }.join(', ')}]"
+      end
+
+      def visit_ElementNode(o)
+        o.value.accept(self)
+      end
+
+      def visit_LogicalNotNode(o)
+        "!#{o.value.accept(self)}"
+      end
+
+      def visit_UnaryMinusNode(o)
+        "-#{o.value.accept(self)}"
+      end
+
+      def visit_UnaryPlusNode(o)
+        "+#{o.value.accept(self)}"
+      end
+
+      def visit_ReturnNode(o)
+        "return" + (o.value ? " #{o.value.accept(self)}" : '') + ';'
+      end
+
+      def visit_ThrowNode(o)
+        "throw #{o.value.accept(self)};"
+      end
+
+      def visit_TypeOfNode(o)
+        "typeof #{o.value.accept(self)}"
+      end
+
+      def visit_VoidNode(o)
+        "void(#{o.value.accept(self)})"
+      end
+
+      [
+        [:Add, '+'],
+        [:BitAnd, '&'],
+        [:BitOr, '|'],
+        [:BitXOr, '^'],
+        [:Divide, '/'],
+        [:Equal, '=='],
+        [:Greater, '>'],
+        [:Greater, '>'],
+        [:GreaterOrEqual, '>='],
+        [:GreaterOrEqual, '>='],
+        [:InstanceOf, 'instanceof'],
+        [:LeftShift, '<<'],
+        [:LessOrEqual, '<='],
+        [:LogicalAnd, '&&'],
+        [:LogicalOr, '||'],
+        [:Modulus, '%'],
+        [:Multiply, '*'],
+        [:NotEqual, '!='],
+        [:NotStrictEqual, '!=='],
+        [:OpAndEqual, '&='],
+        [:OpDivideEqual, '/='],
+        [:OpLShiftEqual, '<<='],
+        [:OpMinusEqual, '-='],
+        [:OpModEqual, '%='],
+        [:OpMultiplyEqual, '*='],
+        [:OpOrEqual, '|='],
+        [:OpPlusEqual, '+='],
+        [:OpRShiftEqual, '>>='],
+        [:OpURShiftEqual, '>>>='],
+        [:OpXOrEqual, '^='],
+        [:RightShift, '>>'],
+        [:StrictEqual, '==='],
+        [:Subtract, '-'],
+        [:UnsignedRightShift, '>>>'],
+      ].each do |name,op|
+        define_method(:"visit_#{name}Node") do |o|
+          "#{o.left.accept(self)} #{op} #{o.value.accept(self)}"
         end
       end
-      # End Single value nodes
+
+      def visit_WhileNode(o)
+        "while(#{o.left.accept(self)}) #{o.value.accept(self)}"
+      end
+
+      def visit_SwitchNode(o)
+        "switch(#{o.left.accept(self)}) #{o.value.accept(self)}"
+      end
+
+      def visit_CaseBlockNode(o)
+        @indent += 1
+        "{\n" + (o.value ? o.value.map { |x| x.accept(self) }.join('') : '') +
+          "#{@indent -=1; indent}}"
+      end
+
+      def visit_CaseClauseNode(o)
+        case_code = "#{indent}case #{o.left ? o.left.accept(self) : nil}:\n"
+        @indent += 1
+        case_code += "#{o.value.accept(self)}\n"
+        @indent -= 1
+        case_code
+      end
+
+      def visit_DoWhileNode(o)
+        "do #{o.left.accept(self)} while(#{o.value.accept(self)});"
+      end
+
+      def visit_DoWhileNode(o)
+        "do #{o.left.accept(self)} while(#{o.value.accept(self)});"
+      end
+
+      def visit_WithNode(o)
+        "with(#{o.left.accept(self)}) #{o.value.accept(self)}"
+      end
 
       # Binary nodes
       %w{
-        AddNode BitAndNode BitOrNode BitXOrNode CaseClauseNode CommaNode
-        DivideNode DoWhileNode EqualNode GreaterNode GreaterOrEqualNode InNode
-        InstanceOfNode LeftShiftNode LessOrEqualNode LogicalAndNode
-        LogicalOrNode ModulusNode MultiplyNode NotEqualNode NotStrictEqualNode
-        OpAndEqualNode OpDivideEqualNode OpLShiftEqualNode
-        OpMinusEqualNode OpModEqualNode OpMultiplyEqualNode OpOrEqualNode
-        OpPlusEqualNode OpRShiftEqualNode OpURShiftEqualNode OpXOrEqualNode
-        RightShiftNode StrictEqualNode SubtractNode SwitchNode
-        UnsignedRightShiftNode WhileNode WithNode
+        CommaNode
+        InNode
       }.each do |type|
         define_method(:"visit_#{type}") do |o|
           raise
@@ -156,7 +260,6 @@ module RKelly
 
       # Array Value Nodes
       %w{
-        ArrayNode CaseBlockNode ConstStatementNode
         ObjectLiteralNode
       }.each do |type|
         define_method(:"visit_#{type}") do |o|
