@@ -13,6 +13,10 @@ module RKelly
         SexpVisitor.new.accept(self)
       end
 
+      def to_ecma
+        ECMAVisitor.new.accept(self)
+      end
+
       def to_dots
         visitor = DotVisitor.new
         visitor.accept(self)
