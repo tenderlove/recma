@@ -240,10 +240,6 @@ module RKelly
         "do #{o.left.accept(self)} while(#{o.value.accept(self)});"
       end
 
-      def visit_DoWhileNode(o)
-        "do #{o.left.accept(self)} while(#{o.value.accept(self)});"
-      end
-
       def visit_WithNode(o)
         "with(#{o.left.accept(self)}) #{o.value.accept(self)}"
       end
