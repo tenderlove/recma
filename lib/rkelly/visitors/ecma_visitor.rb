@@ -183,6 +183,7 @@ module RKelly
         [:Greater, '>'],
         [:GreaterOrEqual, '>='],
         [:GreaterOrEqual, '>='],
+        [:In, 'in'],
         [:InstanceOf, 'instanceof'],
         [:LeftShift, '<<'],
         [:LessOrEqual, '<='],
@@ -264,55 +265,50 @@ module RKelly
         "#{o.name}: #{o.value.accept(self)}"
       end
 
-      # Binary nodes
-      %w{
-        CommaNode
-        InNode
-      }.each do |type|
-        define_method(:"visit_#{type}") do |o|
-          raise
-        end
+      def visit_GetterPropertyNode(o)
+        "get #{o.name}#{o.value.accept(self)}"
       end
-      # End Binary nodes
 
-      # Name and Value Nodes
-      %w{
-        GetterPropertyNode SetterPropertyNode
-      }.each do |type|
-        define_method(:"visit_#{type}") do |o|
-          raise
-        end
+      def visit_SetterPropertyNode(o)
+        "set #{o.name}#{o.value.accept(self)}"
       end
-      # END Name and Value Nodes
 
-      %w{ IfNode ConditionalNode }.each do |type|
-        define_method(:"visit_#{type}") do |o|
-          raise
-        end
+      def visit_FunctionExprNode(o)
+        "#{o.value}(#{o.arguments.map { |x| x.accept(self) }.join(', ')}) " +
+          "#{o.function_body.accept(self)}"
+      end
+
+      def visit_CommaNode(o)
+        "#{o.left.accept(self)}, #{o.value.accept(self)}"
+      end
+
+      def visit_IfNode(o)
+        "if(#{o.conditions.accept(self)}) #{o.value.accept(self)}" +
+          (o.else ? " else #{o.else.accept(self)}" : '')
+      end
+
+      def visit_ConditionalNode(o)
+        "#{o.conditions.accept(self)} ? #{o.value.accept(self)} : " +
+          "#{o.else.accept(self)}"
       end
 
       def visit_ForInNode(o)
-        raise
+        "for(#{o.left.accept(self)} in #{o.right.accept(self)}) " +
+          "#{o.value.accept(self)}"
       end
 
       def visit_TryNode(o)
-        raise
+        "try #{o.value.accept(self)}" +
+          (o.catch_block ? " catch(#{o.catch_var}) #{o.catch_block.accept(self)}" : '') +
+          (o.finally_block ? " finally #{o.finally_block.accept(self)}" : '')
       end
 
       def visit_BracketAccessorNode(o)
-        raise
+        "#{o.value.accept(self)}[#{o.accessor.accept(self)}]"
       end
 
-      %w{ NewExprNode }.each do |type|
-        define_method(:"visit_#{type}") do |o|
-          raise
-        end
-      end
-
-      %w{ FunctionExprNode }.each do |type|
-        define_method(:"visit_#{type}") do |o|
-          raise
-        end
+      def visit_NewExprNode(o)
+        "new #{o.value.accept(self)}(#{o.arguments.accept(self)})"
       end
 
       private

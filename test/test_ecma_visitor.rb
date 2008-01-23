@@ -129,6 +129,55 @@ class ECMAVisitorTest < Test::Unit::TestCase
     assert_to_ecma("var foo = { bar: 10 };")
   end
 
+  def test_getter_node
+    assert_to_ecma("var foo = { get a() { } };")
+  end
+
+  def test_setter_node
+    assert_to_ecma("var foo = { set a(b) { } };")
+  end
+
+  def test_bracket_access_node
+    assert_to_ecma("var foo = foo.bar[10];")
+  end
+
+  def test_new_expr_node
+    assert_to_ecma("var foo = new Array();")
+    assert_to_ecma("var foo = new Array(10);")
+    assert_to_ecma("var foo = new Array(a, 10);")
+  end
+
+  def test_try_finally
+    assert_to_ecma('try { var x = 10; } finally { var x = 20; }')
+  end
+
+  def test_try_catch
+    assert_to_ecma('try { var x = 10; } catch(a) { var x = 20; }')
+  end
+
+  def test_comma_node
+    assert_to_ecma('i = 10, j = 11;')
+  end
+
+  def test_in_node
+    assert_to_ecma('var x = 0 in foo;')
+  end
+
+  def test_if_node
+    assert_to_ecma('if(5 && 10) var foo = 20;')
+    assert_to_ecma('if(5 && 10) { var foo = 20; }')
+    assert_to_ecma('if(5 && 10) { var foo = 20; } else var foo = 10;')
+    assert_to_ecma('if(5 && 10) { var foo = 20; } else { var foo = 10; }')
+  end
+
+  def test_conditional_node
+    assert_to_ecma('var x = 5 < 10 ? 20 : 30;')
+  end
+
+  def test_for_in_node
+    assert_to_ecma('for(foo in bar) { var x = 10; }')
+  end
+
   def assert_to_ecma(expected, actual = nil)
     ecma = @parser.parse(actual || expected).to_ecma
     ecma = ecma.gsub(/\n/, ' ').gsub(/\s+/, ' ')
