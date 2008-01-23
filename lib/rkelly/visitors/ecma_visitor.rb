@@ -247,6 +247,23 @@ module RKelly
         "with(#{o.left.accept(self)}) #{o.value.accept(self)}"
       end
 
+      def visit_LabelNode(o)
+        "#{o.name}: #{o.value.accept(self)}"
+      end
+
+      def visit_ObjectLiteralNode(o)
+        @indent += 1
+        lit = "{" + (o.value.length > 0 ? "\n" : ' ') +
+          o.value.map { |x| "#{indent}#{x.accept(self)}" }.join(",\n") +
+          (o.value.length > 0 ? "\n" : '') + '}'
+        @indent -= 1
+        lit
+      end
+
+      def visit_PropertyNode(o)
+        "#{o.name}: #{o.value.accept(self)}"
+      end
+
       # Binary nodes
       %w{
         CommaNode
@@ -258,19 +275,9 @@ module RKelly
       end
       # End Binary nodes
 
-      # Array Value Nodes
-      %w{
-        ObjectLiteralNode
-      }.each do |type|
-        define_method(:"visit_#{type}") do |o|
-          raise
-        end
-      end
-      # END Array Value Nodes
-
       # Name and Value Nodes
       %w{
-        LabelNode PropertyNode GetterPropertyNode SetterPropertyNode
+        GetterPropertyNode SetterPropertyNode
       }.each do |type|
         define_method(:"visit_#{type}") do |o|
           raise

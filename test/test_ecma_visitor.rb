@@ -117,6 +117,18 @@ class ECMAVisitorTest < Test::Unit::TestCase
     assert_to_ecma("const foo;")
   end
 
+  def test_label_node
+    assert_to_ecma("foo: var foo;")
+  end
+
+  def test_object_literal
+    assert_to_ecma("var foo = { };")
+  end
+
+  def test_property
+    assert_to_ecma("var foo = { bar: 10 };")
+  end
+
   def assert_to_ecma(expected, actual = nil)
     ecma = @parser.parse(actual || expected).to_ecma
     ecma = ecma.gsub(/\n/, ' ').gsub(/\s+/, ' ')
