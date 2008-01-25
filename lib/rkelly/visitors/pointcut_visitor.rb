@@ -9,7 +9,7 @@ module RKelly
 
       ALL_NODES.each do |type|
         define_method(:"visit_#{type}Node") do |o|
-          @matches << o if o =~ @ast
+          @matches << o if @ast =~ o
           super
         end
       end

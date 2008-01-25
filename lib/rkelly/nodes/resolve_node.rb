@@ -1,7 +1,7 @@
 module RKelly
   module Nodes
     class ResolveNode < Node
-      def =~(other)
+      def ==(other)
         return true if super
         if @value =~ /^[A-Z]/
           klass = [Object, Module].find { |x| x.const_defined?(@value.to_sym) }
@@ -9,6 +9,7 @@ module RKelly
         end
         false
       end
+      alias :=~ :==
     end
   end
 end

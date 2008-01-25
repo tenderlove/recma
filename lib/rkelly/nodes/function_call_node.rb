@@ -6,6 +6,11 @@ module RKelly
         super(value)
         @arguments = arguments
       end
+
+      def ==(other)
+        super && @arguments == other.arguments
+      end
+      alias :=~ :==
     end
   end
 end
