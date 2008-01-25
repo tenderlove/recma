@@ -7,7 +7,7 @@ module RKelly
         @scope_chain = scope
       end
 
-      def visit_SourceElements(o)
+      def visit_SourceElementsNode(o)
         o.value.each { |x| x.accept(self) }
       end
 

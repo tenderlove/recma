@@ -1,7 +1,7 @@
 module RKelly
   module Nodes
     class CaseClauseNode < BinaryNode
-      def initialize(left, src = SourceElements.new([]))
+      def initialize(left, src = SourceElementsNode.new([]))
         super
       end
     end

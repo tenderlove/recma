@@ -9,7 +9,7 @@ class ForNodeTest < NodeTestCase
     compare = LessNode.new(ResolveNode.new('foo'), NumberNode.new(10))
     exec = PostfixNode.new(ResolveNode.new('foo'), '++')
 
-    block = BlockNode.new(SourceElements.new([stmt]))
+    block = BlockNode.new(SourceElementsNode.new([stmt]))
 
     node = ForNode.new(nil, nil, nil, block)
     assert_sexp([:for, nil, nil, nil, [:block, [[:var, [[:var_decl, :foo, [:assign, [:lit, 10]]]]]]]], node)

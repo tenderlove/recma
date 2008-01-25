@@ -86,7 +86,7 @@ module RKelly
       # Array Value Nodes
       %w{
         ArgumentsNode ArrayNode CaseBlockNode ConstStatementNode
-        ObjectLiteralNode SourceElements VarStatementNode
+        ObjectLiteralNode SourceElementsNode VarStatementNode
       }.each do |type|
         define_method(:"visit_#{type}") do |o|
           node = Node.new(@node_index += 1, [type])

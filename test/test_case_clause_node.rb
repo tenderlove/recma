@@ -9,7 +9,7 @@ class CaseClauseNodeTest < NodeTestCase
     assert_sexp([:case, nil, []], node)
 
     node = CaseClauseNode.new(  ResolveNode.new('foo'),
-                                SourceElements.new([ResolveNode.new('bar')]))
+                                SourceElementsNode.new([ResolveNode.new('bar')]))
     assert_sexp([:case, [:resolve, 'foo'], [[:resolve, 'bar']]], node)
   end
 end

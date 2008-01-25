@@ -1,6 +1,6 @@
 module RKelly
   module Nodes
-    class SourceElements < Node
+    class SourceElementsNode < Node
     end
   end
 end

@@ -8,7 +8,7 @@ module RKelly
         @operand = []
       end
 
-      def visit_SourceElements(o)
+      def visit_SourceElementsNode(o)
         o.value.each { |x|
           next if scope_chain.returned?
           x.accept(self)

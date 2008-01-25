@@ -5,10 +5,10 @@ class BlockNodeTest < NodeTestCase
     initializer = AssignExprNode.new(NumberNode.new(10))
     var_foo = VarDeclNode.new('foo', initializer)
 
-    node = BlockNode.new(SourceElements.new([]))
+    node = BlockNode.new(SourceElementsNode.new([]))
     assert_sexp([:block, []], node)
 
-    node = BlockNode.new(SourceElements.new([var_foo]))
+    node = BlockNode.new(SourceElementsNode.new([var_foo]))
     assert_sexp([:block, [[:var_decl, :foo, [:assign, [:lit, 10]]]]], node)
   end
 end

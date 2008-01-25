@@ -10,216 +10,196 @@ module RKelly
       end
 
       def visit_AssignExprNode(o)
-        [:assign, o.value.accept(self)]
+        [:assign, super]
       end
 
       def visit_VarDeclNode(o)
         [ o.constant? ? :const_decl : :var_decl,
-          o.name.to_sym, o.value ? o.value.accept(self) : nil]
+          o.name.to_sym, o.value ? super(o) : nil]
       end
 
       def visit_VarStatementNode(o)
-        [:var, o.value.map { |x| x.accept(self) }]
+        [:var, super]
       end
 
       def visit_PostfixNode(o)
-        [:postfix, o.operand.accept(self), o.value]
+        [:postfix, super, o.value]
       end
 
       def visit_PrefixNode(o)
-        [:prefix, o.operand.accept(self), o.value]
+        [:prefix, super, o.value]
       end
 
       def visit_DeleteNode(o)
-        [:delete, o.value.accept(self)]
+        [:delete, super]
       end
 
       def visit_VoidNode(o)
-        [:void, o.value.accept(self)]
+        [:void, super]
       end
 
       def visit_TypeOfNode(o)
-        [:typeof, o.value.accept(self)]
+        [:typeof, super]
       end
 
       def visit_UnaryPlusNode(o)
-        [:u_plus, o.value.accept(self)]
+        [:u_plus, super]
       end
 
       def visit_UnaryMinusNode(o)
-        [:u_minus, o.value.accept(self)]
+        [:u_minus, super]
       end
 
       def visit_BitwiseNotNode(o)
-        [:bitwise_not, o.value.accept(self)]
+        [:bitwise_not, super]
       end
 
       def visit_LogicalNotNode(o)
-        [:not, o.value.accept(self)]
+        [:not, super]
       end
 
       def visit_ConstStatementNode(o)
-        [:const, o.value.map { |x| x.accept(self) }]
+        [:const, super]
       end
 
       def visit_MultiplyNode(o)
-        [:multiply, o.left.accept(self), o.value.accept(self)]
+        [:multiply, *super]
       end
 
       def visit_DivideNode(o)
-        [:divide, o.left.accept(self), o.value.accept(self)]
+        [:divide, *super]
       end
 
       def visit_ModulusNode(o)
-        [:modulus, o.left.accept(self), o.value.accept(self)]
+        [:modulus, *super]
       end
 
       def visit_AddNode(o)
-        [:add, o.left.accept(self), o.value.accept(self)]
+        [:add, *super]
       end
 
       def visit_LeftShiftNode(o)
-        [:lshift, o.left.accept(self), o.value.accept(self)]
+        [:lshift, *super]
       end
 
       def visit_RightShiftNode(o)
-        [:rshift, o.left.accept(self), o.value.accept(self)]
+        [:rshift, *super]
       end
 
       def visit_UnsignedRightShiftNode(o)
-        [:urshift, o.left.accept(self), o.value.accept(self)]
+        [:urshift, *super]
       end
 
       def visit_SubtractNode(o)
-        [:subtract, o.left.accept(self), o.value.accept(self)]
+        [:subtract, *super]
       end
 
       def visit_LessNode(o)
-        [:less, o.left.accept(self), o.value.accept(self)]
+        [:less, *super]
       end
 
       def visit_GreaterNode(o)
-        [:greater, o.left.accept(self), o.value.accept(self)]
+        [:greater, *super]
       end
 
       def visit_LessOrEqualNode(o)
-        [:less_or_equal, o.left.accept(self), o.value.accept(self)]
+        [:less_or_equal, *super]
       end
 
       def visit_GreaterOrEqualNode(o)
-        [:greater_or_equal, o.left.accept(self), o.value.accept(self)]
+        [:greater_or_equal, *super]
       end
 
       def visit_InstanceOfNode(o)
-        [:instance_of, o.left.accept(self), o.value.accept(self)]
+        [:instance_of, *super]
       end
 
       def visit_EqualNode(o)
-        [:equal, o.left.accept(self), o.value.accept(self)]
+        [:equal, *super]
       end
 
       def visit_NotEqualNode(o)
-        [:not_equal, o.left.accept(self), o.value.accept(self)]
+        [:not_equal, *super]
       end
 
       def visit_StrictEqualNode(o)
-        [:strict_equal, o.left.accept(self), o.value.accept(self)]
+        [:strict_equal, *super]
       end
 
       def visit_NotStrictEqualNode(o)
-        [:not_strict_equal, o.left.accept(self), o.value.accept(self)]
+        [:not_strict_equal, *super]
       end
 
       def visit_BitAndNode(o)
-        [:bit_and, o.left.accept(self), o.value.accept(self)]
+        [:bit_and, *super]
       end
 
       def visit_BitOrNode(o)
-        [:bit_or, o.left.accept(self), o.value.accept(self)]
+        [:bit_or, *super]
       end
 
       def visit_BitXOrNode(o)
-        [:bit_xor, o.left.accept(self), o.value.accept(self)]
+        [:bit_xor, *super]
       end
 
       def visit_LogicalAndNode(o)
-        [:and, o.left.accept(self), o.value.accept(self)]
+        [:and, *super]
       end
 
       def visit_LogicalOrNode(o)
-        [:or, o.left.accept(self), o.value.accept(self)]
+        [:or, *super]
       end
 
       def visit_InNode(o)
-        [:in, o.left.accept(self), o.value.accept(self)]
+        [:in, *super]
       end
 
       def visit_DoWhileNode(o)
-        [:do_while, o.left.accept(self), o.value.accept(self)]
+        [:do_while, *super]
       end
 
       def visit_WhileNode(o)
-        [:while, o.left.accept(self), o.value.accept(self)]
+        [:while, *super]
       end
 
       def visit_WithNode(o)
-        [:with, o.left.accept(self), o.value.accept(self)]
+        [:with, *super]
       end
 
       def visit_CaseClauseNode(o)
-        [:case, o.left ? o.left.accept(self) : nil, o.value.accept(self)]
+        [:case, *super]
       end
 
       def visit_CaseBlockNode(o)
-        [:case_block, o.value.map { |x| x.accept(self) }]
+        [:case_block, super]
       end
 
       def visit_SwitchNode(o)
-        [:switch, o.left.accept(self), o.value.accept(self)]
+        [:switch, *super]
       end
 
       def visit_ForNode(o)
-        [ :for,
-          o.init ? o.init.accept(self) : nil,
-          o.test ? o.test.accept(self) : nil,
-          o.counter ? o.counter.accept(self) : nil,
-          o.value.accept(self)
-        ]
+        [ :for, *super]
       end
 
       def visit_BlockNode(o)
-        [:block, o.value.accept(self)]
+        [:block, super]
       end
 
       def visit_IfNode(o)
-        [:if, o.conditions.accept(self),
-              o.value.accept(self),
-              o.else ? o.else.accept(self) : nil
-        ].compact
+        [:if, *super].compact
       end
 
       def visit_ConditionalNode(o)
-        [:conditional, o.conditions.accept(self),
-              o.value.accept(self),
-              o.else.accept(self)
-        ]
+        [:conditional, *super]
       end
 
       def visit_ForInNode(o)
-        [ :for_in,
-          o.left.accept(self),
-          o.right.accept(self),
-          o.value.accept(self)
-        ]
+        [ :for_in, *super]
       end
 
       def visit_TryNode(o)
-        [ :try,
-          o.value.accept(self),
-          o.catch_var ? o.catch_var : nil,
-          o.catch_block ? o.catch_block.accept(self) : nil,
-          o.finally_block ? o.finally_block.accept(self) : nil
-        ]
+        [ :try, *super]
       end
 
       def visit_EmptyStatementNode(o)
@@ -227,11 +207,7 @@ module RKelly
       end
 
       def visit_FunctionBodyNode(o)
-        [:func_body, o.value.accept(self)]
-      end
-
-      def visit_SourceElements(o)
-        o.value.map { |x| x.accept(self) }
+        [:func_body, super]
       end
 
       def visit_ResolveNode(o)
@@ -239,14 +215,11 @@ module RKelly
       end
 
       def visit_BracketAccessorNode(o)
-        [:bracket_access,
-          o.value.accept(self),
-          o.accessor.accept(self)
-        ]
+        [:bracket_access, *super]
       end
 
       def visit_NewExprNode(o)
-        [:new_expr, o.value.accept(self), o.arguments.accept(self)]
+        [:new_expr, *super]
       end
 
       def visit_ParameterNode(o)
@@ -262,95 +235,95 @@ module RKelly
       end
 
       def visit_LabelNode(o)
-        [:label, o.name, o.value.accept(self)]
+        [:label, o.name, super]
       end
 
       def visit_ThrowNode(o)
-        [:throw, o.value.accept(self)]
+        [:throw, super]
       end
 
       def visit_ObjectLiteralNode(o)
-        [:object, o.value.map { |x| x.accept(self) }]
+        [:object, super]
       end
 
       def visit_PropertyNode(o)
-        [ :property, o.name, o.value.accept(self) ]
+        [ :property, o.name, super ]
       end
 
       def visit_GetterPropertyNode(o)
-        [ :getter, o.name, o.value.accept(self) ]
+        [ :getter, o.name, super ]
       end
 
       def visit_SetterPropertyNode(o)
-        [ :setter, o.name, o.value.accept(self) ]
+        [ :setter, o.name, super ]
       end
 
       def visit_ElementNode(o)
-        [:element, o.value.accept(self)]
+        [:element, super ]
       end
 
       def visit_ExpressionStatementNode(o)
-        [:expression, o.value.accept(self)]
+        [:expression, super ]
       end
 
       def visit_OpEqualNode(o)
-        [:op_equal, o.left.accept(self), o.value.accept(self)]
+        [:op_equal, *super ]
       end
 
       def visit_OpPlusEqualNode(o)
-        [:op_plus_equal, o.left.accept(self), o.value.accept(self)]
+        [:op_plus_equal, *super ]
       end
 
       def visit_OpMinusEqualNode(o)
-        [:op_minus_equal, o.left.accept(self), o.value.accept(self)]
+        [:op_minus_equal, *super ]
       end
 
       def visit_OpMultiplyEqualNode(o)
-        [:op_multiply_equal, o.left.accept(self), o.value.accept(self)]
+        [:op_multiply_equal, *super ]
       end
 
       def visit_OpDivideEqualNode(o)
-        [:op_divide_equal, o.left.accept(self), o.value.accept(self)]
+        [:op_divide_equal, *super]
       end
 
       def visit_OpLShiftEqualNode(o)
-        [:op_lshift_equal, o.left.accept(self), o.value.accept(self)]
+        [:op_lshift_equal, *super ]
       end
 
       def visit_OpRShiftEqualNode(o)
-        [:op_rshift_equal, o.left.accept(self), o.value.accept(self)]
+        [:op_rshift_equal, *super ]
       end
 
       def visit_OpURShiftEqualNode(o)
-        [:op_urshift_equal, o.left.accept(self), o.value.accept(self)]
+        [:op_urshift_equal, *super ]
       end
 
       def visit_OpAndEqualNode(o)
-        [:op_and_equal, o.left.accept(self), o.value.accept(self)]
+        [:op_and_equal, *super ]
       end
 
       def visit_OpXOrEqualNode(o)
-        [:op_xor_equal, o.left.accept(self), o.value.accept(self)]
+        [:op_xor_equal, *super ]
       end
 
       def visit_OpOrEqualNode(o)
-        [:op_or_equal, o.left.accept(self), o.value.accept(self)]
+        [:op_or_equal, *super ]
       end
 
       def visit_OpModEqualNode(o)
-        [:op_mod_equal, o.left.accept(self), o.value.accept(self)]
+        [:op_mod_equal, *super]
       end
 
       def visit_CommaNode(o)
-        [:comma, o.left.accept(self), o.value.accept(self)]
+        [:comma, *super]
       end
 
       def visit_FunctionCallNode(o)
-        [:function_call, o.value.accept(self), o.arguments.accept(self)]
+        [:function_call, *super]
       end
 
       def visit_ArrayNode(o)
-        [:array, o.value.map { |x| x ? x.accept(self) : nil }]
+        [:array, super]
       end
 
       def visit_ThisNode(o)
@@ -358,32 +331,24 @@ module RKelly
       end
 
       def visit_ReturnNode(o)
-        o.value ? [:return, o.value.accept(self)] : [:return]
+        o.value ? [:return, super] : [:return]
       end
 
       def visit_FunctionExprNode(o)
-        [ :func_expr,
-          o.value ? o.value : nil,
-          o.arguments.map { |x| x.accept(self) },
-          o.function_body.accept(self)
-        ]
+        [ :func_expr, *super]
       end
 
       def visit_FunctionDeclNode(o)
-        [ :func_decl,
-          o.value ? o.value : nil,
-          o.arguments.map { |x| x.accept(self) },
-          o.function_body.accept(self)
-        ]
+        [ :func_decl, *super]
       end
 
       def visit_ArgumentsNode(o)
-        [:args, o.value.map { |x| x.accept(self) }]
+        [:args, super]
       end
 
       def visit_DotAccessorNode(o)
         [:dot_access,
-          o.value.accept(self),
+          super,
           o.accessor
         ]
       end

@@ -14,9 +14,9 @@ class TryNodeTest < NodeTestCase
       VarDeclNode.new('baz', AssignExprNode.new(NumberNode.new(69)))
     ])
 
-    try_block = BlockNode.new(SourceElements.new([var_baz]))
-    catch_block = BlockNode.new(SourceElements.new([var_bar]))
-    finally_block = BlockNode.new(SourceElements.new([var_foo]))
+    try_block = BlockNode.new(SourceElementsNode.new([var_baz]))
+    catch_block = BlockNode.new(SourceElementsNode.new([var_bar]))
+    finally_block = BlockNode.new(SourceElementsNode.new([var_foo]))
 
     node = TryNode.new(try_block, nil, nil, finally_block)
     assert_sexp([ :try,

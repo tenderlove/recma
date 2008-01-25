@@ -15,7 +15,7 @@ module RKelly
     def parse(javascript)
       @tokens = TOKENIZER.tokenize(javascript)
       @position = 0
-      SourceElements.new([do_parse].flatten)
+      SourceElementsNode.new([do_parse].flatten)
     end
 
     private

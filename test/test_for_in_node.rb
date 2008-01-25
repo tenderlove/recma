@@ -5,7 +5,7 @@ class ForInNodeTest < NodeTestCase
     initializer = AssignExprNode.new(NumberNode.new(10))
     decl = VarDeclNode.new('foo', initializer)
     stmt = VarStatementNode.new([decl])
-    block = BlockNode.new(SourceElements.new([stmt]))
+    block = BlockNode.new(SourceElementsNode.new([stmt]))
 
     node = ForInNode.new(ResolveNode.new('foo'), ResolveNode.new('bar'), block)
     assert_sexp([:for_in,

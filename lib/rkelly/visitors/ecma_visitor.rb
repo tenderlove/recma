@@ -5,7 +5,7 @@ module RKelly
         @indent = 0
       end
 
-      def visit_SourceElements(o)
+      def visit_SourceElementsNode(o)
         o.value.map { |x| "#{indent}#{x.accept(self)}" }.join("\n")
       end
 

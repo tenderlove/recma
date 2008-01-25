@@ -11,7 +11,7 @@
   var_statement_node
   const_statement_node
   empty_statement_node
-  source_elements
+  source_elements_node
   resolve_node
 }.each do |node|
   require "rkelly/nodes/#{node}"

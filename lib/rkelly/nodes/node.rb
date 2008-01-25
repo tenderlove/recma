@@ -9,6 +9,19 @@ module RKelly
         @value = value
       end
 
+      def ==(other)
+        other.is_a?(self.class) && @value == other.value
+      end
+      alias :=~ :==
+
+      def pointcut(pattern)
+        ast = RKelly::Parser.new.parse(pattern)
+        # Only take the first statement
+        visitor = PointcutVisitor.new(ast.value.first.value)
+        visitor.accept(self)
+        visitor
+      end
+
       def to_sexp
         SexpVisitor.new.accept(self)
       end
