@@ -4,8 +4,12 @@ module RKelly
       def ==(other)
         return true if super
         if @value =~ /^[A-Z]/
-          klass = [Object, Module].find { |x| x.const_defined?(@value.to_sym) }
-          return true if klass && other.value.is_a?(klass)
+          place = [Object, Module, RKelly::Nodes].find { |x|
+            x.const_defined?(@value.to_sym)
+          }
+          return false unless place
+          klass = place.const_get(@value.to_sym)
+          return true if klass && other.is_a?(klass) || other.value.is_a?(klass)
         end
         false
       end
