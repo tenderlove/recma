@@ -28,5 +28,7 @@ class PointcutVisitorTest < Test::Unit::TestCase
   def test_try_catch
     ast = @parser.parse('try { Element.update(10, 10); } catch(e) { }')
     assert_equal(1, ast.pointcut('Element.update(10, 10)').matches.length)
+    ast = @parser.parse('try { Element.update("foo", "bar"); } catch(e) { }')
+    assert_equal(1, ast.pointcut('Element.update(String, String)').matches.length)
   end
 end
