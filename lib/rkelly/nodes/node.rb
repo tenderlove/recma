@@ -17,7 +17,9 @@ module RKelly
       def pointcut(pattern)
         ast = RKelly::Parser.new.parse(pattern)
         # Only take the first statement
-        visitor = PointcutVisitor.new(ast.value.first.value)
+        finder = ast.value.first.class.to_s =~ /StatementNode$/ ?
+          ast.value.first.value : ast.value.first
+        visitor = PointcutVisitor.new(finder)
         visitor.accept(self)
         visitor
       end

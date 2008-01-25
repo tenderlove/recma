@@ -38,6 +38,10 @@ module RKelly
         target.accept(self)
       end
 
+      TERMINAL_NODES.each do |type|
+        define_method(:"visit_#{type}Node") { |o| }
+      end
+
       BINARY_NODES.each do |type|
         define_method(:"visit_#{type}Node") do |o|
           [o.left && o.left.accept(self), o.value && o.value.accept(self)]
