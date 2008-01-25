@@ -4,7 +4,7 @@ module RKelly
       include RKelly::Visitable
       include RKelly::Visitors
 
-      attr_reader :value
+      attr_accessor :value
       def initialize(value)
         @value = value
       end
