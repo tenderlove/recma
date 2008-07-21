@@ -21,7 +21,7 @@ class ParserTest < Test::Unit::TestCase
     assert_sexp(
                 [[:var,
                   [[:var_decl, :foo, [:assign,
-                    [:func_expr, nil, [], [:func_body, []]]
+                    [:func_expr, "function", [], [:func_body, []]]
                   ]]]
                 ]],
                 @parser.parse("var foo = function() { }"))
@@ -31,7 +31,7 @@ class ParserTest < Test::Unit::TestCase
     assert_sexp(
                 [[:var,
                   [[:var_decl, :foo, [:assign,
-                    [:func_expr, nil, [],
+                    [:func_expr, "function", [],
                       [:func_body,
                         [[:var, [[:var_decl, :a, [:assign, [:lit, 10]]]]]]
                       ]
@@ -45,7 +45,7 @@ class ParserTest < Test::Unit::TestCase
     assert_sexp(
                 [[:var,
                   [[:var_decl, :foo, [:assign,
-                    [:func_expr, nil, [[:param, "a"]], [:func_body, []]]
+                    [:func_expr, "function", [[:param, "a"]], [:func_body, []]]
                   ]]]
                 ]],
                 @parser.parse("var foo = function(a) { }"))
@@ -55,7 +55,7 @@ class ParserTest < Test::Unit::TestCase
     assert_sexp(
                 [[:var,
                   [[:var_decl, :foo, [:assign,
-                    [:func_expr, nil, [[:param, "a"], [:param, 'b']], [:func_body, []]]
+                    [:func_expr, "function", [[:param, "a"], [:param, 'b']], [:func_body, []]]
                   ]]]
                 ]],
                 @parser.parse("var foo = function(a,b) { }"))

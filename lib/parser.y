@@ -821,11 +821,11 @@ rule
 
   FunctionExpr:
     FUNCTION '(' ')' '{' FunctionBody '}' {
-      result = FunctionExprNode.new(nil, val[4])
+      result = FunctionExprNode.new(val[0], val[4])
       debug(val[4])
     }
   | FUNCTION '(' FormalParameterList ')' '{' FunctionBody '}' {
-      result = FunctionExprNode.new(nil, val[5], val[2])
+      result = FunctionExprNode.new(val[0], val[5], val[2])
       debug(val[5])
     }
   | FUNCTION IDENT '(' ')' '{' FunctionBody '}' {
