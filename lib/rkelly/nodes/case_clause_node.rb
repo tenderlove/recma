@@ -1,3 +1,5 @@
+require 'rkelly/nodes/binary_node'
+
 module RKelly
   module Nodes
     class CaseClauseNode < BinaryNode

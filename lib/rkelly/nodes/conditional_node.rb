@@ -1,3 +1,5 @@
+require 'rkelly/nodes/if_node'
+
 module RKelly
   module Nodes
     class ConditionalNode < IfNode
