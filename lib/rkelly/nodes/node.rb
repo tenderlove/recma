@@ -3,6 +3,7 @@ module RKelly
     class Node
       include RKelly::Visitable
       include RKelly::Visitors
+      include Enumerable
 
       attr_accessor :value
       def initialize(value)
@@ -52,6 +53,10 @@ edge [ ];
           s
         }.join("\n")
         "#{header}\n#{nodes}\n#{arrows}\n}"
+      end
+
+      def each(&block)
+        EnumerableVisitor.new(block).accept(self)
       end
     end
 
