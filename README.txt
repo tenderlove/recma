@@ -24,10 +24,12 @@ Copyright (c) 2007 by Aaron Patterson (aaronp@rubyforge.org)
 
 == Acknowledgments
 
-The javascript parser was was taken from rbnarcissus written by Paul Sowden.
-Thanks Paul!
+The original javascript parser was was taken from rbnarcissus written by
+Paul Sowden.  Thanks Paul!
 
   http://idontsmoke.co.uk/2005/rbnarcissus/
+
+The current parser was taken from WebKit.  Thank you WebKit team!
   
 == License
 
