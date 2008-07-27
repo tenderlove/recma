@@ -28,6 +28,7 @@ module RKelly
     end
 
     def next_token
+      @terminator = false
       begin
         return [false, false] if @position >= @tokens.length
         n_token = @tokens[@position]
