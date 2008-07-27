@@ -36,7 +36,7 @@ module RKelly
         when :COMMENT
           @terminator = true if n_token[1] =~ /^\/\//
         when :S
-          @terminator = true if n_token[1] =~ /^[\r\n]/
+          @terminator = true if n_token[1] =~ /[\r\n]/
         end
       end while([:COMMENT, :S].include?(n_token[0]))
       n_token
