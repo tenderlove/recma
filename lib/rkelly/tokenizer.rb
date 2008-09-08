@@ -89,7 +89,12 @@ module RKelly
     end
   
     def tokenize(string)
+      raw_tokens(string).map { |x| x.to_racc_token }
+    end
+
+    def raw_tokens(string)
       tokens = []
+      line_number = 1
       while string.length > 0
         longest_token = nil
 
@@ -101,10 +106,13 @@ module RKelly
           longest_token = match
         }
 
+        longest_token.line = line_number
+        lines = longest_token.value.match(/\n/)
+        line_number += lines ? lines.length : 0
         string = string.slice(Range.new(longest_token.value.length, -1))
         tokens << longest_token
       end
-      tokens.map { |x| x.to_racc_token }
+      tokens
     end
   
     private

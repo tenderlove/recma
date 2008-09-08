@@ -1,20 +1,23 @@
 require 'rkelly/tokenizer'
 require 'rkelly/generated_parser'
 
+
 module RKelly
   class Parser < RKelly::GeneratedParser
     TOKENIZER = Tokenizer.new
+
     attr_accessor :logger
     def initialize
       @tokens = []
       @logger = nil
       @terminator = false
       @prev_token = nil
+      @comment_stack = []
     end
 
     # Parse +javascript+ and return an AST
     def parse(javascript)
-      @tokens = TOKENIZER.tokenize(javascript)
+      @tokens = TOKENIZER.raw_tokens(javascript)
       @position = 0
       SourceElementsNode.new([do_parse].flatten)
     end
@@ -34,22 +37,24 @@ module RKelly
         return [false, false] if @position >= @tokens.length
         n_token = @tokens[@position]
         @position += 1
-        case @tokens[@position - 1][0]
+        case @tokens[@position - 1].name
         when :COMMENT
-          @terminator = true if n_token[1] =~ /^\/\//
+          @comment_stack << n_token
+          @terminator = true if n_token.value =~ /^\/\//
         when :S
-          @terminator = true if n_token[1] =~ /[\r\n]/
+          @terminator = true if n_token.value =~ /[\r\n]/
         end
-      end while([:COMMENT, :S].include?(n_token[0]))
+      end while([:COMMENT, :S].include?(n_token.name))
 
       if @terminator &&
-          ((@prev_token && %w[continue break return throw].include?(@prev_token[1])) ||
-           (n_token && %w[++ --].include?(n_token[1])))
+          ((@prev_token && %w[continue break return throw].include?(@prev_token.value)) ||
+           (n_token && %w[++ --].include?(n_token.value)))
         @position -= 1
-        return (@prev_token = [';', ';'])
+        return (@prev_token = RKelly::Token.new(';', ';')).to_racc_token
       end
 
       @prev_token = n_token
+      n_token.to_racc_token
     end
   end
 end

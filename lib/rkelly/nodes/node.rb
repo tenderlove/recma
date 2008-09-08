@@ -5,22 +5,30 @@ module RKelly
       include RKelly::Visitors
       include Enumerable
 
-      attr_accessor :value
+      attr_accessor :value, :comments
       def initialize(value)
         @value = value
+        @comments = []
       end
 
       def ==(other)
-        other.is_a?(self.class) && @value == other.value
+        other.is_a?(self.class) && @value === other.value
       end
       alias :=~ :==
+      alias :=== :==
 
       def pointcut(pattern)
-        ast = RKelly::Parser.new.parse(pattern)
-        # Only take the first statement
-        finder = ast.value.first.class.to_s =~ /StatementNode$/ ?
-          ast.value.first.value : ast.value.first
-        visitor = PointcutVisitor.new(finder)
+        case pattern
+        when String
+          ast = RKelly::Parser.new.parse(pattern)
+          # Only take the first statement
+          finder = ast.value.first.class.to_s =~ /StatementNode$/ ?
+            ast.value.first.value : ast.value.first
+          visitor = PointcutVisitor.new(finder)
+        else
+          visitor = PointcutVisitor.new(pattern)
+        end
+
         visitor.accept(self)
         visitor
       end
