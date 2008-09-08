@@ -40,8 +40,12 @@ preclow
 
 rule
   SourceElements:
+    /* nothing */ 			{ result = SourceElementsNode.new([]) }
+  | SourceElementList			{ result = SourceElementsNode.new([val].flatten) }
+
+  SourceElementList:
     SourceElement
-  | SourceElements SourceElement        { result = val.flatten }
+  | SourceElementList SourceElement        { result = val.flatten }
   ;
 
   SourceElement:
@@ -500,12 +504,8 @@ rule
 
 
   Block:
-    '{' '}' {
-      result = BlockNode.new(SourceElementsNode.new([]))
-      debug(result)
-    }
-  | '{' SourceElements '}' {
-      result = BlockNode.new(SourceElementsNode.new([val[1]].flatten))
+    '{' SourceElements '}' {
+      result = BlockNode.new(val[1])
       debug(result)
     }
   ;
@@ -750,18 +750,14 @@ rule
   ;
 
   CaseClause:
-    CASE Expr ':'                       { result = CaseClauseNode.new(val[1]) }
-  | CASE Expr ':' SourceElements        {
-      result = CaseClauseNode.new(val[1], SourceElementsNode.new([val[3]].flatten))
+    CASE Expr ':' SourceElements        {
+      result = CaseClauseNode.new(val[1], val[3])
     }
   ;
 
   DefaultClause:
-    DEFAULT ':'                         {
-      result = CaseClauseNode.new(nil, SourceElementsNode.new([]))
-    }
-  | DEFAULT ':' SourceElements          {
-      result = CaseClauseNode.new(nil, SourceElementsNode.new([val[2]].flatten))
+    DEFAULT ':' SourceElements          {
+      result = CaseClauseNode.new(nil, val[2])
     }
   ;
 
@@ -846,8 +842,7 @@ rule
   ;
 
   FunctionBody:
-    /* not in spec */           { result = FunctionBodyNode.new(SourceElementsNode.new([])) }
-  | SourceElements              { result = FunctionBodyNode.new(SourceElementsNode.new([val[0]].flatten)) }
+    SourceElements              { result = FunctionBodyNode.new(val[0]) }
   ;
 end
 

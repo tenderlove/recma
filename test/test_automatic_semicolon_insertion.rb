@@ -120,15 +120,15 @@ class AutomaticSemicolonInsertionTest < Test::Unit::TestCase
   end
 
   def test_insertion_after_throw
-    assert_sexp([nil], @parser.parse("throw\nfoo"))
+    assert_nil @parser.parse("throw\nfoo")
   end
 
   def test_no_empty_statement_insertion
-    assert_sexp([nil], @parser.parse("if (a > b)\nelse c = d"))
+    assert_nil @parser.parse("if (a > b)\nelse c = d")
   end
 
   def test_no_for_insertion
-    assert_sexp([nil], @parser.parse("for (a;b\n){}"))
+    assert_nil @parser.parse("for (a;b\n){}")
   end
 
   def assert_sexp(expected, node)
