@@ -27,17 +27,38 @@ module RKelly
       @logger = nil
       @terminator = false
       @prev_token = nil
-      @comment_stack = []
+      @comments = []
     end
 
     # Parse +javascript+ and return an AST
     def parse(javascript)
       @tokens = TOKENIZER.raw_tokens(javascript)
       @position = 0
-      do_parse
+      ast = do_parse
+      apply_comments(ast)
     end
 
     private
+    def apply_comments(ast)
+      ast_hash = Hash.new { |h,k| h[k] = [] }
+      (ast || []).each { |n|
+        next unless n.line
+        ast_hash[n.line] << n
+      }
+      max = ast_hash.keys.sort.last
+      @comments.each do |comment|
+        node = nil
+        comment.line.upto(max) do |line|
+          if ast_hash.key?(line)
+            node = ast_hash[line].first
+            break
+          end
+        end
+        node.comments << comment if node
+      end
+      ast
+    end
+
     def on_error(error_token_id, error_value, value_stack)
       if logger
         logger.error(token_to_str(error_token_id))
@@ -54,7 +75,7 @@ module RKelly
         @position += 1
         case @tokens[@position - 1].name
         when :COMMENT
-          @comment_stack << n_token
+          @comments << n_token
           @terminator = true if n_token.value =~ /^\/\//
         when :S
           @terminator = true if n_token.value =~ /[\r\n]/

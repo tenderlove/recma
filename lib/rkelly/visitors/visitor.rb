@@ -62,7 +62,7 @@ module RKelly
 
       SINGLE_VALUE_NODES.each do |type|
         define_method(:"visit_#{type}Node") do |o|
-          o.value.accept(self)
+          o.value.accept(self) if o.value
         end
       end
 
