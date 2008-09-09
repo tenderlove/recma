@@ -7,7 +7,7 @@ require 'rkelly/constants'
 
 GENERATED_PARSER = "lib/rkelly/generated_parser.rb"
 
-Hoe.new('rkelly', RKelly::VERSION) do |p|
+HOE = Hoe.new('rkelly', RKelly::VERSION) do |p|
   p.rubyforge_name  = 'rkelly'
   p.author          = 'Aaron Patterson'
   p.email           = 'aaronp@rubyforge.org'
@@ -73,4 +73,13 @@ class #{classname}Test < NodeTestCase
 end
     END
   }
+end
+
+namespace :gem do
+  task :spec do
+    File.open("#{HOE.name}.gemspec", 'w') do |f|
+      HOE.spec.version = "#{HOE.version}.#{Time.now.strftime("%Y%m%d%H%M%S")}"
+      f.write(HOE.spec.to_ruby)
+    end
+  end
 end

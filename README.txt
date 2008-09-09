@@ -4,23 +4,16 @@
 
 == DESCRIPTION
 
-The RKelly library will parse JavaScript and return a parse tree suitable
-for feeding to Ruby2Ruby.
+The RKelly library will parse JavaScript and return a parse tree.
 
 == Example
 
   require 'rkelly'
-  require 'ruby2ruby'
 
-  parser = RKelly.new
-  tree   = parser.process(
+  parser = RKelly::Parser.new
+  ast    = parser.parse(
     "for(var i = 0; i < 10; i++) { var x = 5 + 5; }"
   )
-  puts RubyToRuby.new().process(tree)
-
-== Authors
-
-Copyright (c) 2007 by Aaron Patterson (aaronp@rubyforge.org) 
 
 == Acknowledgments
 
