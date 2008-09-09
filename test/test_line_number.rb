@@ -2,8 +2,11 @@ require File.dirname(__FILE__) + "/helper"
 
 class LineNumberTest < NodeTestCase
   def test_line_numbers
-    p = RKelly::Parser.new
-    ast = p.parse(<<-eojs)
+    parser = RKelly::Parser.new
+    ast = parser.parse(<<-eojs)
+      /**
+       * This is an awesome test comment.
+       */
       function aaron() {
         var x = 10;
         return 1 + 1;
@@ -11,10 +14,10 @@ class LineNumberTest < NodeTestCase
     eojs
     func = ast.pointcut(FunctionDeclNode).matches.first
     assert func
-    assert_equal(1, func.line)
+    assert_equal(4, func.line)
 
     return_node = ast.pointcut(ReturnNode).matches.first
     assert return_node
-    assert_equal(3, return_node.line)
+    assert_equal(6, return_node.line)
   end
 end

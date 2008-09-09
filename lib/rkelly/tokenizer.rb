@@ -107,8 +107,7 @@ module RKelly
         }
 
         longest_token.line = line_number
-        lines = longest_token.value.match(/\n/)
-        line_number += lines ? lines.length : 0
+        line_number += longest_token.value.scan(/\n/).length
         string = string.slice(Range.new(longest_token.value.length, -1))
         tokens << longest_token
       end
