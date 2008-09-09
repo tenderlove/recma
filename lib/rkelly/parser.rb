@@ -6,6 +6,21 @@ module RKelly
   class Parser < RKelly::GeneratedParser
     TOKENIZER = Tokenizer.new
 
+    RKelly::GeneratedParser.instance_methods.each do |im|
+      next unless im.to_s =~ /^_reduce_\d+$/
+      eval(<<-eoawesomehack)
+        def #{im}(val, _values, result)
+          r = super(val.map { |v|
+              v.is_a?(Token) ? v.to_racc_token[1] : v
+            }, _values, result)
+          if token = val.find { |v| v.is_a?(Token) }
+            r.line = token.line if r.respond_to?(:line)
+          end
+          r
+        end
+      eoawesomehack
+    end
+
     attr_accessor :logger
     def initialize
       @tokens = []
@@ -54,7 +69,9 @@ module RKelly
       end
 
       @prev_token = n_token
-      n_token.to_racc_token
+      v = n_token.to_racc_token
+      v[1] = n_token
+      v
     end
   end
 end
