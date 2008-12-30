@@ -2,9 +2,22 @@ module RKelly
   module Visitors
     class PointcutVisitor < Visitor
       attr_reader :matches
-      def initialize(pattern)
+      def initialize(pattern, matches = [])
         @pattern  = pattern
-        @matches  = []
+        @matches  = matches
+      end
+
+      def >(pattern)
+        pattern =
+          case pattern
+          when Class
+            pattern.new(Object)
+          else
+            pattern
+          end
+        self.class.new(nil, @matches.map do |m|
+          m.pointcut(pattern).matches
+        end.flatten)
       end
 
       ALL_NODES.each do |type|

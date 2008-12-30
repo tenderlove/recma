@@ -13,10 +13,13 @@ module RKelly
       end
 
       def ==(other)
-        other.is_a?(self.class) && @value === other.value
+        other.is_a?(self.class) && @value == other.value
       end
       alias :=~ :==
-      alias :=== :==
+
+      def ===(other)
+        other.is_a?(self.class) && @value === other.value
+      end
 
       def pointcut(pattern)
         case pattern
@@ -33,6 +36,7 @@ module RKelly
         visitor.accept(self)
         visitor
       end
+      alias :/ :pointcut
 
       def to_sexp
         SexpVisitor.new.accept(self)
