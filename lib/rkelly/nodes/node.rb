@@ -71,6 +71,10 @@ edge [ ];
       def each(&block)
         EnumerableVisitor.new(block).accept(self)
       end
+
+      def to_real_sexp
+        RealSexpVisitor.new.accept(self)
+      end
     end
 
     %w[EmptyStatement ExpressionStatement True Delete Return TypeOf
