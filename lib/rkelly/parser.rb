@@ -15,6 +15,7 @@ module RKelly
             }, _values, result)
           if token = val.find { |v| v.is_a?(Token) }
             r.line = token.line if r.respond_to?(:line)
+            r.filename = @filename if r.respond_to?(:filename)
           end
           r
         end
@@ -31,9 +32,10 @@ module RKelly
     end
 
     # Parse +javascript+ and return an AST
-    def parse(javascript)
+    def parse(javascript, filename = nil)
       @tokens = TOKENIZER.raw_tokens(javascript)
       @position = 0
+      @filename = filename
       ast = do_parse
       apply_comments(ast)
     end
@@ -55,7 +57,7 @@ module RKelly
           end
         end
         node.comments << comment if node
-      end
+      end if max
       ast
     end
 
