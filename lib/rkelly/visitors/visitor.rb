@@ -39,7 +39,7 @@ module RKelly
       end
 
       TERMINAL_NODES.each do |type|
-        define_method(:"visit_#{type}Node") { |o| }
+        define_method(:"visit_#{type}Node") { |o| o.value }
       end
 
       BINARY_NODES.each do |type|
@@ -56,7 +56,7 @@ module RKelly
 
       NAME_VALUE_NODES.each do |type|
         define_method(:"visit_#{type}Node") do |o|
-          return o.value ? o.value.accept(self) : nil
+          [o.name.to_s.to_sym, o.value ? o.value.accept(self) : nil]
         end
       end
 

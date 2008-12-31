@@ -6,7 +6,7 @@ class LabelNodeTest < NodeTestCase
     var = VarDeclNode.new('bar', initializer)
     node = LabelNode.new('foo', var)
     assert_sexp(
-                [:label, 'foo',
+                [:label, :foo,
                   [:var_decl, :bar, [:assign, [:lit, 10]]],
                 ], node)
   end

@@ -14,8 +14,7 @@ module RKelly
       end
 
       def visit_VarDeclNode(o)
-        [ o.constant? ? :const_decl : :var_decl,
-          o.name.to_sym, o.value ? super(o) : nil]
+        [ o.constant? ? :const_decl : :var_decl ] + super(o)
       end
 
       def visit_VarStatementNode(o)
@@ -235,7 +234,7 @@ module RKelly
       end
 
       def visit_LabelNode(o)
-        [:label, o.name, super]
+        [:label ] + super
       end
 
       def visit_ThrowNode(o)
@@ -247,15 +246,15 @@ module RKelly
       end
 
       def visit_PropertyNode(o)
-        [ :property, o.name, super ]
+        [ :property ] + super
       end
 
       def visit_GetterPropertyNode(o)
-        [ :getter, o.name, super ]
+        [ :getter ] + super
       end
 
       def visit_SetterPropertyNode(o)
-        [ :setter, o.name, super ]
+        [ :setter ] + super
       end
 
       def visit_ElementNode(o)

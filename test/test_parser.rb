@@ -82,9 +82,9 @@ class ParserTest < Test::Unit::TestCase
   end
 
   def test_labelled_statement
-    assert_sexp([[:label, "foo", [:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]]]],
+    assert_sexp([[:label, :foo, [:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]]]],
                 @parser.parse('foo: var x = 10;'))
-    assert_sexp([[:label, "foo", [:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]]]],
+    assert_sexp([[:label, :foo, [:var, [[:var_decl, :x, [:assign, [:lit, 10]]]]]]],
                 @parser.parse('foo: var x = 10'))
   end
 
@@ -97,7 +97,7 @@ class ParserTest < Test::Unit::TestCase
     assert_sexp(
                 [[:var,
                   [[:var_decl, :foo, [:assign,
-                    [:object, [[:property, "bar", [:lit, 10]]]]
+                    [:object, [[:property, :bar, [:lit, 10]]]]
                   ]]]
                 ]],
                 @parser.parse('var foo = { bar: 10 }'))
@@ -111,14 +111,14 @@ class ParserTest < Test::Unit::TestCase
     assert_sexp(
                 [[:var,
                   [[:var_decl, :foo, [:assign,
-                    [:object, [[:property, '"bar"', [:lit, 10]]]]
+                    [:object, [[:property, '"bar"'.to_sym, [:lit, 10]]]]
                   ]]]
                 ]],
                 @parser.parse('var foo = { "bar": 10 }'))
     assert_sexp(
                 [[:var,
                   [[:var_decl, :foo, [:assign,
-                    [:object, [[:property, 5, [:lit, 10]]]]
+                    [:object, [[:property, :"5", [:lit, 10]]]]
                   ]]]
                 ]],
                 @parser.parse('var foo = { 5: 10 }'))
@@ -128,7 +128,7 @@ class ParserTest < Test::Unit::TestCase
     assert_sexp(
                 [[:var,
                   [[:var_decl, :foo, [:assign,
-                    [:object, [[:getter, 'a', [:func_expr, nil, [], [:func_body, []]]]]]
+                    [:object, [[:getter, :a, [:func_expr, nil, [], [:func_body, []]]]]]
                   ]]]
                 ]],
                 @parser.parse('var foo = { get a() { } }'))
@@ -138,7 +138,7 @@ class ParserTest < Test::Unit::TestCase
     assert_sexp(
                 [[:var,
                   [[:var_decl, :foo, [:assign,
-                    [:object, [[:setter, 'a',
+                    [:object, [[:setter, :a,
                       [:func_expr, nil, [[:param, 'foo']], [:func_body, []]]
                     ]]]
                   ]]]
@@ -151,8 +151,8 @@ class ParserTest < Test::Unit::TestCase
                 [[:var,
                   [[:var_decl, :foo, [:assign,
                     [:object, [
-                      [:property, "bar", [:lit, 10]],
-                      [:property, "baz", [:lit, 1]]
+                      [:property, :bar, [:lit, 10]],
+                      [:property, :baz, [:lit, 1]]
                     ]]
                   ]]]
                 ]],
@@ -161,8 +161,8 @@ class ParserTest < Test::Unit::TestCase
                 [[:var,
                   [[:var_decl, :foo, [:assign,
                     [:object, [
-                      [:property, "bar", [:lit, 10]],
-                      [:property, "baz", [:lit, 1]]
+                      [:property, :bar, [:lit, 10]],
+                      [:property, :baz, [:lit, 1]]
                     ]]
                   ]]]
                 ]],
