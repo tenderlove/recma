@@ -61,6 +61,7 @@ lib/rkelly/visitors/enumerable_visitor.rb
 lib/rkelly/visitors/evaluation_visitor.rb
 lib/rkelly/visitors/function_visitor.rb
 lib/rkelly/visitors/pointcut_visitor.rb
+lib/rkelly/visitors/real_sexp_visitor.rb
 lib/rkelly/visitors/sexp_visitor.rb
 lib/rkelly/visitors/visitor.rb
 rkelly.gemspec
@@ -173,6 +174,7 @@ test/test_regexp_node.rb
 test/test_resolve_node.rb
 test/test_return_node.rb
 test/test_right_shift_node.rb
+test/test_rkelly.rb
 test/test_runtime.rb
 test/test_scope_chain.rb
 test/test_setter_property_node.rb
