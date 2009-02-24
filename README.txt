@@ -8,12 +8,21 @@ The RKelly library will parse JavaScript and return a parse tree.
 
 == Example
 
+  ##
+  # Iterate over and modify a JavaScript AST.  Then print the modified
+  # AST as JavaScript.
   require 'rkelly'
 
   parser = RKelly::Parser.new
   ast    = parser.parse(
     "for(var i = 0; i < 10; i++) { var x = 5 + 5; }"
   )
+  
+  ast.each do |node|
+    node.value  = 'hello' if node.value == 'i'
+    node.name   = 'hello' if node.respond_to?(:name) && node.name == 'i'
+  end
+  puts ast.to_ecma # => awesome javascript
 
 == Acknowledgments
 
@@ -28,7 +37,7 @@ The current parser was ported from WebKit.  Thank you WebKit team!
 
 The MIT License
 
-Copyright (c) 2007, 2008 Aaron Patterson, John Barnette
+Copyright (c) 2007, 2008, 2009 Aaron Patterson, John Barnette
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
