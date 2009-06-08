@@ -1,6 +1,6 @@
 = RKelly
 
-  http://rkelly.rubyforge.org/
+* http://rkelly.rubyforge.org/
 
 == DESCRIPTION
 

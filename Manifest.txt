@@ -1,6 +1,6 @@
-CHANGELOG.txt
+CHANGELOG.rdoc
 Manifest.txt
-README.txt
+README.rdoc
 Rakefile
 lib/parser.y
 lib/rkelly.rb
@@ -64,7 +64,6 @@ lib/rkelly/visitors/pointcut_visitor.rb
 lib/rkelly/visitors/real_sexp_visitor.rb
 lib/rkelly/visitors/sexp_visitor.rb
 lib/rkelly/visitors/visitor.rb
-rkelly.gemspec
 test/ecma_script_test_case.rb
 test/execute_test_case.rb
 test/execution_contexts/test_10_1_3-1.rb
