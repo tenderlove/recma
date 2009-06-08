@@ -1,6 +1,12 @@
 = RKelly CHANGELOG
 
-== 0.0.1
+=== 1.0.1
+
+* Bugfixes
+
+  * Fixed nondeterministic file order loading issue.
+
+=== 0.0.1
 
 * Added dynamic method assignment
 * Birthday!
