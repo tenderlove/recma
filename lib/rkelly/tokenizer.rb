@@ -70,7 +70,7 @@ module RKelly
         [LITERALS[value], value]
       end
 
-      token(:IDENT, /\A(\w|\$)+/) do |type,value|
+      token(:IDENT, /\A([_\$A-Za-z][_\$0-9A-Za-z]*)/) do |type,value|
         if KEYWORDS.include?(value)
           [value.upcase.to_sym, value]
         elsif RESERVED.include?(value)

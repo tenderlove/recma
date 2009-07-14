@@ -49,6 +49,11 @@ class TokenizerTest < Test::Unit::TestCase
     assert_tokens([[:IDENT, 'foo']], tokens)
   end
 
+  def test_ignore_identifier
+    tokens = @tokenizer.tokenize("0foo")
+    assert_tokens([[:NUMBER, 0], [:IDENT, 'foo']], tokens)
+  end
+
   def test_increment
     tokens = @tokenizer.tokenize("foo += 1;")
     assert_tokens([
