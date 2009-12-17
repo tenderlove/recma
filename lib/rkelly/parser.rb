@@ -40,6 +40,10 @@ module RKelly
       apply_comments(ast)
     end
 
+    def yyabort
+      raise "something bad happened, please report a bug with sample JavaScript"
+    end
+
     private
     def apply_comments(ast)
       ast_hash = Hash.new { |h,k| h[k] = [] }
