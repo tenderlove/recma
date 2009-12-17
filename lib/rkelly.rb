@@ -3,6 +3,7 @@ require 'rkelly/visitable'
 require 'rkelly/visitors'
 require 'rkelly/parser'
 require 'rkelly/runtime'
+require 'rkelly/syntax_error'
 
 module RKelly
   class << self

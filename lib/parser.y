@@ -590,7 +590,7 @@ rule
   | ExprNoBF error {
       result = ExpressionStatementNode.new(val.first)
       debug(result)
-      yyabort unless allow_auto_semi?(val.last)
+      raise RKelly::SyntaxError unless allow_auto_semi?(val.last)
     }
   ;
 

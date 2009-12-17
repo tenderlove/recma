@@ -5,6 +5,12 @@ class ParserTest < Test::Unit::TestCase
     @parser = RKelly::Parser.new
   end
 
+  def test_birthday!
+    assert_raises(RKelly::SyntaxError) do
+      RKelly::Parser.new.parse "Happy birthday, tenderlove!"
+    end
+  end
+
   def test_array_access
     assert_sexp(
       [
