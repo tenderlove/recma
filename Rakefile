@@ -1,9 +1,8 @@
 require 'rubygems'
 require 'hoe'
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), "lib")
-
-require 'rkelly/constants'
+Hoe.plugin :gemspec # `gem install hoe-gemspec`
+Hoe.plugin :git     # `gem install hoe-git`
 
 GENERATED_PARSER = "lib/rkelly/generated_parser.rb"
 
