@@ -1,5 +1,13 @@
 = RKelly CHANGELOG
 
+=== 1.0.3
+
+* Bugfixes
+
+  * Fixed a typo in visitor.rb
+  * Fixed syntax error class
+  * Regex tonenization (thanks Josh Dzielak)
+
 === 1.0.1
 
 * Bugfixes
