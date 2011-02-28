@@ -51,6 +51,7 @@ lib/rkelly/parser.rb
 lib/rkelly/runtime.rb
 lib/rkelly/runtime/ruby_function.rb
 lib/rkelly/runtime/scope_chain.rb
+lib/rkelly/syntax_error.rb
 lib/rkelly/token.rb
 lib/rkelly/tokenizer.rb
 lib/rkelly/visitable.rb

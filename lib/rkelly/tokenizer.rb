@@ -45,6 +45,8 @@ module RKelly
       '/='  => :DIVEQUAL,
     }
 
+    TOKENS_THAT_IMPLY_DIVISION = [:IDENT, :NUMBER, ')', ']', '}']
+
     def initialize(&block)
       @lexemes = []
 
@@ -95,16 +97,21 @@ module RKelly
     def raw_tokens(string)
       tokens = []
       line_number = 1
+      accepting_regexp = true
       while string.length > 0
         longest_token = nil
 
         @lexemes.each { |lexeme|
+          next if lexeme.name == :REGEXP && !accepting_regexp
+
           match = lexeme.match(string)
           next if match.nil?
           longest_token = match if longest_token.nil?
           next if longest_token.value.length >= match.value.length
           longest_token = match
         }
+
+        accepting_regexp = followable_by_regex(longest_token)
 
         longest_token.line = line_number
         line_number += longest_token.value.scan(/\n/).length
@@ -117,6 +124,13 @@ module RKelly
     private
     def token(name, pattern = nil, &block)
       @lexemes << Lexeme.new(name, pattern, &block)
+    end
+
+    def followable_by_regex(current_token)
+     name = current_token.name
+     name = current_token.value if name == :SINGLE_CHAR
+     #the tokens that imply division vs. start of regex form a disjoint set
+     !TOKENS_THAT_IMPLY_DIVISION.include?(name)
     end
   end
 end
