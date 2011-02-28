@@ -29,7 +29,7 @@ module RKelly
       CONDITIONAL_NODES     = %w{ If Conditional }
       FUNC_CALL_NODES       = %w{ NewExpr FunctionCall }
       FUNC_DECL_NODES       = %w{ FunctionExpr FunctionDecl }
-      ALL_NODES = %w{ For ForIn Try BracketAccessor DotAcessor } +
+      ALL_NODES = %w{ For ForIn Try BracketAccessor DotAccessor } +
         TERMINAL_NODES + SINGLE_VALUE_NODES + BINARY_NODES + ARRAY_VALUE_NODES +
         NAME_VALUE_NODES + PREFIX_POSTFIX_NODES + CONDITIONAL_NODES +
         FUNC_CALL_NODES + FUNC_DECL_NODES
