@@ -183,6 +183,12 @@ class ECMAVisitorTest < Test::Unit::TestCase
     assert_to_ecma('for(foo in bar) { var x = 10; }')
   end
 
+  def test_for_node
+    assert_to_ecma('for(var i = 0; i < 10; i++) { var x = 10; }')
+    assert_to_ecma('var i = 0; for(; i < 10; i++) { var x = 10; }')
+    assert_to_ecma('var i; for(i = 0; i < 6; ++i) { var x = 10; }')
+  end
+
   def assert_to_ecma(expected, actual = nil)
     ecma = @parser.parse(actual || expected).to_ecma
     ecma = ecma.gsub(/\n/, ' ').gsub(/\s+/, ' ')
