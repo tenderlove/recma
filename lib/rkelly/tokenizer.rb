@@ -89,7 +89,7 @@ module RKelly
         [value, value]
       end
     end
-  
+
     def tokenize(string)
       raw_tokens(string).map { |x| x.to_racc_token }
     end

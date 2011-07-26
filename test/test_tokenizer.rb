@@ -64,7 +64,7 @@ class TokenizerTest < Test::Unit::TestCase
     ], tokens)
   end
 
-  def test_regex
+  def test_regular_expression
     tokens = @tokenizer.tokenize("foo = /=asdf/;")
     assert_tokens([
                  [:IDENT, 'foo'],
@@ -72,6 +72,20 @@ class TokenizerTest < Test::Unit::TestCase
                  [:REGEXP, '/=asdf/'],
                  [';', ';'],
     ], tokens)
+  end
+
+  def test_regular_expression_invalid
+    tokens = @tokenizer.tokenize("foo = (1 / 2) / 3")
+    assert_tokens([[:IDENT, "foo"],
+                   ["=", "="],
+                   ["(", "("],
+                   [:NUMBER, 1],
+                   ["/", "/"],
+                   [:NUMBER, 2],
+                   [")", ")"],
+                   ["/", "/"],
+                   [:NUMBER, 3]
+                  ], tokens)
   end
 
   def test_regular_expression_escape

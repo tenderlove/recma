@@ -181,7 +181,8 @@ rule
   ;
 
   CallExprNoBF:
-    MemberExprNoBF Arguments  { result = FunctionCallNode.new(val[0], val[1]) }
+    VOID '(' MemberExpr ')' { result = FunctionCallNode.new(ResolveNode.new(val[0]), val[2]) }
+  | MemberExprNoBF Arguments  { result = FunctionCallNode.new(val[0], val[1]) }
   | CallExprNoBF Arguments    { result = FunctionCallNode.new(val[0], val[1]) }
   | CallExprNoBF '[' Expr ']' { result = BracketAccessorNode.new(val[0], val[2]) }
   | CallExprNoBF '.' IDENT    { result = DotAccessorNode.new(val[0], val[2]) }
