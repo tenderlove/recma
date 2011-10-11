@@ -6,7 +6,7 @@ module RKelly
         String This True
       }
       SINGLE_VALUE_NODES = %w{
-        AssignExpr BitwiseNot Block Delete Element ExpressionStatement
+        Parenthetical AssignExpr BitwiseNot Block Delete Element ExpressionStatement
         FunctionBody LogicalNot Return Throw TypeOf UnaryMinus UnaryPlus Void
       }
       BINARY_NODES = %w{

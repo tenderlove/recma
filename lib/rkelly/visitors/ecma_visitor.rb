@@ -5,6 +5,10 @@ module RKelly
         @indent = 0
       end
 
+      def visit_ParentheticalNode(o)
+        "(#{o.value.accept(self)})"
+      end
+
       def visit_SourceElementsNode(o)
         o.value.map { |x| "#{indent}#{x.accept(self)}" }.join("\n")
       end

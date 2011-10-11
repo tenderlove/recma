@@ -77,7 +77,7 @@ edge [ ];
       end
     end
 
-    %w[EmptyStatement ExpressionStatement True Delete Return TypeOf
+    %w[EmptyStatement Parenthetical ExpressionStatement True Delete Return TypeOf
        SourceElements Number LogicalNot AssignExpr FunctionBody
        ObjectLiteral UnaryMinus Throw This BitwiseNot Element String
        Array CaseBlock Null Break Parameter Block False Void Regexp

@@ -116,7 +116,7 @@ rule
   | Literal
   | ArrayLiteral
   | IDENT         { result = ResolveNode.new(val.first) }
-  | '(' Expr ')'  { result = val[1] }
+  | '(' Expr ')'  { result = ParentheticalNode.new(val[1]) }
   ;
 
   ArrayLiteral:
