@@ -35,6 +35,7 @@ module RKelly
 
       def visit_ForNode(o)
         init    = o.init ? o.init.accept(self) : ';'
+        init    << ';' unless init[-1] == ';' # make sure it has a ;
         test    = o.test ? o.test.accept(self) : ''
         counter = o.counter ? o.counter.accept(self) : ''
         "for(#{init} #{test}; #{counter}) #{o.value.accept(self)}"
