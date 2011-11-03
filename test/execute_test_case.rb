@@ -1,9 +1,9 @@
-require File.dirname(__FILE__) + "/helper"
-
 class ExecuteTestCase < Test::Unit::TestCase
   include RKelly::Nodes
 
-  undef :default_test
+  if defined? default_test
+    undef :default_test
+  end
 
   def assert_execute(expected, code)
     scope_chain = @runtime.execute(code)

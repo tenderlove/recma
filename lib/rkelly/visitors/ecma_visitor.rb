@@ -185,8 +185,6 @@ module RKelly
         [:Divide, '/'],
         [:Equal, '=='],
         [:Greater, '>'],
-        [:Greater, '>'],
-        [:GreaterOrEqual, '>='],
         [:GreaterOrEqual, '>='],
         [:In, 'in'],
         [:InstanceOf, 'instanceof'],

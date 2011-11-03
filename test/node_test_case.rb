@@ -1,9 +1,9 @@
-require File.dirname(__FILE__) + "/helper"
-
 class NodeTestCase < Test::Unit::TestCase
   include RKelly::Nodes
 
-  undef :default_test
+  if defined? default_test
+    undef :default_test
+  end
 
   def assert_sexp(expected, actual)
     assert_equal(expected, actual.to_sexp)

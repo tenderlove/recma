@@ -1,9 +1,9 @@
-require File.dirname(__FILE__) + "/helper"
-
 class ECMAScriptTestCase < Test::Unit::TestCase
   include RKelly::JS
 
-  undef :default_test
+  if defined? default_test
+    undef :default_test
+  end
 
   def setup
     @runtime = RKelly::Runtime.new
