@@ -111,7 +111,9 @@ module RKelly
           longest_token = match
         }
 
-        accepting_regexp = followable_by_regex(longest_token)
+        if longest_token.name != :S
+          accepting_regexp = followable_by_regex(longest_token)
+        end
 
         longest_token.line = line_number
         line_number += longest_token.value.scan(/\n/).length
