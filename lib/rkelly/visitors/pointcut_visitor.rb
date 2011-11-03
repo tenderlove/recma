@@ -23,7 +23,7 @@ module RKelly
       ALL_NODES.each do |type|
         define_method(:"visit_#{type}Node") do |o|
           @matches << o if @pattern === o
-          super
+          super(o)
         end
       end
     end
