@@ -1,7 +1,7 @@
 class ECMAScriptTestCase < Test::Unit::TestCase
   include RKelly::JS
 
-  if defined? default_test
+  if method_defined? :default_test
     undef :default_test
   end
 
