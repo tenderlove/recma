@@ -1,6 +1,6 @@
 module RKelly
   class Token
-    attr_accessor :name, :value, :transformer, :line
+    attr_accessor :name, :value, :transformer, :line, :character
     def initialize(name, value, &transformer)
       @name         = name
       @value        = value

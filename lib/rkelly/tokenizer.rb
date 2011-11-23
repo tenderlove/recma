@@ -97,6 +97,7 @@ module RKelly
     def raw_tokens(string)
       tokens = []
       line_number = 1
+      char_number = 1
       accepting_regexp = true
       while string.length > 0
         longest_token = nil
@@ -116,7 +117,17 @@ module RKelly
         end
 
         longest_token.line = line_number
-        line_number += longest_token.value.scan(/\n/).length
+        longest_token.character = char_number
+        if longest_token.value == "\n"
+          line_number += 1
+          char_number = 1
+        elsif longest_token.value.include?("\n")
+          line_number += longest_token.value.scan(/\n/).length
+          split_list = longest_token.value.split(/\n/)
+          char_number = split_list[-1].length + 1
+        else
+          char_number += longest_token.value.length
+        end
         string = string.slice(Range.new(longest_token.value.length, -1))
         tokens << longest_token
       end
