@@ -12,7 +12,7 @@ module RKelly
        DoWhile Switch LogicalAnd UnsignedRightShift Modulus While
        NotStrictEqual Less With In Greater BitOr StrictEqual LogicalOr
        BitXOr LeftShift Equal BitAnd InstanceOf Divide RightShift].each do |node|
-      eval "class #{node}Node < BinaryNode; end"
+      const_set "#{node}Node", Class.new(BinaryNode)
     end
   end
 end
