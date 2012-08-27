@@ -232,7 +232,11 @@ module RKelly
       end
 
       def visit_CaseClauseNode(o)
-        case_code = "#{indent}case #{o.left ? o.left.accept(self) : nil}:\n"
+        if o.left
+          case_code = "#{indent}case #{o.left.accept(self)}:\n"
+        else
+          case_code = "#{indent}default:\n"
+        end
         @indent += 1
         case_code += "#{o.value.accept(self)}\n"
         @indent -= 1

@@ -110,6 +110,17 @@ class ECMAVisitorTest < Test::Unit::TestCase
     }")
   end
 
+  def test_switch_default_node
+    assert_to_ecma("switch(a) {
+                   case 1:
+                    foo();
+                   break;
+                   default:
+                    bar();
+                   break;
+    }")
+  end
+
   def test_do_while_node
     assert_to_ecma("do { foo(); } while(true);")
   end
