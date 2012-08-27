@@ -8,7 +8,7 @@ module RKelly
       end
     end
 
-    %w[Subtract LessOrEqual GreaterOrEqual Add Multiply While NotEqual
+    %w[Subtract LessOrEqual GreaterOrEqual Add Multiply NotEqual
        DoWhile Switch LogicalAnd UnsignedRightShift Modulus While
        NotStrictEqual Less With In Greater BitOr StrictEqual LogicalOr
        BitXOr LeftShift Equal BitAnd InstanceOf Divide RightShift].each do |node|
