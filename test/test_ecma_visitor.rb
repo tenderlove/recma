@@ -192,6 +192,7 @@ class ECMAVisitorTest < Test::Unit::TestCase
 
   def test_for_in_node
     assert_to_ecma('for(foo in bar) { var x = 10; }')
+    assert_to_ecma('for(var foo in bar) { var x = 10; }')
   end
 
   def test_for_node

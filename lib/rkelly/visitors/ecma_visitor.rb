@@ -296,7 +296,8 @@ module RKelly
       end
 
       def visit_ForInNode(o)
-        "for(#{o.left.accept(self)} in #{o.right.accept(self)}) " +
+        var = o.left.is_a?(RKelly::Nodes::VarDeclNode) ? 'var ' : ''
+        "for(#{var}#{o.left.accept(self)} in #{o.right.accept(self)}) " +
           "#{o.value.accept(self)}"
       end
 
