@@ -100,6 +100,7 @@ class TokenizerTest < Test::Unit::TestCase
 
   def test_regular_expression_is_not_found_if_prev_token_implies_division
     {:IDENT => 'foo',
+     :TRUE => 'true',
      :NUMBER => 1,
      ')' => ')',
      ']' => ']',
@@ -111,6 +112,17 @@ class TokenizerTest < Test::Unit::TestCase
                    [:NUMBER, 2],
                    ["/", "/"],
                    [:NUMBER, 3],
+      ], tokens)
+    end
+  end
+
+  def test_regular_expression_is_found_if_prev_token_is_non_literal_keyword
+    {:RETURN => 'return',
+     :THROW => 'throw'}.each do |name, value|
+      tokens = @tokenizer.tokenize("#{value}/2/")
+      assert_tokens([
+                  [name, value],
+                   [:REGEXP, "/2/"],
       ], tokens)
     end
   end
