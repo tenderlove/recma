@@ -127,6 +127,14 @@ class TokenizerTest < Test::Unit::TestCase
     end
   end
 
+  def test_regular_expression_is_not_found_if_block_comment_with_re_modifier
+    tokens = @tokenizer.tokenize("/**/i")
+    assert_tokens([
+      [:COMMENT, "/**/"],
+      [:IDENT, "i"]
+    ], tokens)
+  end
+
   def test_comment_assign
     tokens = @tokenizer.tokenize("foo = /**/;")
     assert_tokens([
