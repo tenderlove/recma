@@ -45,7 +45,15 @@ module RKelly
       '/='  => :DIVEQUAL,
     }
 
-    TOKENS_THAT_IMPLY_DIVISION = [:IDENT, :NUMBER, ')', ']', '}']
+    # Some keywords can be followed by regular expressions (eg, return and throw).
+    # Others can be followed by division.
+    KEYWORDS_THAT_IMPLY_DIVISION = %w{
+      this true false null
+    }
+
+    KEYWORDS_THAT_IMPLY_REGEX = KEYWORDS - KEYWORDS_THAT_IMPLY_DIVISION
+
+    SINGLE_CHARS_THAT_IMPLY_DIVISION = [')', ']', '}']
 
     def initialize(&block)
       @lexemes = []
@@ -72,13 +80,13 @@ module RKelly
         [LITERALS[value], value]
       end
 
-      token(:IDENT, /\A([_\$A-Za-z][_\$0-9A-Za-z]*)/) do |type,value|
+      token(:RAW_IDENT, /\A([_\$A-Za-z][_\$0-9A-Za-z]*)/) do |type,value|
         if KEYWORDS.include?(value)
           [value.upcase.to_sym, value]
         elsif RESERVED.include?(value)
           [:RESERVED, value]
         else
-          [type, value]
+          [:IDENT, value]
         end
       end
 
@@ -129,10 +137,16 @@ module RKelly
     end
 
     def followable_by_regex(current_token)
-     name = current_token.name
-     name = current_token.value if name == :SINGLE_CHAR
-     #the tokens that imply division vs. start of regex form a disjoint set
-     !TOKENS_THAT_IMPLY_DIVISION.include?(name)
+      case current_token.name
+      when :RAW_IDENT
+        KEYWORDS_THAT_IMPLY_REGEX.include?(current_token.value)
+      when :NUMBER
+        false
+      when :SINGLE_CHAR
+        !SINGLE_CHARS_THAT_IMPLY_DIVISION.include?(current_token.value)
+      else
+        true
+      end
     end
   end
 end
