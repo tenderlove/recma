@@ -11,5 +11,9 @@ module RKelly
       return transformer.call(name, value) if transformer
       [name, value]
     end
+
+    def to_s
+      return "#{self.name}: #{self.value}"
+    end
   end
 end
