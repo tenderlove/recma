@@ -99,7 +99,7 @@ module RKelly
       # (eg, // and //g). Here we could depend on match length and priority to
       # determine that these are actually comments, but it turns out to be
       # easier to not match them in the first place.
-      token(:REGEXP, /\A\/(?:[^\/\r\n\\*]|\\[^\r\n])[^\/\r\n\\]*(?:\\[^\r\n][^\/\r\n\\]*)*\/[gi]*/)
+      token(:REGEXP, /\A\/(?:[^\/\r\n\\*]|\\[^\r\n])[^\/\r\n\\]*(?:\\[^\r\n][^\/\r\n\\]*)*\/[gim]*/)
       token(:S, /\A[\s\r\n]*/m)
 
       token(:SINGLE_CHAR, /\A./) do |type, value|
