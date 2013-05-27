@@ -5,7 +5,7 @@ module RKelly
       include RKelly::Visitors
       include Enumerable
 
-      attr_accessor :value, :comments, :line, :filename
+      attr_accessor :value, :comments, :line, :character, :filename
       def initialize(value)
         @value = value
         @comments = []

@@ -15,6 +15,7 @@ module RKelly
             }, _values, result)
           if token = val.find { |v| v.is_a?(Token) }
             r.line = token.line if r.respond_to?(:line)
+            r.character = token.character if r.respond_to?(:character)
             r.filename = @filename if r.respond_to?(:filename)
           end
           r
