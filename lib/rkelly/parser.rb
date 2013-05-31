@@ -13,8 +13,9 @@ module RKelly
           r = super(val.map { |v|
               v.is_a?(Token) ? v.to_racc_token[1] : v
             }, _values, result)
-          if token = val.find { |v| v.is_a?(Token) }
-            r.line = token.line if r.respond_to?(:line)
+          unless (tokens = val.select { |v| v.is_a?(Token) }).empty?
+            r.line = tokens.first.line if r.respond_to?(:line)
+            r.lines = tokens.last.line - tokens.first.line + 1 if r.respond_to?(:lines)
             r.filename = @filename if r.respond_to?(:filename)
           end
           r

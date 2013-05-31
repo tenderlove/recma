@@ -5,11 +5,11 @@ module RKelly
       include RKelly::Visitors
       include Enumerable
 
-      attr_accessor :value, :comments, :line, :filename
+      attr_accessor :value, :comments, :line, :lines, :filename
       def initialize(value)
         @value = value
         @comments = []
-        @filename = @line = nil
+        @filename = @line = @lines = nil
       end
 
       def ==(other)
