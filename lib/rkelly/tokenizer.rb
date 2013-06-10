@@ -1,5 +1,4 @@
 require 'rkelly/lexeme'
-require 'strscan'
 
 module RKelly
   class Tokenizer
@@ -113,17 +112,16 @@ module RKelly
     end
 
     def raw_tokens(string)
-      scanner = StringScanner.new(string)
       tokens = []
       line_number = 1
       accepting_regexp = true
-      while !scanner.eos?
+      while string.length > 0
         longest_token = nil
 
         @lexemes.each { |lexeme|
           next if lexeme.name == :REGEXP && !accepting_regexp
 
-          match = lexeme.match(scanner)
+          match = lexeme.match(string)
           next if match.nil?
           longest_token = match if longest_token.nil?
           next if longest_token.value.length >= match.value.length
@@ -136,7 +134,7 @@ module RKelly
 
         longest_token.line = line_number
         line_number += longest_token.value.scan(/\n/).length
-        scanner.pos += longest_token.value.length
+        string = string.slice(Range.new(longest_token.value.length, -1))
         tokens << longest_token
       end
       tokens
