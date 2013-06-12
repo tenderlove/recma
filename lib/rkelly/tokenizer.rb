@@ -115,7 +115,7 @@ module RKelly
     def raw_tokens(string)
       scanner = StringScanner.new(string)
       tokens = []
-      line_number = 1
+      position = [1, 1]
       accepting_regexp = true
       while !scanner.eos?
         longest_token = nil
@@ -134,10 +134,16 @@ module RKelly
           accepting_regexp = followable_by_regex(longest_token)
         end
 
-        old_line_number = line_number
-        line_number += longest_token.value.scan(/\n/).length
+        old_position = position
+        if longest_token.value.include?("\n")
+          lines = longest_token.value.split(/\n/, -1)
+          position = [old_position[0] + lines.length - 1, lines.last.length]
+        else
+          position = [old_position[0], old_position[1] + longest_token.value.length]
+        end
+
         scanner.pos += longest_token.value.length
-        longest_token.range = [old_line_number, line_number]
+        longest_token.range = [[old_position[0], old_position[1]+1], position]
         tokens << longest_token
       end
       tokens
