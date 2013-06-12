@@ -57,31 +57,33 @@ module RKelly
     SINGLE_CHARS_THAT_IMPLY_DIVISION = [')', ']', '}']
 
     def initialize(&block)
-      @lexemes = []
+      @lexemes = Hash.new {|hash, key| hash[key] = [] }
 
-      token(:COMMENT, /\A\/(?:\*(?:.)*?\*\/|\/[^\n]*)/m)
-      token(:STRING, /\A"(?:[^"\\]*(?:\\.[^"\\]*)*)"|\A'(?:[^'\\]*(?:\\.[^'\\]*)*)'/m)
+      token(:COMMENT, /\A\/(?:\*(?:.)*?\*\/|\/[^\n]*)/m, ['/'])
+      token(:STRING, /\A"(?:[^"\\]*(?:\\.[^"\\]*)*)"|\A'(?:[^'\\]*(?:\\.[^'\\]*)*)'/m, ["'", '"'])
 
       # A regexp to match floating point literals (but not integer literals).
-      token(:NUMBER, /\A\d+\.\d*(?:[eE][-+]?\d+)?|\A\d+(?:\.\d*)?[eE][-+]?\d+|\A\.\d+(?:[eE][-+]?\d+)?/m) do |type, value|
+      digits = ('0'..'9').to_a
+      token(:NUMBER, /\A\d+\.\d*(?:[eE][-+]?\d+)?|\A\d+(?:\.\d*)?[eE][-+]?\d+|\A\.\d+(?:[eE][-+]?\d+)?/m, digits+['.']) do |type, value|
         value.gsub!(/\.(\D)/, '.0\1') if value =~ /\.\w/
         value.gsub!(/\.$/, '.0') if value =~ /\.$/
         value.gsub!(/^\./, '0.') if value =~ /^\./
         [type, eval(value)]
       end
-      token(:NUMBER, /\A0[xX][\da-fA-F]+|\A0[0-7]*|\A\d+/) do |type, value|
+      token(:NUMBER, /\A0[xX][\da-fA-F]+|\A0[0-7]*|\A\d+/, digits) do |type, value|
         [type, eval(value)]
       end
 
-      token(:LITERALS,
-        Regexp.new(LITERALS.keys.sort_by { |x|
+      literal_chars = LITERALS.keys.map {|k| k.slice(0,1) }.uniq
+      literal_regex = Regexp.new(LITERALS.keys.sort_by { |x|
           x.length
-        }.reverse.map { |x| "\\A#{x.gsub(/([|+*^])/, '\\\\\1')}" }.join('|')
-      )) do |type, value|
+        }.reverse.map { |x| "\\A#{x.gsub(/([|+*^])/, '\\\\\1')}" }.join('|'))
+      token(:LITERALS, literal_regex, literal_chars) do |type, value|
         [LITERALS[value], value]
       end
 
-      token(:RAW_IDENT, /\A([_\$A-Za-z][_\$0-9A-Za-z]*)/) do |type,value|
+      word_chars = ('a'..'z').to_a + ('A'..'Z').to_a + ['_', '$']
+      token(:RAW_IDENT, /\A([_\$A-Za-z][_\$0-9A-Za-z]*)/, word_chars) do |type,value|
         if KEYWORDS.include?(value)
           [value.upcase.to_sym, value]
         elsif RESERVED.include?(value)
@@ -100,10 +102,11 @@ module RKelly
       # (eg, // and //g). Here we could depend on match length and priority to
       # determine that these are actually comments, but it turns out to be
       # easier to not match them in the first place.
-      token(:REGEXP, /\A\/(?:[^\/\r\n\\*]|\\[^\r\n])[^\/\r\n\\]*(?:\\[^\r\n][^\/\r\n\\]*)*\/[gim]*/)
-      token(:S, /\A[\s\r\n]*/m)
+      token(:REGEXP, /\A\/(?:[^\/\r\n\\*]|\\[^\r\n])[^\/\r\n\\]*(?:\\[^\r\n][^\/\r\n\\]*)*\/[gim]*/, ['/'])
+      token(:S, /\A[\s\r\n]*/m, [" ", "\t", "\r", "\n", "\f"])
 
-      token(:SINGLE_CHAR, /\A./) do |type, value|
+      symbols = ('!'..'/').to_a + (':'..'@').to_a + ('['..'^').to_a + ['`'] + ('{'..'~').to_a
+      token(:SINGLE_CHAR, /\A./, symbols) do |type, value|
         [value, value]
       end
     end
@@ -120,7 +123,7 @@ module RKelly
       while !scanner.eos?
         longest_token = nil
 
-        @lexemes.each { |lexeme|
+        @lexemes[scanner.peek(1)].each { |lexeme|
           next if lexeme.name == :REGEXP && !accepting_regexp
 
           match = lexeme.match(scanner)
@@ -143,8 +146,15 @@ module RKelly
     end
 
     private
-    def token(name, pattern = nil, &block)
-      @lexemes << Lexeme.new(name, pattern, &block)
+
+    # Registers a lexeme and maps it to all the characters it can
+    # begin with.  So later when scanning the source we only need to
+    # match those lexemes that can begin with the character we're at.
+    def token(name, pattern, chars, &block)
+      lexeme = Lexeme.new(name, pattern, &block)
+      chars.each do |c|
+        @lexemes[c] << lexeme
+      end
     end
 
     def followable_by_regex(current_token)
