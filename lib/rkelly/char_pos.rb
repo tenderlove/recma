@@ -24,8 +24,10 @@ module RKelly
     end
 
     def to_s
-      "{line:#{@line} char:#{@char} index:#{@index}}"
+      "{line:#{@line} char:#{@char} (#{@index})}"
     end
+
+    alias_method :inspect, :to_s
 
     # A re-usable empty position
     EMPTY = CharPos.new(1,0,-1)

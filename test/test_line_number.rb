@@ -34,10 +34,10 @@ class LineNumberTest < NodeTestCase
     eojs
     func = ast.pointcut(FunctionDeclNode).matches.first
     assert func
-    assert_equal("<{line:4 char:7 index:68} .. {line:7 char:7 index:135}>", func.range.to_s)
+    assert_equal("<{line:4 char:7 (68)}...{line:7 char:7 (135)}>", func.range.to_s)
 
     return_node = ast.pointcut(ReturnNode).matches.first
     assert return_node
-    assert_equal("<{line:6 char:9 index:115} .. {line:6 char:21 index:127}>", return_node.range.to_s)
+    assert_equal("<{line:6 char:9 (115)}...{line:6 char:21 (127)}>", return_node.range.to_s)
   end
 end

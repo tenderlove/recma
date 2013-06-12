@@ -20,8 +20,10 @@ module RKelly
     end
 
     def to_s
-      "<#{@from} .. #{@to}>"
+      "<#{@from}...#{@to}>"
     end
+
+    alias_method :inspect, :to_s
 
     # A re-usable empty range
     EMPTY = CharRange.new(CharPos::EMPTY, CharPos::EMPTY)
