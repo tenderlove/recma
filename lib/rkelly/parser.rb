@@ -41,7 +41,8 @@ module RKelly
       @position = 0
       @filename = filename
       ast = do_parse
-      apply_comments(ast)
+      ast.comments = @comments if ast
+      ast
     end
 
     def yyabort
@@ -49,27 +50,6 @@ module RKelly
     end
 
     private
-    def apply_comments(ast)
-      ast_hash = Hash.new { |h,k| h[k] = [] }
-      (ast || []).each { |n|
-        next unless n.line
-        ast_hash[n.line] << n
-      }
-      max = ast_hash.keys.sort.last
-
-      @comments.each do |comment|
-        node = nil
-        comment.line.upto(max) do |line|
-          if ast_hash.key?(line)
-            node = ast_hash[line].first
-            break
-          end
-        end
-        node.comments << comment if node
-      end if max
-      ast
-    end
-
     def on_error(error_token_id, error_value, value_stack)
       if logger
         logger.error(token_to_str(error_token_id))
