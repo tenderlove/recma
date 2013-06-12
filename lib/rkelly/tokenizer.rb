@@ -1,4 +1,5 @@
 require 'rkelly/lexeme'
+require 'rkelly/char_range'
 require 'strscan'
 
 module RKelly
@@ -115,7 +116,7 @@ module RKelly
     def raw_tokens(string)
       scanner = StringScanner.new(string)
       tokens = []
-      position = [1, 1]
+      range = CharRange::EMPTY
       accepting_regexp = true
       while !scanner.eos?
         longest_token = nil
@@ -134,16 +135,9 @@ module RKelly
           accepting_regexp = followable_by_regex(longest_token)
         end
 
-        old_position = position
-        if longest_token.value.include?("\n")
-          lines = longest_token.value.split(/\n/, -1)
-          position = [old_position[0] + lines.length - 1, lines.last.length]
-        else
-          position = [old_position[0], old_position[1] + longest_token.value.length]
-        end
-
+        range = range.next(longest_token.value)
         scanner.pos += longest_token.value.length
-        longest_token.range = [[old_position[0], old_position[1]+1], position]
+        longest_token.range = range
         tokens << longest_token
       end
       tokens

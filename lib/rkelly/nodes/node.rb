@@ -9,13 +9,13 @@ module RKelly
       def initialize(value)
         @value = value
         @comments = []
-        @range = [[],[]]
+        @range = CharRange::EMPTY
         @filename = nil
       end
 
       # For backwards compatibility
       def line
-        @range[0][0]
+        @range.from.line
       end
 
       def ==(other)

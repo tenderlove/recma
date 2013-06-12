@@ -9,7 +9,7 @@ module RKelly
 
     # For backwards compatibility
     def line
-      @range[0][0]
+      @range.from.line
     end
 
     def to_racc_token

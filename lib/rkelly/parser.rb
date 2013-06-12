@@ -18,7 +18,7 @@ module RKelly
           first = suitable_values.first
           last = suitable_values.last
           if first
-            r.range = [first.range[0], last.range[1]] if r.respond_to?(:range)
+            r.range = CharRange.new(first.range.from, last.range.to) if r.respond_to?(:range)
             r.filename = @filename if r.respond_to?(:filename)
           end
           r
