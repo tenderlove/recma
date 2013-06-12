@@ -134,9 +134,10 @@ module RKelly
           accepting_regexp = followable_by_regex(longest_token)
         end
 
-        longest_token.line = line_number
+        old_line_number = line_number
         line_number += longest_token.value.scan(/\n/).length
         scanner.pos += longest_token.value.length
+        longest_token.range = [old_line_number, line_number]
         tokens << longest_token
       end
       tokens

@@ -13,8 +13,12 @@ module RKelly
           r = super(val.map { |v|
               v.is_a?(Token) ? v.to_racc_token[1] : v
             }, _values, result)
-          if token = val.find { |v| v.is_a?(Token) }
-            r.line = token.line if r.respond_to?(:line)
+
+          suitable_values = val.find_all {|v| v.is_a?(Node) || v.is_a?(Token) }
+          first = suitable_values.first
+          last = suitable_values.last
+          if first
+            r.range = [first.range[0], last.range[1]] if r.respond_to?(:range)
             r.filename = @filename if r.respond_to?(:filename)
           end
           r
@@ -52,6 +56,7 @@ module RKelly
         ast_hash[n.line] << n
       }
       max = ast_hash.keys.sort.last
+
       @comments.each do |comment|
         node = nil
         comment.line.upto(max) do |line|
