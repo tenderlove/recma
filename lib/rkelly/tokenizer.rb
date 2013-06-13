@@ -59,31 +59,31 @@ module RKelly
     def initialize(&block)
       @lexemes = Hash.new {|hash, key| hash[key] = [] }
 
-      token(:COMMENT, /\A\/(?:\*(?:.)*?\*\/|\/[^\n]*)/m, ['/'])
-      token(:STRING, /\A"(?:[^"\\]*(?:\\.[^"\\]*)*)"|\A'(?:[^'\\]*(?:\\.[^'\\]*)*)'/m, ["'", '"'])
+      token(:COMMENT, /\/(?:\*(?:.)*?\*\/|\/[^\n]*)/m, ['/'])
+      token(:STRING, /"(?:[^"\\]*(?:\\.[^"\\]*)*)"|'(?:[^'\\]*(?:\\.[^'\\]*)*)'/m, ["'", '"'])
 
       # A regexp to match floating point literals (but not integer literals).
       digits = ('0'..'9').to_a
-      token(:NUMBER, /\A\d+\.\d*(?:[eE][-+]?\d+)?|\A\d+(?:\.\d*)?[eE][-+]?\d+|\A\.\d+(?:[eE][-+]?\d+)?/m, digits+['.']) do |type, value|
+      token(:NUMBER, /\d+\.\d*(?:[eE][-+]?\d+)?|\d+(?:\.\d*)?[eE][-+]?\d+|\.\d+(?:[eE][-+]?\d+)?/m, digits+['.']) do |type, value|
         value.gsub!(/\.(\D)/, '.0\1') if value =~ /\.\w/
         value.gsub!(/\.$/, '.0') if value =~ /\.$/
         value.gsub!(/^\./, '0.') if value =~ /^\./
         [type, eval(value)]
       end
-      token(:NUMBER, /\A0[xX][\da-fA-F]+|\A0[0-7]*|\A\d+/, digits) do |type, value|
+      token(:NUMBER, /0[xX][\da-fA-F]+|0[0-7]*|\d+/, digits) do |type, value|
         [type, eval(value)]
       end
 
       literal_chars = LITERALS.keys.map {|k| k.slice(0,1) }.uniq
       literal_regex = Regexp.new(LITERALS.keys.sort_by { |x|
           x.length
-        }.reverse.map { |x| "\\A#{x.gsub(/([|+*^])/, '\\\\\1')}" }.join('|'))
+        }.reverse.map { |x| "#{x.gsub(/([|+*^])/, '\\\\\1')}" }.join('|'))
       token(:LITERALS, literal_regex, literal_chars) do |type, value|
         [LITERALS[value], value]
       end
 
       word_chars = ('a'..'z').to_a + ('A'..'Z').to_a + ['_', '$']
-      token(:RAW_IDENT, /\A([_\$A-Za-z][_\$0-9A-Za-z]*)/, word_chars) do |type,value|
+      token(:RAW_IDENT, /([_\$A-Za-z][_\$0-9A-Za-z]*)/, word_chars) do |type,value|
         if KEYWORDS.include?(value)
           [value.upcase.to_sym, value]
         elsif RESERVED.include?(value)
@@ -102,11 +102,11 @@ module RKelly
       # (eg, // and //g). Here we could depend on match length and priority to
       # determine that these are actually comments, but it turns out to be
       # easier to not match them in the first place.
-      token(:REGEXP, /\A\/(?:[^\/\r\n\\*]|\\[^\r\n])[^\/\r\n\\]*(?:\\[^\r\n][^\/\r\n\\]*)*\/[gim]*/, ['/'])
-      token(:S, /\A[\s\r\n]*/m, [" ", "\t", "\r", "\n", "\f"])
+      token(:REGEXP, /\/(?:[^\/\r\n\\*]|\\[^\r\n])[^\/\r\n\\]*(?:\\[^\r\n][^\/\r\n\\]*)*\/[gim]*/, ['/'])
+      token(:S, /[\s\r\n]*/m, [" ", "\t", "\r", "\n", "\f"])
 
       symbols = ('!'..'/').to_a + (':'..'@').to_a + ('['..'^').to_a + ['`'] + ('{'..'~').to_a
-      token(:SINGLE_CHAR, /\A./, symbols) do |type, value|
+      token(:SINGLE_CHAR, /./, symbols) do |type, value|
         [value, value]
       end
     end
