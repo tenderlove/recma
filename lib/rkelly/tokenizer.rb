@@ -3,20 +3,20 @@ require 'strscan'
 
 module RKelly
   class Tokenizer
-    KEYWORDS = %w{
+    KEYWORDS = Hash[%w{
       break case catch continue default delete do else finally for function
       if in instanceof new return switch this throw try typeof var void while
       with
 
       const true false null debugger
-    }
+    }.map {|kw| [kw, kw.upcase.to_sym] }]
 
-    RESERVED = %w{
+    RESERVED = Hash[%w{
       abstract boolean byte char class double enum export extends
       final float goto implements import int interface long native package
       private protected public short static super synchronized throws
       transient volatile
-    }
+    }.map {|kw| [kw, true] }]
 
     LITERALS = {
       # Punctuators
@@ -48,13 +48,20 @@ module RKelly
 
     # Some keywords can be followed by regular expressions (eg, return and throw).
     # Others can be followed by division.
-    KEYWORDS_THAT_IMPLY_DIVISION = %w{
-      this true false null
+    KEYWORDS_THAT_IMPLY_DIVISION = {
+      'this' => true,
+      'true' => true,
+      'false' => true,
+      'null' => true,
     }
 
-    KEYWORDS_THAT_IMPLY_REGEX = KEYWORDS - KEYWORDS_THAT_IMPLY_DIVISION
+    KEYWORDS_THAT_IMPLY_REGEX = KEYWORDS.reject {|k,v| KEYWORDS_THAT_IMPLY_DIVISION[k] }
 
-    SINGLE_CHARS_THAT_IMPLY_DIVISION = [')', ']', '}']
+    SINGLE_CHARS_THAT_IMPLY_DIVISION = {
+      ')' => true,
+      ']' => true,
+      '}' => true,
+    }
 
     def initialize(&block)
       @lexemes = Hash.new {|hash, key| hash[key] = [] }
@@ -77,9 +84,9 @@ module RKelly
 
       word_chars = ('a'..'z').to_a + ('A'..'Z').to_a + ['_', '$']
       token(:RAW_IDENT, /([_\$A-Za-z][_\$0-9A-Za-z]*)/, word_chars) do |type,value|
-        if KEYWORDS.include?(value)
-          [value.upcase.to_sym, value]
-        elsif RESERVED.include?(value)
+        if KEYWORDS[value]
+          [KEYWORDS[value], value]
+        elsif RESERVED[value]
           [:RESERVED, value]
         else
           [:IDENT, value]
@@ -160,11 +167,11 @@ module RKelly
     def followable_by_regex(current_token)
       case current_token.name
       when :RAW_IDENT
-        KEYWORDS_THAT_IMPLY_REGEX.include?(current_token.value)
+        KEYWORDS_THAT_IMPLY_REGEX[current_token.value]
       when :NUMBER
         false
       when :SINGLE_CHAR
-        !SINGLE_CHARS_THAT_IMPLY_DIVISION.include?(current_token.value)
+        !SINGLE_CHARS_THAT_IMPLY_DIVISION[current_token.value]
       else
         true
       end
