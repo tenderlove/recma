@@ -61,6 +61,7 @@ module RKelly
 
       token(:COMMENT, /\/(?:\*(?:.)*?\*\/|\/[^\n]*)/m, ['/'])
       token(:STRING, /"(?:[^"\\]*(?:\\.[^"\\]*)*)"|'(?:[^'\\]*(?:\\.[^'\\]*)*)'/m, ["'", '"'])
+      token(:S, /[\s\r\n]*/m, [" ", "\t", "\r", "\n", "\f"])
 
       # A regexp to match floating point literals (but not integer literals).
       digits = ('0'..'9').to_a
@@ -72,14 +73,6 @@ module RKelly
       end
       token(:NUMBER, /0[xX][\da-fA-F]+|0[0-7]*|\d+/, digits) do |type, value|
         [type, eval(value)]
-      end
-
-      literal_chars = LITERALS.keys.map {|k| k.slice(0,1) }.uniq
-      literal_regex = Regexp.new(LITERALS.keys.sort_by { |x|
-          x.length
-        }.reverse.map { |x| "#{x.gsub(/([|+*^])/, '\\\\\1')}" }.join('|'))
-      token(:LITERALS, literal_regex, literal_chars) do |type, value|
-        [LITERALS[value], value]
       end
 
       word_chars = ('a'..'z').to_a + ('A'..'Z').to_a + ['_', '$']
@@ -103,7 +96,14 @@ module RKelly
       # determine that these are actually comments, but it turns out to be
       # easier to not match them in the first place.
       token(:REGEXP, /\/(?:[^\/\r\n\\*]|\\[^\r\n])[^\/\r\n\\]*(?:\\[^\r\n][^\/\r\n\\]*)*\/[gim]*/, ['/'])
-      token(:S, /[\s\r\n]*/m, [" ", "\t", "\r", "\n", "\f"])
+
+      literal_chars = LITERALS.keys.map {|k| k.slice(0,1) }.uniq
+      literal_regex = Regexp.new(LITERALS.keys.sort_by { |x|
+          x.length
+        }.reverse.map { |x| "#{x.gsub(/([|+*^])/, '\\\\\1')}" }.join('|'))
+      token(:LITERALS, literal_regex, literal_chars) do |type, value|
+        [LITERALS[value], value]
+      end
 
       symbols = ('!'..'/').to_a + (':'..'@').to_a + ('['..'^').to_a + ['`'] + ('{'..'~').to_a
       token(:SINGLE_CHAR, /./, symbols) do |type, value|
@@ -121,31 +121,31 @@ module RKelly
       line_number = 1
       accepting_regexp = true
       while !scanner.eos?
-        longest_token = nil
+        token = match_lexeme(scanner, accepting_regexp)
 
-        @lexemes[scanner.peek(1)].each { |lexeme|
-          next if lexeme.name == :REGEXP && !accepting_regexp
-
-          match = lexeme.match(scanner)
-          next if match.nil?
-          longest_token = match if longest_token.nil?
-          next if longest_token.value.length >= match.value.length
-          longest_token = match
-        }
-
-        if longest_token.name != :S
-          accepting_regexp = followable_by_regex(longest_token)
+        if token.name != :S
+          accepting_regexp = followable_by_regex(token)
         end
 
-        longest_token.line = line_number
-        line_number += longest_token.value.scan(/\n/).length
-        scanner.pos += longest_token.value.length
-        tokens << longest_token
+        token.line = line_number
+        line_number += token.value.scan(/\n/).length
+        scanner.pos += token.value.length
+        tokens << token
       end
       tokens
     end
 
     private
+
+    # Returns the token of the first matching lexeme
+    def match_lexeme(scanner, accepting_regexp)
+      @lexemes[scanner.peek(1)].each do |lexeme|
+        next if lexeme.name == :REGEXP && !accepting_regexp
+
+        token = lexeme.match(scanner)
+        return token if token
+      end
+    end
 
     # Registers a lexeme and maps it to all the characters it can
     # begin with.  So later when scanning the source we only need to
