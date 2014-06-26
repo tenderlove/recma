@@ -17,7 +17,7 @@ The RKelly library will parse JavaScript and return a parse tree.
   ast    = parser.parse(
     "for(var i = 0; i < 10; i++) { var x = 5 + 5; }"
   )
-  
+
   ast.each do |node|
     node.value  = 'hello' if node.value == 'i'
     node.name   = 'hello' if node.respond_to?(:name) && node.name == 'i'
@@ -26,13 +26,13 @@ The RKelly library will parse JavaScript and return a parse tree.
 
 == Acknowledgments
 
-The original javascript parser was was taken from rbnarcissus written by
+The original javascript parser was taken from rbnarcissus written by
 Paul Sowden.  Thanks Paul!
 
   http://idontsmoke.co.uk/2005/rbnarcissus/
 
 The current parser was ported from WebKit.  Thank you WebKit team!
-  
+
 == License
 
 The MIT License
