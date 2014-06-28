@@ -13,17 +13,14 @@ class CommentsTest < NodeTestCase
       }
     eojs
 
-    func = ast.pointcut(FunctionDeclNode).matches.first
-    assert func
-    assert_match('awesome', func.comments[0].value)
-    assert_match('side', func.comments[1].value)
-
-    return_node = ast.pointcut(ReturnNode).matches.first
-    assert return_node
-    assert_match('America', return_node.comments[0].value)
+    assert ast
+    assert_equal(3, ast.comments.length)
+    assert_match('awesome', ast.comments[0].value)
+    assert_match('side', ast.comments[1].value)
+    assert_match('America', ast.comments[2].value)
   end
 
-  def test_even_more_comments
+  def test_only_comments
     parser = RKelly::Parser.new
     ast = parser.parse(<<-eojs)
       /**
@@ -32,13 +29,17 @@ class CommentsTest < NodeTestCase
       /**
        * This is an awesome test comment.
        */
-      function aaron() { // This is a side comment
-        var x = 10;
-        return 1 + 1; // America!
-      }
     eojs
-    func = ast.pointcut(FunctionDeclNode).matches.first
-    assert func
-    assert_equal(3, func.comments.length)
+
+    assert ast
+    assert_equal(2, ast.comments.length)
+  end
+
+  def test_empty_source_results_in_zero_comments
+    parser = RKelly::Parser.new
+    ast = parser.parse("")
+
+    assert ast
+    assert_equal(0, ast.comments.length)
   end
 end

@@ -1,12 +1,13 @@
 require 'rkelly/lexeme'
+require 'rkelly/char_range'
 require 'strscan'
 
 module RKelly
   class Tokenizer
     KEYWORDS = %w{
       break case catch continue default delete do else finally for function
-      if in instanceof new return switch this throw try typeof var void while 
-      with 
+      if in instanceof new return switch this throw try typeof var void while
+      with
 
       const true false null debugger
     }
@@ -115,7 +116,7 @@ module RKelly
     def raw_tokens(string)
       scanner = StringScanner.new(string)
       tokens = []
-      line_number = 1
+      range = CharRange::EMPTY
       accepting_regexp = true
       while !scanner.eos?
         longest_token = nil
@@ -134,14 +135,14 @@ module RKelly
           accepting_regexp = followable_by_regex(longest_token)
         end
 
-        longest_token.line = line_number
-        line_number += longest_token.value.scan(/\n/).length
+        range = range.next(longest_token.value)
         scanner.pos += longest_token.value.length
+        longest_token.range = range
         tokens << longest_token
       end
       tokens
     end
-  
+
     private
     def token(name, pattern = nil, &block)
       @lexemes << Lexeme.new(name, pattern, &block)
