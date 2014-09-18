@@ -87,9 +87,7 @@ module RKelly
       end
 
       def visit_FunctionDeclNode(o)
-        "#{indent}function #{o.value}(" +
-          "#{o.arguments.map { |x| x.accept(self) }.join(', ')})" +
-          "#{o.function_body.accept(self)}"
+        "#{indent}function #{o.value}" + function_params_and_body(o)
       end
 
       def visit_ParameterNode(o)
@@ -269,15 +267,21 @@ module RKelly
       end
 
       def visit_GetterPropertyNode(o)
-        "get #{o.name}#{o.value.accept(self)}"
+        "get #{o.name}" + function_params_and_body(o.value)
       end
 
       def visit_SetterPropertyNode(o)
-        "set #{o.name}#{o.value.accept(self)}"
+        "set #{o.name}" + function_params_and_body(o.value)
       end
 
       def visit_FunctionExprNode(o)
-        "#{o.value}(#{o.arguments.map { |x| x.accept(self) }.join(', ')}) " +
+        name = (o.value == 'function') ? '' : ' '+o.value
+        "function" + name + function_params_and_body(o)
+      end
+
+      # Helper for all the various function nodes
+      def function_params_and_body(o)
+        "(#{o.arguments.map { |x| x.accept(self) }.join(', ')}) " +
           "#{o.function_body.accept(self)}"
       end
 

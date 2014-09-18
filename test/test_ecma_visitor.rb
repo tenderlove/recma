@@ -9,6 +9,9 @@ class ECMAVisitorTest < Test::Unit::TestCase
     assert_to_ecma('a = function() { };')
   end
 
+  def test_named_function_expr
+    assert_to_ecma('a = function b() { };')
+  end
 
   def test_this_node
     assert_to_ecma('this.foo;')
