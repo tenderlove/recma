@@ -132,14 +132,6 @@ class AutomaticSemicolonInsertionTest < Test::Unit::TestCase
   end
 
   def test_no_for_insertion_with_prefix_plus_plus
-    # RKelly erroneously inserts a semicolon after `b`:
-    assert_sexp([[:for, [:resolve, 'a'],
-                        [:resolve, 'b'],
-                        [:prefix, [:resolve, 'c'], '++'],
-                        [:block, []]]],
-                @parser.parse("for (a;\nb\n++c){}"))
-
-    # This correct code, on the other hand, fails to parse.
     assert_sexp([[:for, [:resolve, 'a'],
                         [:resolve, 'b'],
                         [:prefix, [:resolve, 'c'], '++'],
