@@ -27,6 +27,7 @@ module RKelly
       @tokens = []
       @logger = nil
       @terminator = false
+      @for_header_parentheses = 0
       @prev_token = nil
       @comments = []
     end
@@ -88,7 +89,21 @@ module RKelly
         end
       end while([:COMMENT, :S].include?(n_token.name))
 
+
+      if '(' == n_token.value
+        if 'for' == @prev_token.value
+          @for_header_parentheses = 1
+        elsif @for_header_parentheses > 0
+          @for_header_parentheses += 1
+        end
+      end
+
+      if ')' == n_token.value && @for_header_parentheses > 0
+        @for_header_parentheses -= 1
+      end
+
       if @terminator &&
+          0 == @for_header_parentheses &&
           ((@prev_token && %w[continue break return throw].include?(@prev_token.value)) ||
            (n_token && %w[++ --].include?(n_token.value)))
         @position -= 1

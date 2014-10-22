@@ -131,6 +131,22 @@ class AutomaticSemicolonInsertionTest < Test::Unit::TestCase
     assert_nil @parser.parse("for (a;b\n){}")
   end
 
+  def test_no_for_insertion_with_prefix_plus_plus
+    assert_sexp([[:for, [:resolve, 'a'],
+                        [:resolve, 'b'],
+                        [:prefix, [:resolve, 'c'], '++'],
+                        [:block, []]]],
+                @parser.parse("for (a;\nb;\n++c){}"))
+  end
+
+  def test_no_for_insertion_with_postfix_plus_plus
+    assert_sexp([[:for, [:resolve, 'a'],
+                        [:resolve, 'b'],
+                        [:postfix, [:resolve, 'c'], '++'],
+                        [:block, []]]],
+                @parser.parse("for (a;\nb;\nc++){}"))
+  end
+
   def assert_sexp(expected, node)
     assert_equal(expected, node.to_sexp)
   end
