@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + "/../helper"
 
 class Statement_12_5_1_Test < ExecuteTestCase
   def setup
-    @runtime = RKelly::Runtime.new
+    @runtime = RECMA::Runtime.new
   end
 
   def test_if_true

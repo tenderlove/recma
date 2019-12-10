@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + "/../helper"
 
 class Expressions_11_9_1_Test < ExecuteTestCase
   def setup
-    @runtime = RKelly::Runtime.new
+    @runtime = RECMA::Runtime.new
   end
 
   def test_void_equal

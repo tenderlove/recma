@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + "/helper"
 
 class ECMAVisitorTest < Test::Unit::TestCase
   def setup
-    @parser = RKelly::Parser.new
+    @parser = RECMA::Parser.new
   end
 
   def test_anonymous_function_expr

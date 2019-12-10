@@ -1,5 +1,5 @@
 class ExecuteTestCase < Test::Unit::TestCase
-  include RKelly::Nodes
+  include RECMA::Nodes
 
   if method_defined? :default_test
     undef :default_test

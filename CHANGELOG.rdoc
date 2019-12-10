@@ -1,4 +1,10 @@
-= RKelly CHANGELOG
+= RECMA CHANGELOG
+
+=== 1.0.4
+
+* Bugfixes
+
+  * Renamed
 
 === 1.0.3
 

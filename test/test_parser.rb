@@ -2,12 +2,12 @@ require File.dirname(__FILE__) + "/helper"
 
 class ParserTest < Test::Unit::TestCase
   def setup
-    @parser = RKelly::Parser.new
+    @parser = RECMA::Parser.new
   end
 
   def test_birthday!
-    assert_raises(RKelly::SyntaxError) do
-      RKelly::Parser.new.parse "Happy birthday, tenderlove!"
+    assert_raises(RECMA::SyntaxError) do
+      RECMA::Parser.new.parse "Happy birthday, tenderlove!"
     end
   end
 

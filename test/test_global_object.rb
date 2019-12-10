@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + "/helper"
 
 class GlobalObjectTest < Test::Unit::TestCase
-  include RKelly::JS
+  include RECMA::JS
 
   def setup
     @object = GlobalObject.new

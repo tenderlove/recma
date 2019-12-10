@@ -1,19 +1,19 @@
-= RKelly
+= RECMA
 
-* http://rkelly.rubyforge.org/
+* http://recma.rubyforge.org/
 
 == DESCRIPTION
 
-The RKelly library will parse JavaScript and return a parse tree.
+The RECMA library will parse JavaScript and return a parse tree.
 
 == Example
 
   ##
   # Iterate over and modify a JavaScript AST.  Then print the modified
   # AST as JavaScript.
-  require 'rkelly'
+  require 'recma'
 
-  parser = RKelly::Parser.new
+  parser = RECMA::Parser.new
   ast    = parser.parse(
     "for(var i = 0; i < 10; i++) { var x = 5 + 5; }"
   )

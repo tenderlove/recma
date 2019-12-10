@@ -1,11 +1,11 @@
 require File.dirname(__FILE__) + "/helper"
 
 class PointcutVisitorTest < Test::Unit::TestCase
-  include RKelly::Visitors
-  include RKelly::Nodes
+  include RECMA::Visitors
+  include RECMA::Nodes
 
   def setup
-    @parser = RKelly::Parser.new
+    @parser = RECMA::Parser.new
   end
 
   def test_visit_NumberNode

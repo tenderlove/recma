@@ -2,9 +2,9 @@ require File.dirname(__FILE__) + "/helper"
 
 class FunctionVisitorTest < Test::Unit::TestCase
   def setup
-    @parser = RKelly::Parser.new
-    @scope = RKelly::Runtime::ScopeChain.new
-    @visitor = RKelly::Visitors::FunctionVisitor.new(@scope)
+    @parser = RECMA::Parser.new
+    @scope = RECMA::Runtime::ScopeChain.new
+    @visitor = RECMA::Visitors::FunctionVisitor.new(@scope)
   end
 
   def test_function

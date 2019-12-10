@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + "/helper"
 
 class LineNumberTest < NodeTestCase
   def test_line_numbers
-    parser = RKelly::Parser.new
+    parser = RECMA::Parser.new
     ast = parser.parse(<<-eojs)
       /**
        * This is an awesome test comment.

@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + "/helper"
 
 class CommentsTest < NodeTestCase
   def test_some_comments
-    parser = RKelly::Parser.new
+    parser = RECMA::Parser.new
     ast = parser.parse(<<-eojs)
       /**
        * This is an awesome test comment.
@@ -24,7 +24,7 @@ class CommentsTest < NodeTestCase
   end
 
   def test_even_more_comments
-    parser = RKelly::Parser.new
+    parser = RECMA::Parser.new
     ast = parser.parse(<<-eojs)
       /**
        * The first comment

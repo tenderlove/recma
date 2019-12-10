@@ -1,6 +1,6 @@
 /* vim: set filetype=racc : */
 
-class RKelly::GeneratedParser
+class RECMA::GeneratedParser
 
 /* Literals */
 token NULL TRUE FALSE
@@ -591,7 +591,7 @@ rule
   | ExprNoBF error {
       result = ExpressionStatementNode.new(val.first)
       debug(result)
-      raise RKelly::SyntaxError unless allow_auto_semi?(val.last)
+      raise RECMA::SyntaxError unless allow_auto_semi?(val.last)
     }
   ;
 
@@ -848,10 +848,10 @@ rule
 end
 
 ---- header
-  require "rkelly/nodes"
+  require "recma/nodes"
 
 ---- inner
-  include RKelly::Nodes
+  include RECMA::Nodes
 
   def allow_auto_semi?(error_token)
     error_token == false || error_token == '}' || @terminator

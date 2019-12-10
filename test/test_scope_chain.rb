@@ -2,10 +2,10 @@ require File.dirname(__FILE__) + "/helper"
 
 class TestScopeChain < Test::Unit::TestCase
   def setup
-    @scope_chain = RKelly::Runtime::ScopeChain.new
-    scope_1 = RKelly::JS::Scope.new
+    @scope_chain = RECMA::Runtime::ScopeChain.new
+    scope_1 = RECMA::JS::Scope.new
     scope_1.properties[:foo] = 1
-    scope_2 = RKelly::JS::Scope.new
+    scope_2 = RECMA::JS::Scope.new
     scope_2.properties[:bar] = 10
     @scope_chain << scope_1
     @scope_chain << scope_2

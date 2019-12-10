@@ -1,12 +1,12 @@
 class ECMAScriptTestCase < Test::Unit::TestCase
-  include RKelly::JS
+  include RECMA::JS
 
   if method_defined? :default_test
     undef :default_test
   end
 
   def setup
-    @runtime = RKelly::Runtime.new
+    @runtime = RECMA::Runtime.new
     @runtime.define_function(:assert_equal) do |*args|
       assert_equal(*args)
     end

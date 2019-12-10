@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + "/helper"
 
 class TokenizerTest < Test::Unit::TestCase
   def setup
-    @tokenizer = RKelly::Tokenizer.new
+    @tokenizer = RECMA::Tokenizer.new
   end
 
   def test_comments
