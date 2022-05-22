@@ -1271,6 +1271,38 @@ class ParserTest < Test::Unit::TestCase
     )
   end
 
+  def test_let_statement
+    assert_sexp(
+      [[:let, [[:let_decl, :foo, [:assign, [:lit, 10]]]]]],
+      @parser.parse('let foo = 10;')
+    )
+  end
+
+  def test_let_decl_list
+    assert_sexp(
+      [[:let,
+        [
+          [:let_decl, :foo, [:assign, [:lit, 10]]],
+          [:let_decl, :bar, [:assign, [:lit, 1]]],
+      ]]],
+      @parser.parse('let foo = 10, bar = 1;')
+    )
+  end
+
+  def test_let_decl_no_init
+    assert_sexp(
+      [[:let, [[:let_decl, :foo, nil]]]],
+      @parser.parse('let foo;')
+    )
+  end
+
+  def test_let_statement_error
+    assert_sexp(
+      [[:let, [[:let_decl, :foo, [:assign, [:lit, 10]]]]]],
+      @parser.parse('let foo = 10')
+    )
+  end
+
   def test_variable_statement
     assert_sexp(
       [[:var, [[:var_decl, :foo, [:assign, [:lit, 10]]]]]],

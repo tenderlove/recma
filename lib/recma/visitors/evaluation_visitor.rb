@@ -283,7 +283,7 @@ module RECMA
         ForInNode ForNode
         FunctionExprNode GetterPropertyNode GreaterNode GreaterOrEqualNode
         InNode InstanceOfNode LabelNode LeftShiftNode LessNode
-        LessOrEqualNode LogicalAndNode LogicalOrNode
+        LessOrEqualNode LetStatementNode LogicalAndNode LogicalOrNode
         NotEqualNode NotStrictEqualNode
         ObjectLiteralNode OpAndEqualNode OpDivideEqualNode
         OpLShiftEqualNode OpMinusEqualNode OpModEqualNode

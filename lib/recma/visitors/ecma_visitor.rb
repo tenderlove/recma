@@ -13,12 +13,16 @@ module RECMA
         o.value.map { |x| "#{indent}#{x.accept(self)}" }.join("\n")
       end
 
-      def visit_VarStatementNode(o)
-        "var #{o.value.map { |x| x.accept(self) }.join(', ')};"
-      end
-
       def visit_ConstStatementNode(o)
         "const #{o.value.map { |x| x.accept(self) }.join(', ')};"
+      end
+
+      def visit_LetStatementNode(o)
+        "let #{o.value.map { |x| x.accept(self) }.join(', ')};"
+      end
+
+      def visit_VarStatementNode(o)
+        "var #{o.value.map { |x| x.accept(self) }.join(', ')};"
       end
 
       def visit_VarDeclNode(o)
