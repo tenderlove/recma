@@ -14,7 +14,7 @@ module RECMA
       end
 
       def visit_VarDeclNode(o)
-        [ o.constant? ? :const_decl : :var_decl ] + super(o)
+        [ o.const? ? :const_decl : o.let? ? :let_decl : :var_decl ] + super(o)
       end
 
       def visit_VarStatementNode(o)
@@ -59,6 +59,10 @@ module RECMA
 
       def visit_ConstStatementNode(o)
         [:const, super]
+      end
+
+      def visit_LetStatementNode(o)
+        [:let, super]
       end
 
       def visit_MultiplyNode(o)

@@ -8,7 +8,7 @@ module RECMA
       if in instanceof new return switch this throw try typeof var void while 
       with 
 
-      const true false null debugger
+      const true false let null debugger
     }
 
     RESERVED = %w{

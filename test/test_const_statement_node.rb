@@ -12,3 +12,16 @@ class ConstStatementNodeTest < NodeTestCase
     )
   end
 end
+
+class LetStatementNodeTest < NodeTestCase
+  def test_to_sexp
+    initializer = AssignExprNode.new(NumberNode.new(10))
+    decl = VarDeclNode.new('foo', initializer, :let)
+    stmt = LetStatementNode.new([decl])
+
+    assert_sexp(
+      [:let, [[:let_decl, :foo, [:assign, [:lit, 10]]]]],
+      stmt
+    )
+  end
+end

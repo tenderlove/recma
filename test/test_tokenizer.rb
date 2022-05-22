@@ -161,7 +161,7 @@ class TokenizerTest < Test::Unit::TestCase
     if in instanceof new return switch this throw try typeof var void while 
     with 
 
-    const true false null debugger
+    const let true false null debugger
   }.each do |kw|
     define_method(:"test_keyword_#{kw}") do
       tokens = @tokenizer.tokenize(kw)
@@ -174,8 +174,8 @@ class TokenizerTest < Test::Unit::TestCase
     '!='  => :NE,
     '===' => :STREQ,
     '!==' => :STRNEQ,
-    '<='   => :LE,
-    '>='   => :GE,
+    '<='  => :LE,
+    '>='  => :GE,
     '||'  => :OR,
     '&&'  => :AND,
     '++'  => :PLUSPLUS,

@@ -19,8 +19,8 @@ module RECMA
         While With
       }
       ARRAY_VALUE_NODES = %w{
-        Arguments Array CaseBlock ConstStatement ObjectLiteral SourceElements
-        VarStatement
+        Arguments Array CaseBlock ConstStatement LetStatement ObjectLiteral
+        SourceElements VarStatement
       }
       NAME_VALUE_NODES = %w{
         Label Property GetterProperty SetterProperty VarDecl
